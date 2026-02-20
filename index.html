@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 <title>FreshMaximum</title>
 
 <style>
@@ -12,6 +14,7 @@ body {
   background: #f2f4f7;
   padding-bottom: 120px;
   overflow-x: hidden;
+  touch-action: manipulation;
 }
 
 /* SEARCH */
@@ -21,11 +24,13 @@ body {
   align-items: center;
   gap: 10px;
 }
+
 .back-btn {
   display: none;
   font-size: 24px;
   cursor: pointer;
 }
+
 .search-bar {
   flex: 1;
   height: 50px;
@@ -41,6 +46,7 @@ body {
   text-align: center;
   padding: 30px 20px;
 }
+
 .logo-card {
   display: inline-block;
   background: white;
@@ -48,9 +54,11 @@ body {
   border-radius: 25px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
+
 .logo-card img {
   height: 110px;
 }
+
 .brand-title {
   margin-top: 20px;
   font-size: 34px;
@@ -59,15 +67,13 @@ body {
 }
 
 /* CATEGORY */
-.categories, .products {
-  padding: 20px;
-  transition: all 0.4s ease;
-}
 .categories {
+  padding: 20px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
+
 .category-card {
   background: white;
   border-radius: 30px;
@@ -76,10 +82,12 @@ body {
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   cursor: pointer;
 }
+
 .category-card img {
   width: 100%;
   border-radius: 20px;
 }
+
 .category-title {
   font-size: 22px;
   font-weight: bold;
@@ -88,8 +96,10 @@ body {
 
 /* PRODUCTS */
 .products {
+  padding: 20px;
   display: none;
 }
+
 .card {
   background: white;
   border-radius: 20px;
@@ -98,17 +108,19 @@ body {
   position: relative;
   margin-bottom: 20px;
 }
+
 .card img {
   width: 100%;
   border-radius: 15px;
 }
+
 .product-name {
   font-size: 22px;
   font-weight: bold;
   margin-top: 15px;
 }
 
-/* ADD BUTTON */
+/* ADD BUTTON PERFECT CENTER */
 .add-btn {
   position: absolute;
   top: 15px;
@@ -120,11 +132,14 @@ body {
   border: none;
   color: #2563eb;
   cursor: pointer;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   font-size: 30px;
   line-height: 1;
+  padding: 0;
 }
 
 /* CART */
@@ -138,17 +153,21 @@ body {
   padding: 15px;
   transition: bottom 0.4s ease;
 }
+
 .cart.active {
   bottom: 0;
 }
+
 .cart ul {
   list-style: none;
   padding: 0;
 }
+
 .cart li {
   display: flex;
   justify-content: space-between;
 }
+
 .send-btn {
   width: 100%;
   padding: 10px;
@@ -196,6 +215,10 @@ body {
 </div>
 
 <script>
+document.addEventListener('gesturestart', function (e) {
+  e.preventDefault();
+});
+
 const whatsappNumber="491727117489";
 
 const products=[
