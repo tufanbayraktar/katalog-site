@@ -2,24 +2,36 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Firma Ürün Kataloğu</title>
+<title>FreshMaximum</title>
 
 <style>
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   background: #f4f6f9;
-  padding-bottom: 180px;
+  padding-bottom: 200px;
 }
 
-header {
+/* HEADER */
+.main-header {
   background: #111827;
   color: white;
-  padding: 15px;
-  text-align: center;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  height: 40px;
+}
+
+.brand-name {
+  font-size: 20px;
   font-weight: bold;
 }
 
+/* SEARCH */
 .search-container {
   padding: 15px;
 }
@@ -31,6 +43,7 @@ header {
   border: 1px solid #ccc;
 }
 
+/* PRODUCTS */
 .products {
   padding: 15px;
 }
@@ -40,6 +53,15 @@ header {
   border-radius: 12px;
   padding: 15px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.category {
+  font-size: 12px;
+  background: #e5e7eb;
+  display: inline-block;
+  padding: 3px 6px;
+  border-radius: 6px;
+  margin-bottom: 8px;
 }
 
 .product-row {
@@ -53,15 +75,6 @@ header {
   height: 70px;
   object-fit: cover;
   border-radius: 8px;
-}
-
-.category {
-  font-size: 12px;
-  background: #e5e7eb;
-  display: inline-block;
-  padding: 3px 6px;
-  border-radius: 6px;
-  margin-bottom: 6px;
 }
 
 .card input {
@@ -82,6 +95,7 @@ header {
   cursor: pointer;
 }
 
+/* CART */
 .cart {
   position: fixed;
   bottom: 0;
@@ -90,7 +104,7 @@ header {
   background: #111827;
   color: white;
   padding: 12px;
-  max-height: 170px;
+  max-height: 180px;
   overflow-y: auto;
 }
 
@@ -152,7 +166,10 @@ header {
 
 <body>
 
-<header>Firma Ürün Kataloğu</header>
+<header class="main-header">
+  <img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png" class="logo">
+  <span class="brand-name">FreshMaximum</span>
+</header>
 
 <div class="search-container">
   <input type="text" id="search" placeholder="Ürün ara...">
