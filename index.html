@@ -1,189 +1,162 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
 <title>FreshMaximum</title>
 
 <style>
 *{box-sizing:border-box;}
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #f2f4f7;
-  padding-bottom: 120px;
-  overflow-x: hidden;
-  touch-action: manipulation;
+body{
+  font-family:Arial;
+  margin:0;
+  background:#f2f4f7;
+  padding-bottom:120px;
+  overflow-x:hidden;
 }
 
-/* SEARCH */
-.top-bar {
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* TOP */
+.top-bar{
+  padding:15px;
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
-
-.back-btn {
-  display: none;
-  font-size: 24px;
-  cursor: pointer;
+.back-btn{
+  display:none;
+  font-size:24px;
+  cursor:pointer;
 }
-
-.search-bar {
-  flex: 1;
-  height: 50px;
-  border-radius: 25px;
-  border: none;
-  padding: 0 18px;
-  font-size: 16px;
-  background: #e5e7eb;
+.search-bar{
+  flex:1;
+  height:50px;
+  border-radius:25px;
+  border:none;
+  padding:0 18px;
+  background:#e5e7eb;
 }
 
 /* LOGO */
-.logo-section {
-  text-align: center;
-  padding: 30px 20px;
+.logo-section{text-align:center;padding:30px 20px;}
+.logo-card{
+  display:inline-block;
+  background:white;
+  padding:20px;
+  border-radius:25px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
 }
-
-.logo-card {
-  display: inline-block;
-  background: white;
-  padding: 20px;
-  border-radius: 25px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-}
-
-.logo-card img {
-  height: 110px;
-}
-
-.brand-title {
-  margin-top: 20px;
-  font-size: 34px;
-  font-weight: 900;
-  color: black;
+.logo-card img{height:110px;}
+.brand-title{
+  margin-top:20px;
+  font-size:34px;
+  font-weight:900;
 }
 
 /* CATEGORY */
-.categories {
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+.categories{
+  padding:20px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
 }
-
-.category-card {
-  background: white;
-  border-radius: 30px;
-  padding: 15px;
-  text-align: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-  cursor: pointer;
-  transition: transform 0.3s ease;
+.category-card{
+  background:white;
+  border-radius:30px;
+  padding:15px;
+  text-align:center;
+  box-shadow:0 8px 20px rgba(0,0,0,0.08);
+  cursor:pointer;
 }
-
-.category-card:hover {
-  transform: scale(1.03);
+.category-card img{
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  border-radius:20px;
 }
-
-.category-card img {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 20px;
-}
-
-.category-title {
-  font-size: 22px;
-  font-weight: bold;
-  margin-top: 15px;
+.category-title{
+  font-size:22px;
+  font-weight:bold;
+  margin-top:15px;
 }
 
 /* PRODUCTS */
-.products {
-  padding: 20px;
-  display: none;
+.products{padding:20px;display:none;}
+.card{
+  background:white;
+  border-radius:20px;
+  padding:15px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.08);
+  position:relative;
+  margin-bottom:20px;
+}
+.card img{
+  width:100%;
+  border-radius:15px;
+}
+.product-name{
+  font-size:22px;
+  font-weight:bold;
+  margin-top:15px;
 }
 
-.card {
-  background: white;
-  border-radius: 20px;
-  padding: 15px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-  position: relative;
-  margin-bottom: 20px;
+/* BUTTONS */
+.add-btn,.remove-btn{
+  position:absolute;
+  top:15px;
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  border:none;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:26px;
+  color:white;
 }
 
-.card img {
-  width: 100%;
-  border-radius: 15px;
+.add-btn{
+  right:15px;
+  background:#16a34a;
 }
 
-.product-name {
-  font-size: 22px;
-  font-weight: bold;
-  margin-top: 15px;
+.remove-btn{
+  right:70px;
+  background:#dc2626;
 }
 
-/* ADD BUTTON */
-.add-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: #dbeafe;
-  border: none;
-  color: #2563eb;
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 30px;
-  line-height: 1;
-  padding: 0;
+/* FLOATING ORDER BAR */
+.order-bar{
+  position:fixed;
+  bottom:-100px;
+  left:20px;
+  right:20px;
+  background:#1d9acb;
+  color:white;
+  padding:18px;
+  border-radius:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:bold;
+  font-size:18px;
+  transition:all 0.4s ease;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* CART */
-.cart {
-  position: fixed;
-  bottom: -250px;
-  left: 0;
-  right: 0;
-  background: #111827;
-  color: white;
-  padding: 15px;
-  transition: bottom 0.4s ease;
+.order-bar.active{
+  bottom:20px;
 }
 
-.cart.active {
-  bottom: 0;
-}
-
-.cart ul {
-  list-style: none;
-  padding: 0;
-}
-
-.cart li {
-  display: flex;
-  justify-content: space-between;
-}
-
-.send-btn {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background: #16a34a;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  font-size: 15px;
+.order-count{
+  background:white;
+  color:#1d9acb;
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
 }
 </style>
 </head>
@@ -192,7 +165,7 @@ body {
 
 <div class="top-bar">
   <div class="back-btn" onclick="goBack()">←</div>
-  <input type="text" class="search-bar" placeholder="Suchen">
+  <input class="search-bar" placeholder="Suchen">
 </div>
 
 <div class="logo-section">
@@ -203,7 +176,6 @@ body {
 </div>
 
 <div class="categories" id="categoryView">
-
   <div class="category-card" onclick="openCategory('Obst')">
     <img src="https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png">
     <div class="category-title">Obst</div>
@@ -213,22 +185,19 @@ body {
     <img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png">
     <div class="category-title">Gemüse</div>
   </div>
-
 </div>
 
 <div class="products" id="productView"></div>
 
-<div class="cart" id="cartBox">
-  <strong>Mein Warenkorb</strong>
-  <ul id="cartList"></ul>
-  <button class="send-btn" onclick="sendOrder()">Per WhatsApp senden</button>
+<div class="order-bar" id="orderBar" onclick="sendOrder()">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="order-count" id="orderCount">0</div>
+    Bestellung anzeigen
+  </div>
+  <div id="orderTotal">0 Artikel</div>
 </div>
 
 <script>
-document.addEventListener('gesturestart', function (e) {
-  e.preventDefault();
-});
-
 const whatsappNumber="491727117489";
 
 const products=[
@@ -247,6 +216,7 @@ function openCategory(cat){
   products.filter(p=>p.category===cat).forEach(p=>{
     container.innerHTML+=`
       <div class="card">
+        <button class="remove-btn" onclick="removeFromCart('${p.name}')">−</button>
         <button class="add-btn" onclick="addToCart('${p.name}')">+</button>
         <img src="${p.image}">
         <div class="product-name">${p.name}</div>
@@ -265,21 +235,39 @@ function addToCart(name){
   const existing=cart.find(i=>i.name===name);
   if(existing){existing.qty++;}
   else{cart.push({name,qty:1});}
-
-  document.getElementById("cartBox").classList.add("active");
-  renderCart();
+  updateBar();
 }
 
-function renderCart(){
-  const list=document.getElementById("cartList");
-  list.innerHTML="";
-  cart.forEach(i=>{
-    list.innerHTML+=`<li>${i.name} x${i.qty}</li>`;
-  });
+function removeFromCart(name){
+  const existing=cart.find(i=>i.name===name);
+  if(existing){
+    existing.qty--;
+    if(existing.qty<=0){
+      cart=cart.filter(i=>i.name!==name);
+    }
+  }
+  updateBar();
+}
+
+function updateBar(){
+  const bar=document.getElementById("orderBar");
+  const count=document.getElementById("orderCount");
+  const total=document.getElementById("orderTotal");
+
+  let totalItems=0;
+  cart.forEach(i=> totalItems+=i.qty);
+
+  if(totalItems>0){
+    bar.classList.add("active");
+    count.innerText=totalItems;
+    total.innerText=totalItems+" Artikel";
+  }else{
+    bar.classList.remove("active");
+  }
 }
 
 function sendOrder(){
-  if(cart.length==0){return;}
+  if(cart.length==0)return;
   let msg="Guten Tag, meine Bestellung:%0A";
   cart.forEach(i=>{msg+="- "+i.name+" x"+i.qty+"%0A";});
   window.open("https://wa.me/"+whatsappNumber+"?text="+msg);
