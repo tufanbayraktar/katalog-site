@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta name="viewport"
 content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -10,28 +9,45 @@ content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 <style>
 *{box-sizing:border-box;}
 body{
-  font-family:Arial;
   margin:0;
+  font-family:Arial;
   background:#f4f6f8;
   overflow-x:hidden;
-  -webkit-user-select:none;
   touch-action:manipulation;
 }
 
-/* TOP */
+/* TOP SEARCH */
 .top-bar{
   padding:15px;
-  display:flex;
-  align-items:center;
-  gap:10px;
 }
 .search-bar{
-  flex:1;
+  width:100%;
   height:48px;
   border-radius:24px;
   border:none;
   padding:0 15px;
   background:#e6e9ed;
+}
+
+/* LOGO CARD */
+.logo-section{
+  text-align:center;
+  padding:25px 20px;
+}
+.logo-card{
+  display:inline-block;
+  background:white;
+  padding:20px;
+  border-radius:25px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+.logo-card img{
+  height:100px;
+}
+.brand-title{
+  font-size:28px;
+  font-weight:bold;
+  margin-top:15px;
 }
 
 /* CATEGORY */
@@ -60,8 +76,11 @@ body{
   margin-top:10px;
 }
 
-/* PRODUCT */
-.products{padding:20px;display:none;}
+/* PRODUCTS */
+.products{
+  display:none;
+  padding:20px;
+}
 .card{
   background:white;
   border-radius:20px;
@@ -70,9 +89,14 @@ body{
   position:relative;
   margin-bottom:20px;
 }
-.card img{width:100%;border-radius:15px;}
-.product-name{font-weight:bold;margin-top:10px;}
-
+.card img{
+  width:100%;
+  border-radius:15px;
+}
+.product-name{
+  font-weight:bold;
+  margin-top:10px;
+}
 .add-btn{
   position:absolute;
   top:12px;
@@ -84,12 +108,9 @@ body{
   border:none;
   color:white;
   font-size:24px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
 
-/* FLOAT BAR */
+/* FLOAT ORDER BAR */
 .order-bar{
   position:fixed;
   bottom:-100px;
@@ -97,7 +118,7 @@ body{
   right:20px;
   background:#0f9d58;
   color:white;
-  padding:16px;
+  padding:15px;
   border-radius:20px;
   display:flex;
   justify-content:space-between;
@@ -105,12 +126,14 @@ body{
   font-weight:bold;
   transition:0.4s;
 }
-.order-bar.active{bottom:20px;}
+.order-bar.active{
+  bottom:20px;
+}
 .count{
   background:white;
   color:#0f9d58;
-  width:32px;
-  height:32px;
+  width:30px;
+  height:30px;
   border-radius:50%;
   display:flex;
   align-items:center;
@@ -132,16 +155,23 @@ body{
 }
 
 .cart-header{
-  text-align:center;
+  display:flex;
+  align-items:center;
+  gap:10px;
   margin-bottom:20px;
 }
-.cart-header h1{
-  margin:0;
+.back-cart{
   font-size:24px;
+  cursor:pointer;
 }
-.cart-header p{
-  margin:5px 0 0;
+.cart-title{
+  font-weight:bold;
+  font-size:20px;
+}
+
+.cart-sub{
   color:gray;
+  margin-bottom:20px;
 }
 
 .cart-item{
@@ -152,7 +182,6 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  transition:0.3s;
 }
 
 .minus{
@@ -164,7 +193,7 @@ body{
   border-radius:50%;
 }
 
-/* WHATSAPP BUTTON */
+/* WHATSAPP */
 .whatsapp-btn{
   position:fixed;
   bottom:20px;
@@ -186,10 +215,22 @@ body{
 <input class="search-bar" placeholder="Suchen">
 </div>
 
+<div class="logo-section">
+<div class="logo-card">
+<img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
+</div>
+<div class="brand-title">FreshMaximum</div>
+</div>
+
 <div class="categories" id="categoryView">
-<div class="category-card" onclick="openCategory()">
+<div class="category-card" onclick="openCategory('Obst')">
 <img src="https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png">
 <div class="category-title">Obst</div>
+</div>
+
+<div class="category-card" onclick="openCategory('Gemüse')">
+<img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png">
+<div class="category-title">Gemüse</div>
 </div>
 </div>
 
@@ -204,39 +245,54 @@ Bestellung anzeigen
 </div>
 
 <div class="cart-screen" id="cartScreen">
+
 <div class="cart-header">
-<h1>FreshMaximum</h1>
-<p>Ihre Bestellung</p>
+<div class="back-cart" onclick="closeCart()">←</div>
+<div class="cart-title">FreshMaximum</div>
 </div>
+
+<div class="cart-sub">Ihre Bestellung</div>
 
 <div id="cartItems"></div>
 
 <div class="whatsapp-btn" onclick="sendOrder()">
 WhatsApp Nachricht senden
 </div>
+
 </div>
 
 <script>
 document.addEventListener('gesturestart', e=>e.preventDefault());
 
 const whatsappNumber="491727117489";
+
+const products=[
+{name:"Granatapfel",category:"Obst",image:"https://i.postimg.cc/Qxzd9SNT/granatapfel.png"},
+{name:"Brokkoli",category:"Gemüse",image:"https://i.postimg.cc/qqrY9F9S/broccoli.png"}
+];
+
 let cart=[];
 
-function openCategory(){
+function openCategory(cat){
 document.getElementById("categoryView").style.display="none";
 const container=document.getElementById("productView");
 container.style.display="block";
-container.innerHTML=`
+container.innerHTML="";
+
+products.filter(p=>p.category===cat).forEach(p=>{
+container.innerHTML+=`
 <div class="card">
-<button class="add-btn" onclick="addToCart()">+</button>
-<img src="https://i.postimg.cc/Qxzd9SNT/granatapfel.png">
-<div class="product-name">Granatapfel</div>
+<button class="add-btn" onclick="addToCart('${p.name}')">+</button>
+<img src="${p.image}">
+<div class="product-name">${p.name}</div>
 </div>`;
+});
 }
 
-function addToCart(){
-if(cart.length>0) cart[0].qty++;
-else cart=[{name:"Granatapfel",qty:1}];
+function addToCart(name){
+const existing=cart.find(i=>i.name===name);
+if(existing) existing.qty++;
+else cart.push({name,qty:1});
 updateBar();
 }
 
@@ -256,26 +312,20 @@ function openCart(){
 document.getElementById("cartScreen").classList.add("active");
 }
 
+function closeCart(){
+document.getElementById("cartScreen").classList.remove("active");
+}
+
 function renderCart(){
 const box=document.getElementById("cartItems");
 box.innerHTML="";
 cart.forEach((item,i)=>{
 box.innerHTML+=`
-<div class="cart-item" ontouchstart="startX=event.touches[0].clientX" 
-ontouchend="handleSwipe(event,${i})">
+<div class="cart-item">
 <span>${item.qty} x ${item.name}</span>
 <button class="minus" onclick="decrease(${i})">−</button>
 </div>`;
 });
-}
-
-let startX=0;
-function handleSwipe(e,i){
-let endX=e.changedTouches[0].clientX;
-if(startX-endX>80){
-cart.splice(i,1);
-updateBar();
-}
 }
 
 function decrease(i){
