@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Firma Ürün Kataloğu</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f4f6f9;
+  padding-bottom: 180px;
+}
+
+header {
+  background: #111827;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.search-container {
+  padding: 15px;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.products {
+  padding: 15px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.product-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.product-row img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.category {
+  font-size: 12px;
+  background: #e5e7eb;
+  display: inline-block;
+  padding: 3px 6px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.card input {
+  width: 60px;
+  padding: 5px;
+  margin-top: 8px;
+}
+
+.card button {
+  display: block;
+  margin-top: 8px;
+  padding: 8px;
+  width: 100%;
+  background: #111827;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cart {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #111827;
+  color: white;
+  padding: 12px;
+  max-height: 170px;
+  overflow-y: auto;
+}
+
+.cart ul {
+  margin: 5px 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.cart li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.qty-btn {
+  background: #374151;
+  color: white;
+  border: none;
+  padding: 2px 6px;
+  margin: 0 3px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.remove-btn {
+  background: red;
+  border: none;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.clear-btn {
+  width: 100%;
+  padding: 6px;
+  margin-top: 5px;
+  background: crimson;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.send-btn {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  background: #16a34a;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>Firma Ürün Kataloğu</header>
+
+<div class="search-container">
+  <input type="text" id="search" placeholder="Ürün ara...">
+</div>
+
+<div class="products" id="products"></div>
+
+<div class="cart">
+  <strong>Sipariş Listesi</strong>
+  <ul id="cartList"></ul>
+  <button class="clear-btn" onclick="clearCart()">Tümünü Temizle</button>
+  <button class="send-btn" onclick="sendOrder()">WhatsApp ile Gönder</button>
+</div>
+
+<script>
+const whatsappNumber = "491727117489";
+
+const products = [
+  {
+    name:"Granatapfel",
+    category:"OBST",
+    image:"https://i.postimg.cc/Qxzd9SNT/granatapfel.png"
+  }
+];
+
+let cart = [];
+
+function renderProducts(filter=""){
+  const container = document.getElementById("products");
+  container.innerHTML = "";
+
+  products
+  .filter(p=>p.name.toLowerCase().includes(filter.toLowerCase()))
+  .forEach(p=>{
+    container.innerHTML += `
+      <div class="card">
+        <div class="category">${p.category}</div>
+        <div class="product-row">
+          <img src="${p.image}">
+          <h3>${p.name}</h3>
+        </div>
+        <input type="number" min="1" value="1" id="qty-${p.name}">
+        <button onclick="addToCart('${p.name}')">Sepete Ekle</button>
+      </div>
+    `;
+  });
+}
+
+function addToCart(name){
+  const qty = parseInt(document.getElementById("qty-"+name).value);
+  const existing = cart.find(item => item.name === name);
+
+  if(existing){
+    existing.qty += qty;
+  } else {
+    cart.push({name, qty});
+  }
+
+  renderCart();
+}
+
+function renderCart(){
+  const list = document.getElementById("cartList");
+  list.innerHTML="";
+
+  cart.forEach((item,index)=>{
+    list.innerHTML += `
+      <li>
+        <div>
+          ${item.name}
+          <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+          ${item.qty}
+          <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+        </div>
+        <button class="remove-btn" onclick="removeItem(${index})">X</button>
+      </li>
+    `;
+  });
+}
+
+function changeQty(index, amount){
+  cart[index].qty += amount;
+  if(cart[index].qty <= 0){
+    cart.splice(index,1);
+  }
+  renderCart();
+}
+
+function removeItem(index){
+  cart.splice(index,1);
+  renderCart();
+}
+
+function clearCart(){
+  cart = [];
+  renderCart();
+}
+
+function sendOrder(){
+  if(cart.length==0){alert("Liste boş");return;}
+  let msg="Merhaba siparişim:%0A";
+  cart.forEach(i=>{
+    msg += "- "+i.name+" x"+i.qty+"%0A";
+  });
+  window.open("https://wa.me/"+whatsappNumber+"?text="+msg);
+}
+
+document.getElementById("search").addEventListener("input",e=>{
+  renderProducts(e.target.value);
+});
+
+renderProducts();
+</script>
+
+</body>
+</html>
