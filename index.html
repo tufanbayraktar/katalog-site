@@ -12,11 +12,10 @@ body {
   padding-bottom: 180px;
 }
 
+/* SEARCH */
 .top-bar {
   padding: 15px;
-  background: #f2f4f7;
 }
-
 .search-bar {
   width: 100%;
   height: 55px;
@@ -25,27 +24,17 @@ body {
   padding: 0 20px;
   font-size: 18px;
   background: #e5e7eb;
-  outline: none;
 }
 
+/* LOGO */
 .logo-section {
   text-align: center;
   background: white;
   padding: 30px 20px;
 }
-
-.logo-box {
-  display: inline-block;
-  background: white;
-  padding: 15px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-}
-
 .logo-box img {
-  height: 100px;
+  height: 110px;
 }
-
 .brand-title {
   margin-top: 20px;
   font-size: 36px;
@@ -53,48 +42,75 @@ body {
   color: black;
 }
 
-.products {
+/* CATEGORY CARDS */
+.categories {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   padding: 20px;
 }
+.category-card {
+  background: white;
+  border-radius: 30px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  cursor: pointer;
+}
+.category-card img {
+  width: 100%;
+  border-radius: 20px;
+}
+.category-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 15px;
+}
 
+/* PRODUCTS */
+.products {
+  padding: 20px;
+  display: none;
+}
 .card {
   background: white;
   border-radius: 20px;
   padding: 15px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   position: relative;
   margin-bottom: 20px;
 }
-
 .card img {
   width: 100%;
   border-radius: 15px;
 }
-
 .product-name {
   font-size: 24px;
   font-weight: bold;
   margin-top: 15px;
 }
 
+/* PERFECT CENTER + BUTTON */
 .add-btn {
   position: absolute;
   top: 15px;
   right: 15px;
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: #dbeafe;
   border: none;
   color: #2563eb;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  line-height: 1;
+
+  display: grid;
+  place-items: center;
+
+  font-size: 30px;
+  padding: 0;
 }
 
+/* CART */
 .cart {
   position: fixed;
   bottom: 0;
@@ -106,38 +122,14 @@ body {
   max-height: 200px;
   overflow-y: auto;
 }
-
 .cart ul {
   list-style: none;
   padding: 0;
-  margin: 5px 0;
 }
-
 .cart li {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 6px;
 }
-
-.qty-btn {
-  background: #374151;
-  color: white;
-  border: none;
-  padding: 2px 6px;
-  margin: 0 3px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.remove-btn {
-  background: red;
-  border: none;
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
 .send-btn {
   width: 100%;
   padding: 8px;
@@ -146,7 +138,6 @@ body {
   border: none;
   color: white;
   border-radius: 6px;
-  cursor: pointer;
 }
 </style>
 </head>
@@ -164,7 +155,21 @@ body {
   <div class="brand-title">FreshMaximum</div>
 </div>
 
-<div class="products" id="products"></div>
+<!-- CATEGORY VIEW -->
+<div class="categories" id="categoryView">
+  <div class="category-card" onclick="openCategory('Obst')">
+    <img src="https://i.postimg.cc/yY7F1R0P/fruit.png">
+    <div class="category-title">Obst</div>
+  </div>
+
+  <div class="category-card" onclick="openCategory('Gemüse')">
+    <img src="https://i.postimg.cc/zfcbG2qH/vegetables.png">
+    <div class="category-title">Gemüse</div>
+  </div>
+</div>
+
+<!-- PRODUCT VIEW -->
+<div class="products" id="productView"></div>
 
 <div class="cart">
   <strong>Sipariş Listesi</strong>
@@ -176,19 +181,18 @@ body {
 const whatsappNumber = "491727117489";
 
 const products = [
-  {
-    name:"Granatapfel",
-    image:"https://i.postimg.cc/Qxzd9SNT/granatapfel.png"
-  }
+  {name:"Granatapfel", category:"Obst", image:"https://i.postimg.cc/Qxzd9SNT/granatapfel.png"}
 ];
 
 let cart = [];
 
-function renderProducts(){
-  const container = document.getElementById("products");
-  container.innerHTML = "";
+function openCategory(cat){
+  document.getElementById("categoryView").style.display="none";
+  const container = document.getElementById("productView");
+  container.style.display="block";
+  container.innerHTML="";
 
-  products.forEach(p=>{
+  products.filter(p=>p.category===cat).forEach(p=>{
     container.innerHTML += `
       <div class="card">
         <button class="add-btn" onclick="addToCart('${p.name}')">+</button>
@@ -200,56 +204,26 @@ function renderProducts(){
 }
 
 function addToCart(name){
-  const existing = cart.find(item => item.name === name);
-  if(existing){
-    existing.qty += 1;
-  } else {
-    cart.push({name, qty:1});
-  }
+  const existing = cart.find(i=>i.name===name);
+  if(existing){existing.qty++;}
+  else{cart.push({name,qty:1});}
   renderCart();
 }
 
 function renderCart(){
-  const list = document.getElementById("cartList");
+  const list=document.getElementById("cartList");
   list.innerHTML="";
-  cart.forEach((item,index)=>{
-    list.innerHTML += `
-      <li>
-        <div>
-          ${item.name}
-          <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
-          ${item.qty}
-          <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
-        </div>
-        <button class="remove-btn" onclick="removeItem(${index})">X</button>
-      </li>
-    `;
+  cart.forEach((item)=>{
+    list.innerHTML+=`<li>${item.name} x${item.qty}</li>`;
   });
-}
-
-function changeQty(index, amount){
-  cart[index].qty += amount;
-  if(cart[index].qty <= 0){
-    cart.splice(index,1);
-  }
-  renderCart();
-}
-
-function removeItem(index){
-  cart.splice(index,1);
-  renderCart();
 }
 
 function sendOrder(){
   if(cart.length==0){alert("Liste boş");return;}
   let msg="Merhaba siparişim:%0A";
-  cart.forEach(i=>{
-    msg += "- "+i.name+" x"+i.qty+"%0A";
-  });
+  cart.forEach(i=>{msg+= "- "+i.name+" x"+i.qty+"%0A";});
   window.open("https://wa.me/"+whatsappNumber+"?text="+msg);
 }
-
-renderProducts();
 </script>
 
 </body>
