@@ -77,14 +77,21 @@ body {
 .category-card {
   background: white;
   border-radius: 30px;
-  padding: 20px;
+  padding: 15px;
   text-align: center;
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover {
+  transform: scale(1.03);
 }
 
 .category-card img {
   width: 100%;
+  height: 140px;
+  object-fit: cover;
   border-radius: 20px;
 }
 
@@ -120,7 +127,7 @@ body {
   margin-top: 15px;
 }
 
-/* ADD BUTTON PERFECT CENTER */
+/* ADD BUTTON */
 .add-btn {
   position: absolute;
   top: 15px;
@@ -196,14 +203,17 @@ body {
 </div>
 
 <div class="categories" id="categoryView">
+
   <div class="category-card" onclick="openCategory('Obst')">
-    <img src="https://i.postimg.cc/yY7F1R0P/fruit.png">
+    <img src="https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png">
     <div class="category-title">Obst</div>
   </div>
+
   <div class="category-card" onclick="openCategory('Gemüse')">
-    <img src="https://i.postimg.cc/zfcbG2qH/vegetables.png">
+    <img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png">
     <div class="category-title">Gemüse</div>
   </div>
+
 </div>
 
 <div class="products" id="productView"></div>
