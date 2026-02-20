@@ -8,30 +8,51 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  background: #eef2f7;
-  padding-bottom: 200px;
+  background: #f2f4f7;
+  padding-bottom: 180px;
 }
 
-/* HEADER */
-.main-header {
-  background: #111827;
-  padding: 20px 15px;
+.top-bar {
+  padding: 15px;
+  background: #f2f4f7;
+}
+
+.search-bar {
+  width: 100%;
+  height: 55px;
+  border-radius: 30px;
+  border: none;
+  padding: 0 20px;
+  font-size: 18px;
+  background: #e5e7eb;
+  outline: none;
+}
+
+.logo-section {
   text-align: center;
+  background: white;
+  padding: 30px 20px;
 }
 
-.logo {
-  height: 70px;
-  display: block;
-  margin: 0 auto 10px auto;
+.logo-box {
+  display: inline-block;
+  background: white;
+  padding: 15px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
-.brand-name {
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
+.logo-box img {
+  height: 100px;
 }
 
-/* PRODUCTS */
+.brand-title {
+  margin-top: 20px;
+  font-size: 36px;
+  font-weight: 900;
+  color: black;
+}
+
 .products {
   padding: 20px;
 }
@@ -63,14 +84,17 @@ body {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background: #cfe8f5;
+  background: #dbeafe;
   border: none;
-  font-size: 28px;
-  color: #0ea5e9;
+  color: #2563eb;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  line-height: 1;
 }
 
-/* CART */
 .cart {
   position: fixed;
   bottom: 0;
@@ -129,10 +153,16 @@ body {
 
 <body>
 
-<header class="main-header">
-  <img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png" class="logo">
-  <div class="brand-name">FreshMaximum</div>
-</header>
+<div class="top-bar">
+  <input type="text" class="search-bar" placeholder="Suchen">
+</div>
+
+<div class="logo-section">
+  <div class="logo-box">
+    <img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
+  </div>
+  <div class="brand-title">FreshMaximum</div>
+</div>
 
 <div class="products" id="products"></div>
 
@@ -171,20 +201,17 @@ function renderProducts(){
 
 function addToCart(name){
   const existing = cart.find(item => item.name === name);
-
   if(existing){
     existing.qty += 1;
   } else {
     cart.push({name, qty:1});
   }
-
   renderCart();
 }
 
 function renderCart(){
   const list = document.getElementById("cartList");
   list.innerHTML="";
-
   cart.forEach((item,index)=>{
     list.innerHTML += `
       <li>
