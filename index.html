@@ -1,30 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 <title>FreshMaximum</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
+
+*{box-sizing:border-box}
+
 body{
 margin:0;
-font-family:Arial;
+font-family:'Inter',sans-serif;
 background:#f4f6f8;
 overflow-x:hidden;
+touch-action:manipulation;
 }
 
 /* TOP BAR */
-.top-bar{
+
+.topbar{
 display:flex;
 align-items:center;
 gap:10px;
 padding:15px;
 }
-.back-btn{
+
+.back{
 font-size:22px;
-cursor:pointer;
 display:none;
+cursor:pointer;
 }
-.search-bar{
+
+.search{
 flex:1;
 height:45px;
 border-radius:25px;
@@ -34,156 +45,221 @@ background:#e6e9ed;
 }
 
 /* LOGO */
-.logo-section{
+
+.logo-area{
 text-align:center;
-padding:20px;
+padding:25px;
 }
+
 .logo-card{
 background:white;
 display:inline-block;
-padding:20px;
+padding:25px;
 border-radius:25px;
 box-shadow:0 8px 20px rgba(0,0,0,0.08);
 }
+
 .logo-card img{
-height:90px;
+height:100px;
 }
-.brand-title{
-font-weight:bold;
-font-size:26px;
+
+.brand{
+font-size:28px;
+font-weight:700;
 margin-top:10px;
 }
 
 /* CATEGORIES */
+
 .categories{
 padding:20px;
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:15px;
 }
-.category-card{
+
+.cat{
 background:white;
 border-radius:20px;
 padding:10px;
 box-shadow:0 8px 20px rgba(0,0,0,0.08);
 cursor:pointer;
 }
-.category-card img{
+
+.cat img{
 width:100%;
 height:120px;
 object-fit:cover;
 border-radius:15px;
 }
-.category-title{
+
+.cat-title{
 text-align:center;
-font-weight:bold;
+font-weight:600;
 margin-top:8px;
 }
 
-/* PRODUCTS */
+/* PRODUCT */
+
 .products{
 display:none;
 padding:20px;
 }
+
 .card{
 background:white;
 border-radius:20px;
 padding:15px;
 box-shadow:0 8px 20px rgba(0,0,0,0.08);
-position:relative;
 margin-bottom:20px;
 }
+
 .card img{
 width:100%;
 border-radius:15px;
 cursor:pointer;
 }
-.product-name{
-font-weight:bold;
-font-size:22px;
+
+.name{
 text-align:center;
+font-size:26px;
+font-weight:700;
 margin-top:15px;
 }
-.add-btn{
-position:absolute;
-top:12px;
-right:12px;
-width:45px;
-height:45px;
-border-radius:50%;
-background:#16a34a;
-border:none;
-color:white;
-font-size:24px;
-}
 
-/* PRODUCT DETAIL MODAL */
-.product-modal{
+/* PRODUCT MODAL */
+
+.modal{
 position:fixed;
 inset:0;
-background:rgba(0,0,0,0.4);
+background:white;
+transform:translateY(100%);
+transition:0.4s;
+z-index:999;
+overflow:auto;
+}
+
+.modal.active{
+transform:translateY(0);
+}
+
+.modal-header{
+position:relative;
+padding:20px;
+}
+
+.close{
+position:absolute;
+right:20px;
+top:20px;
+width:40px;
+height:40px;
+border-radius:50%;
+background:#eee;
 display:flex;
 align-items:center;
 justify-content:center;
-opacity:0;
-pointer-events:none;
-transition:0.3s;
-}
-.product-modal.active{
-opacity:1;
-pointer-events:auto;
-}
-.modal-card{
-background:white;
-width:85%;
-border-radius:25px;
-padding:20px;
-text-align:center;
-animation:slideUp 0.3s ease;
-}
-.modal-card img{
-width:100%;
-border-radius:20px;
-}
-.modal-title{
-font-size:24px;
-font-weight:bold;
-margin:15px 0;
-}
-.close-modal{
-margin-top:10px;
-color:#16a34a;
-font-weight:bold;
+font-size:20px;
 cursor:pointer;
 }
 
-@keyframes slideUp{
-from{transform:translateY(50px);opacity:0;}
-to{transform:translateY(0);opacity:1;}
+.modal img{
+width:100%;
+border-radius:20px;
 }
 
-/* ORDER BAR */
-.order-bar{
+.modal-body{
+padding:20px;
+}
+
+.modal-title{
+font-size:34px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.price{
+font-size:22px;
+color:#16a34a;
+font-weight:700;
+margin-bottom:20px;
+}
+
+.qty{
+display:flex;
+gap:10px;
+align-items:center;
+margin-bottom:15px;
+}
+
+.qty button{
+width:35px;
+height:35px;
+border:none;
+border-radius:50%;
+background:#16a34a;
+color:white;
+font-size:18px;
+}
+
+.cart-btn{
+width:100%;
+background:#16a34a;
+color:white;
+padding:16px;
+border:none;
+border-radius:15px;
+font-size:18px;
+font-weight:600;
+}
+
+/* DESCRIPTION */
+
+.desc-title{
+margin-top:25px;
+padding:18px;
+background:#f4f6f8;
+border-radius:15px;
+font-weight:600;
+display:flex;
+justify-content:space-between;
+cursor:pointer;
+}
+
+.desc-card{
+margin-top:15px;
+padding:18px;
+background:white;
+border-radius:15px;
+box-shadow:0 6px 15px rgba(0,0,0,0.08);
+display:none;
+}
+
+/* CART BAR */
+
+.cart-bar{
 position:fixed;
 bottom:-100px;
 left:20px;
 right:20px;
-background:#0f9d58;
+background:#16a34a;
 color:white;
 padding:15px;
 border-radius:20px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-font-weight:bold;
+font-weight:600;
 transition:0.4s;
 }
-.order-bar.active{
+
+.cart-bar.active{
 bottom:20px;
 }
+
 .count{
 background:white;
-color:#0f9d58;
+color:#16a34a;
 width:28px;
 height:28px;
 border-radius:50%;
@@ -191,89 +267,221 @@ display:flex;
 align-items:center;
 justify-content:center;
 }
+
+/* CART SCREEN */
+
+.cart-screen{
+position:fixed;
+inset:0;
+background:white;
+transform:translateY(100%);
+transition:0.4s;
+z-index:1000;
+padding:20px;
+}
+
+.cart-screen.active{
+transform:translateY(0);
+}
+
+.cart-item{
+background:#f4f6f8;
+padding:15px;
+border-radius:15px;
+margin-bottom:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="top-bar">
-<div class="back-btn" id="backBtn" onclick="goBack()">←</div>
-<input class="search-bar" placeholder="Suchen">
+<div class="topbar">
+<div class="back" id="backBtn" onclick="goBack()">←</div>
+<input class="search" placeholder="Suchen">
 </div>
 
-<div class="logo-section" id="logoSection">
+<div class="logo-area" id="logoArea">
 <div class="logo-card">
 <img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
 </div>
-<div class="brand-title">FreshMaximum</div>
+<div class="brand">FreshMaximum</div>
 </div>
 
-<div class="categories" id="categoryView">
-<div class="category-card" onclick="openCategory('Obst')">
+<div class="categories" id="categories">
+
+<div class="cat" onclick="openCategory()">
 <img src="https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png">
-<div class="category-title">Obst</div>
-</div>
-<div class="category-card" onclick="openCategory('Gemüse')">
-<img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png">
-<div class="category-title">Gemüse</div>
-</div>
+<div class="cat-title">Obst</div>
 </div>
 
-<div class="products" id="productView"></div>
+<div class="cat">
+<img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png">
+<div class="cat-title">Gemüse</div>
+</div>
+
+</div>
+
+<div class="products" id="productArea">
+
+<div class="card">
+<img src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png" onclick="openModal()">
+<div class="name">Granatapfel</div>
+</div>
+
+</div>
 
 <!-- PRODUCT MODAL -->
-<div class="product-modal" id="productModal">
-<div class="modal-card" id="modalContent"></div>
+
+<div class="modal" id="modal">
+
+<div class="modal-header">
+<div class="close" onclick="closeModal()">✕</div>
+
+<img src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png">
+
+</div>
+
+<div class="modal-body">
+
+<div class="modal-title">Granatapfel</div>
+<div class="price">€8,99/kg</div>
+
+<div class="qty">
+<button onclick="qty--">−</button>
+<span id="qty">1</span>
+<button onclick="qty++">+</button>
+</div>
+
+<button class="cart-btn" onclick="addToCart()">In den Warenkorb</button>
+
+<div class="desc-title" onclick="toggleDesc()">
+<span>Produktbeschreibung</span>
+<span>›</span>
+</div>
+
+<div class="desc-card" id="descCard">
+Frischer Granatapfel aus kontrolliertem Anbau. Reich an Vitaminen und Antioxidantien.
+</div>
+
+</div>
+</div>
+
+<div class="cart-bar" id="cartBar" onclick="openCart()">
+<span>Bestellung anzeigen</span>
+<div class="count" id="cartCount">0</div>
+</div>
+
+<div class="cart-screen" id="cartScreen">
+
+<h2>Warenkorb</h2>
+
+<div id="cartItems"></div>
+
 </div>
 
 <script>
 
-const products=[
-{name:"Granatapfel",category:"Obst",image:"https://i.postimg.cc/Qxzd9SNT/granatapfel.png"}
-];
+/* ZOOM LOCK */
 
-function openCategory(cat){
-document.getElementById("categoryView").style.display="none";
-document.getElementById("logoSection").style.display="none";
-document.getElementById("backBtn").style.display="block";
-
-const container=document.getElementById("productView");
-container.style.display="block";
-container.innerHTML="";
-
-products.filter(p=>p.category===cat).forEach(p=>{
-container.innerHTML+=`
-<div class="card">
-<button class="add-btn">+</button>
-<img src="${p.image}" onclick="openProduct('${p.name}','${p.image}')">
-<div class="product-name">${p.name}</div>
-</div>`;
+document.addEventListener('gesturestart', function (e) {
+e.preventDefault();
 });
+
+/* CATEGORY */
+
+function openCategory(){
+
+categories.style.display="none"
+logoArea.style.display="none"
+productArea.style.display="block"
+backBtn.style.display="block"
+
 }
 
 function goBack(){
-document.getElementById("categoryView").style.display="grid";
-document.getElementById("logoSection").style.display="block";
-document.getElementById("backBtn").style.display="none";
-document.getElementById("productView").style.display="none";
+
+categories.style.display="grid"
+logoArea.style.display="block"
+productArea.style.display="none"
+backBtn.style.display="none"
+
 }
 
 /* MODAL */
-function openProduct(name,image){
-const modal=document.getElementById("productModal");
-const content=document.getElementById("modalContent");
 
-content.innerHTML=`
-<img src="${image}">
-<div class="modal-title">${name}</div>
-<div class="close-modal" onclick="closeModal()">Schließen</div>
-`;
+function openModal(){
 
-modal.classList.add("active");
+modal.classList.add("active")
+
 }
 
 function closeModal(){
-document.getElementById("productModal").classList.remove("active");
+
+modal.classList.remove("active")
+
+}
+
+/* DESCRIPTION */
+
+function toggleDesc(){
+
+descCard.style.display=
+descCard.style.display==="block"?"none":"block"
+
+}
+
+/* CART */
+
+let cart=[]
+let qty=1
+
+function addToCart(){
+
+cart.push({
+name:"Granatapfel",
+qty:qty
+})
+
+cartCount.innerText=cart.length
+
+cartBar.classList.add("active")
+
+closeModal()
+
+renderCart()
+
+}
+
+function renderCart(){
+
+cartItems.innerHTML=""
+
+cart.forEach((item,i)=>{
+
+let div=document.createElement("div")
+
+div.className="cart-item"
+
+div.innerHTML=`
+${item.qty} x ${item.name}
+`
+
+cartItems.appendChild(div)
+
+})
+
+}
+
+/* CART SCREEN */
+
+function openCart(){
+
+cartScreen.classList.add("active")
+
 }
 
 </script>
