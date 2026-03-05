@@ -1,216 +1,61 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="de">
 <head>
-
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
 <title>FreshMaximum</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-
 *{box-sizing:border-box}
-
-body{
-margin:0;
-font-family:'Inter',sans-serif;
-background:#f4f6f8;
-overflow-x:hidden;
-}
+body{margin:0;font-family:'Inter',sans-serif;background:#f4f6f8;overflow-x:hidden}
 
 /* TOP */
-
-.topbar{
-display:flex;
-gap:10px;
-padding:15px;
-align-items:center;
-}
-
-.back{
-font-size:22px;
-display:none;
-cursor:pointer;
-}
-
-.search{
-flex:1;
-height:45px;
-border-radius:25px;
-border:none;
-padding:0 15px;
-background:#e6e9ed;
-}
+.topbar{display:flex;gap:10px;padding:15px;align-items:center}
+.search{flex:1;height:45px;border-radius:25px;border:none;padding:0 15px;background:#e6e9ed}
 
 /* LOGO */
-
-.logo-area{
-text-align:center;
-padding:25px;
-}
-
-.logo-card{
-background:white;
-display:inline-block;
-padding:25px;
-border-radius:25px;
-box-shadow:0 8px 20px rgba(0,0,0,0.08);
-}
-
-.logo-card img{
-height:100px;
-}
-
-.brand{
-font-size:28px;
-font-weight:700;
-margin-top:10px;
-}
+.logo-area{text-align:center;padding:25px}
+.logo-card{background:white;display:inline-block;padding:25px;border-radius:25px;box-shadow:0 8px 20px rgba(0,0,0,0.08)}
+.logo-card img{height:90px}
+.brand{font-size:28px;font-weight:700;margin-top:10px}
 
 /* CATEGORIES */
-
-.categories{
-padding:20px;
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-}
-
-.cat{
-background:white;
-border-radius:20px;
-padding:10px;
-box-shadow:0 8px 20px rgba(0,0,0,0.08);
-cursor:pointer;
-}
-
-.cat img{
-width:100%;
-height:120px;
-object-fit:cover;
-border-radius:15px;
-}
-
-.cat-title{
-text-align:center;
-font-weight:600;
-margin-top:8px;
-}
+.categories{padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.cat{background:white;border-radius:20px;padding:10px;box-shadow:0 8px 20px rgba(0,0,0,0.08);cursor:pointer}
+.cat img{width:100%;height:120px;object-fit:cover;border-radius:15px}
+.cat-title{text-align:center;font-weight:600;margin-top:8px}
 
 /* PRODUCTS */
+.products{display:none;padding:20px}
+.card{background:white;border-radius:20px;padding:15px;box-shadow:0 8px 20px rgba(0,0,0,0.08);margin-bottom:20px}
+.card img{width:100%;border-radius:15px}
+.name{text-align:center;font-size:20px;font-weight:700;margin-top:10px}
+.price{text-align:center;color:#16a34a;font-weight:700}
 
-.products{
-display:none;
-padding:20px;
-}
+/* VARIANT */
+.variant{margin-top:10px;text-align:center}
 
-.card{
-background:white;
-border-radius:20px;
-padding:15px;
-box-shadow:0 8px 20px rgba(0,0,0,0.08);
-margin-bottom:20px;
-}
-
-.card img{
-width:100%;
-border-radius:15px;
-}
-
-.name{
-text-align:center;
-font-size:22px;
-font-weight:700;
-margin-top:10px;
-}
-
-.price{
-text-align:center;
-color:#16a34a;
-font-weight:700;
-}
+/* CART BAR */
+.cart-bar{position:fixed;bottom:-100px;left:20px;right:20px;background:#16a34a;color:white;padding:15px;border-radius:20px;display:flex;justify-content:space-between;transition:0.4s}
+.cart-bar.active{bottom:20px}
+.count{background:white;color:#16a34a;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 
 /* CART */
-
-.cart-bar{
-position:fixed;
-bottom:-100px;
-left:20px;
-right:20px;
-background:#16a34a;
-color:white;
-padding:15px;
-border-radius:20px;
-display:flex;
-justify-content:space-between;
-transition:0.4s;
-}
-
-.cart-bar.active{
-bottom:20px;
-}
-
-.count{
-background:white;
-color:#16a34a;
-width:28px;
-height:28px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-}
+.cart-screen{position:fixed;inset:0;background:white;transform:translateY(100%);transition:0.4s;z-index:1000;padding:20px;overflow:auto}
+.cart-screen.active{transform:translateY(0)}
+.cart-item{background:#f4f6f8;padding:15px;border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between}
 
 /* ADMIN */
+.admin-btn{position:fixed;right:10px;bottom:120px;background:black;color:white;padding:10px;border-radius:10px;cursor:pointer}
 
-.admin-btn{
-position:fixed;
-right:10px;
-bottom:120px;
-background:black;
-color:white;
-padding:10px;
-border-radius:10px;
-cursor:pointer;
-}
-
-/* PANEL */
-
-.panel{
-position:fixed;
-inset:0;
-background:white;
-transform:translateY(100%);
-transition:0.4s;
-z-index:2000;
-overflow:auto;
-padding:20px;
-}
-
-.panel.active{
-transform:translateY(0);
-}
-
-input{
-width:100%;
-padding:10px;
-margin-bottom:10px;
-border-radius:8px;
-border:1px solid #ddd;
-}
-
-button{
-padding:12px;
-border:none;
-border-radius:10px;
-background:#16a34a;
-color:white;
-}
-
+/* ADMIN PANEL */
+.panel{position:fixed;inset:0;background:white;transform:translateY(100%);transition:0.4s;z-index:2000;padding:20px;overflow:auto}
+.panel.active{transform:translateY(0)}
+input,select{width:100%;padding:10px;margin-bottom:10px;border-radius:8px;border:1px solid #ddd}
+button{padding:12px;border:none;border-radius:10px;background:#16a34a;color:white;margin-top:5px}
 </style>
 
 </head>
@@ -218,11 +63,10 @@ color:white;
 <body>
 
 <div class="topbar">
-<div class="back" id="backBtn" onclick="goBack()">←</div>
 <input class="search" placeholder="Suchen" onkeyup="searchProducts(this.value)">
 </div>
 
-<div class="logo-area" id="logoArea">
+<div class="logo-area">
 <div class="logo-card">
 <img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
 </div>
@@ -245,27 +89,51 @@ color:white;
 
 <div class="products" id="productArea"></div>
 
-<div class="cart-bar" id="cartBar">
+<div class="cart-bar" id="cartBar" onclick="openCart()">
 <span>Bestellung anzeigen</span>
 <div class="count" id="cartCount">0</div>
+</div>
+
+<div class="cart-screen" id="cartScreen">
+
+<h2>Warenkorb</h2>
+
+<div id="cartItems"></div>
+
+<input id="customerName" placeholder="Ihr Name">
+
+<button onclick="sendOrder()">WhatsApp Bestellung senden</button> <button onclick="downloadPDF()">PDF erstellen</button>
+
+<h3>Bestellverlauf</h3>
+<div id="history"></div>
+
 </div>
 
 <div class="admin-btn" onclick="adminLogin()">ADMIN</div>
 
 <div class="panel" id="adminPanel">
 
-<h2>Admin Panel</h2>
+<h2>Produkt hinzufügen / bearbeiten</h2>
 
 <input id="pname" placeholder="Produktname">
 <input id="pprice" placeholder="Preis €/kg">
 <input id="pstock" placeholder="Stock">
-<input id="pcat" placeholder="Kategorie (Obst/Gemüse)">
-<input type="file" id="pimg">
 
-<button onclick="saveProduct()">Produkt speichern</button>
+<select id="pvariant">
+<option value="kg">kg</option>
+<option value="kiste">kiste</option>
+</select>
+
+<select id="pcat">
+<option value="Obst">Obst</option>
+<option value="Gemüse">Gemüse</option>
+</select>
+
+<input id="pimg" placeholder="Bild URL">
+
+<button onclick="saveProduct()">Speichern</button>
 
 <h3>Produkte</h3>
-
 <div id="adminProducts"></div>
 
 </div>
@@ -273,12 +141,26 @@ color:white;
 <script>
 
 let products=JSON.parse(localStorage.getItem("products"))||[]
+let orders=JSON.parse(localStorage.getItem("orders"))||[]
 
 let cart=[]
 let currentCategory=null
+let editIndex=null
 
 function saveDB(){
 localStorage.setItem("products",JSON.stringify(products))
+localStorage.setItem("orders",JSON.stringify(orders))
+}
+
+function openCategory(cat){
+
+currentCategory=cat
+
+categories.style.display="none"
+productArea.style.display="block"
+
+renderProducts()
+
 }
 
 function renderProducts(){
@@ -299,35 +181,17 @@ div.innerHTML=`
 
 <div class="name">${p.name}</div>
 
-<div class="price">${p.price}</div>
+<div class="price">${p.price} / ${p.variant}</div>
+
+<div class="variant">
+<button onclick="addToCart(${i})">+</button>
+</div>
 
 `
 
 productArea.appendChild(div)
 
 })
-
-}
-
-function openCategory(cat){
-
-currentCategory=cat
-
-categories.style.display="none"
-logoArea.style.display="none"
-productArea.style.display="block"
-backBtn.style.display="block"
-
-renderProducts()
-
-}
-
-function goBack(){
-
-categories.style.display="grid"
-logoArea.style.display="block"
-productArea.style.display="none"
-backBtn.style.display="none"
 
 }
 
@@ -338,6 +202,111 @@ q=q.toLowerCase()
 document.querySelectorAll(".card").forEach(p=>{
 p.style.display=p.innerText.toLowerCase().includes(q)?"block":"none"
 })
+
+}
+
+function addToCart(i){
+
+let p=products[i]
+
+cart.push(p)
+
+cartCount.innerText=cart.length
+cartBar.classList.add("active")
+
+renderCart()
+
+}
+
+function renderCart(){
+
+cartItems.innerHTML=""
+
+cart.forEach((item,i)=>{
+
+let div=document.createElement("div")
+
+div.className="cart-item"
+
+div.innerHTML=`
+${item.name} - ${item.price}
+<span onclick="removeItem(${i})">❌</span>
+`
+
+cartItems.appendChild(div)
+
+})
+
+}
+
+function removeItem(i){
+
+cart.splice(i,1)
+
+cartCount.innerText=cart.length
+
+renderCart()
+
+}
+
+function openCart(){
+cartScreen.classList.add("active")
+}
+
+function sendOrder(){
+
+let name=document.getElementById("customerName").value
+
+let order={
+customer:name,
+items:cart,
+date:new Date().toLocaleString()
+}
+
+orders.push(order)
+
+saveDB()
+
+let msg="Bestellung von "+name+"%0A"
+
+cart.forEach(i=>msg+=i.name+" "+i.price+"%0A")
+
+window.open("https://wa.me/491727117489?text="+msg)
+
+renderHistory()
+
+}
+
+function renderHistory(){
+
+history.innerHTML=""
+
+orders.forEach(o=>{
+
+let div=document.createElement("div")
+
+div.innerHTML=o.customer+" - "+o.date
+
+history.appendChild(div)
+
+})
+
+}
+
+function downloadPDF(){
+
+const {jsPDF}=window.jspdf
+let doc=new jsPDF()
+
+doc.text("FreshMaximum Bestellung",20,20)
+
+cart.forEach((i,index)=>{
+
+doc.text(i.name+" "+i.price,20,40+(index*10))
+
+})
+
+doc.save("bestellung.pdf")
 
 }
 
@@ -375,29 +344,41 @@ adminProducts.appendChild(div)
 
 function saveProduct(){
 
-let file=document.getElementById("pimg").files[0]
-
-let reader=new FileReader()
-
-reader.onload=function(){
-
-products.push({
-
+let p={
 name:pname.value,
 price:pprice.value,
 stock:pstock.value,
+variant:pvariant.value,
 category:pcat.value,
-img:reader.result
+img:pimg.value
+}
 
-})
+if(editIndex!==null){
+products[editIndex]=p
+editIndex=null
+}else{
+products.push(p)
+}
 
 saveDB()
 
 renderAdmin()
+renderProducts()
 
 }
 
-reader.readAsDataURL(file)
+function editProduct(i){
+
+let p=products[i]
+
+pname.value=p.name
+pprice.value=p.price
+pstock.value=p.stock
+pvariant.value=p.variant
+pcat.value=p.category
+pimg.value=p.img
+
+editIndex=i
 
 }
 
@@ -411,23 +392,7 @@ renderAdmin()
 
 }
 
-function editProduct(i){
-
-let p=products[i]
-
-p.name=prompt("Name",p.name)
-p.price=prompt("Preis",p.price)
-p.stock=prompt("Stock",p.stock)
-
-saveDB()
-
-renderAdmin()
-
-}
-
-new Sortable(productArea,{
-animation:150
-})
+renderHistory()
 
 </script>
 
