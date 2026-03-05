@@ -2,139 +2,257 @@
 
 <html lang="de">
 <head>
+
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 <title>FreshMaximum</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-<!-- Charts -->
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- PDF -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
+
 *{box-sizing:border-box}
-body{margin:0;font-family:'Inter',sans-serif;background:#f4f6f8}
 
-/* TOP */
-.topbar{display:flex;gap:10px;padding:15px;align-items:center}
-.search{flex:1;height:45px;border-radius:25px;border:none;padding:0 15px;background:#e6e9ed}
-.lang{margin-left:5px}
+body{
+margin:0;
+font-family:'Inter',sans-serif;
+background:#f6f7f9
+}
 
-/* LOGIN */
-.login{padding:20px}
-.login input{width:100%;padding:10px;margin-bottom:10px;border-radius:8px;border:1px solid #ddd}
+/* HEADER */
 
-/* LOGO */
-.logo-area{text-align:center;padding:25px}
-.logo-card{background:white;display:inline-block;padding:25px;border-radius:25px;box-shadow:0 8px 20px rgba(0,0,0,0.08)}
-.logo-card img{height:90px}
-.brand{font-size:28px;font-weight:700;margin-top:10px}
+.header{
+background:#16a34a;
+color:white;
+padding:18px;
+font-size:22px;
+font-weight:700;
+text-align:center
+}
 
-/* CATEGORIES */
-.categories{padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.cat{background:white;border-radius:20px;padding:10px;box-shadow:0 8px 20px rgba(0,0,0,0.08);cursor:pointer}
-.cat img{width:100%;height:120px;object-fit:cover;border-radius:15px}
-.cat-title{text-align:center;font-weight:600;margin-top:8px}
+.searchbar{
+padding:12px;
+background:white
+}
 
-/* PRODUCTS */
-.products{display:none;padding:20px}
-.card{background:white;border-radius:20px;padding:15px;box-shadow:0 8px 20px rgba(0,0,0,0.08);margin-bottom:20px}
-.card img{width:100%;border-radius:15px}
-.name{text-align:center;font-size:20px;font-weight:700;margin-top:10px}
-.price{text-align:center;color:#16a34a;font-weight:700}
+.searchbar input{
+width:100%;
+padding:12px;
+border-radius:12px;
+border:none;
+background:#eef0f2
+}
 
-/* CART */
-.cart-bar{position:fixed;bottom:-100px;left:20px;right:20px;background:#16a34a;color:white;padding:15px;border-radius:20px;display:flex;justify-content:space-between;transition:0.4s}
-.cart-bar.active{bottom:20px}
-.count{background:white;color:#16a34a;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+/* CATEGORY SLIDER */
 
-/* CART SCREEN */
-.cart-screen{position:fixed;inset:0;background:white;transform:translateY(100%);transition:0.4s;z-index:1000;padding:20px;overflow:auto}
-.cart-screen.active{transform:translateY(0)}
-.cart-item{background:#f4f6f8;padding:15px;border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between}
+.categories{
+display:flex;
+overflow-x:auto;
+gap:10px;
+padding:10px
+}
+
+.cat{
+background:white;
+padding:10px 14px;
+border-radius:20px;
+white-space:nowrap;
+font-weight:600;
+box-shadow:0 2px 6px rgba(0,0,0,0.08);
+cursor:pointer
+}
+
+/* PRODUCT GRID */
+
+.products{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+padding:12px
+}
+
+.card{
+background:white;
+border-radius:18px;
+padding:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+position:relative
+}
+
+.card img{
+width:100%;
+border-radius:14px;
+height:120px;
+object-fit:cover
+}
+
+.name{
+font-weight:600;
+margin-top:6px
+}
+
+.price{
+color:#16a34a;
+font-weight:700
+}
+
+.stock{
+font-size:12px;
+color:#666
+}
+
+.add{
+position:absolute;
+right:10px;
+bottom:10px;
+background:#16a34a;
+color:white;
+border:none;
+width:32px;
+height:32px;
+border-radius:50%;
+font-size:18px
+}
+
+/* CART BAR */
+
+.cartbar{
+position:fixed;
+bottom:-80px;
+left:10px;
+right:10px;
+background:#16a34a;
+color:white;
+padding:14px;
+border-radius:16px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+transition:0.3s
+}
+
+.cartbar.active{
+bottom:10px
+}
+
+.count{
+background:white;
+color:#16a34a;
+padding:3px 8px;
+border-radius:10px
+}
+
+/* CART PANEL */
+
+.cartpanel{
+position:fixed;
+inset:0;
+background:white;
+transform:translateY(100%);
+transition:0.3s;
+padding:20px;
+overflow:auto
+}
+
+.cartpanel.active{
+transform:translateY(0)
+}
+
+.cartitem{
+display:flex;
+justify-content:space-between;
+padding:10px;
+background:#f2f3f5;
+border-radius:10px;
+margin-bottom:8px
+}
 
 /* ADMIN */
-.admin-btn{position:fixed;right:10px;bottom:120px;background:black;color:white;padding:10px;border-radius:10px;cursor:pointer}
 
-/* PANEL */
-.panel{position:fixed;inset:0;background:white;transform:translateY(100%);transition:0.4s;z-index:2000;padding:20px;overflow:auto}
-.panel.active{transform:translateY(0)}
+.admin{
+position:fixed;
+right:10px;
+bottom:100px;
+background:black;
+color:white;
+padding:10px;
+border-radius:10px
+}
 
-input,select{width:100%;padding:10px;margin-bottom:10px;border-radius:8px;border:1px solid #ddd}
-button{padding:12px;border:none;border-radius:10px;background:#16a34a;color:white;margin-top:5px}
+.panel{
+position:fixed;
+inset:0;
+background:white;
+transform:translateY(100%);
+transition:0.3s;
+padding:20px;
+overflow:auto
+}
 
-.stat{background:#f4f6f8;padding:10px;border-radius:10px;margin-top:10px}
+.panel.active{
+transform:translateY(0)
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin-bottom:8px;
+border-radius:8px;
+border:1px solid #ddd
+}
+
+button{
+padding:10px;
+border:none;
+border-radius:10px;
+background:#16a34a;
+color:white
+}
+
 </style>
 
 </head>
 
 <body>
 
-<div class="login" id="loginBox">
-<h2>Kunde Login</h2>
-<input id="custName" placeholder="Name">
-<input id="custPhone" placeholder="Telefon">
-<button onclick="loginCustomer()">Login</button>
+<div class="header">
+FreshMaximum
 </div>
 
-<div id="mainApp" style="display:none">
-
-<div class="topbar">
-<input class="search" placeholder="Suchen" onkeyup="searchProducts(this.value)">
-<select class="lang" onchange="setLang(this.value)">
-<option value="de">DE</option>
-<option value="tr">TR</option>
-<option value="en">EN</option>
-</select>
-</div>
-
-<div class="logo-area">
-<div class="logo-card">
-<img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
-</div>
-<div class="brand">FreshMaximum</div>
+<div class="searchbar">
+<input placeholder="Suchen..." onkeyup="searchProducts(this.value)">
 </div>
 
 <div class="categories" id="categories">
 
-<div class="cat" onclick="openCategory('Obst')">
-<img src="https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png">
-<div class="cat-title">Obst</div>
-</div>
-
-<div class="cat" onclick="openCategory('Gemüse')">
-<img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png">
-<div class="cat-title">Gemüse</div>
-</div>
+<div class="cat" onclick="filterCategory('all')">Alle</div>
+<div class="cat" onclick="filterCategory('Obst')">Obst</div>
+<div class="cat" onclick="filterCategory('Gemüse')">Gemüse</div>
 
 </div>
 
-<div class="products" id="productArea"></div>
+<div class="products" id="productList"></div>
 
-<div class="cart-bar" id="cartBar" onclick="openCart()">
-<span id="cartText">Bestellung anzeigen</span>
-<div class="count" id="cartCount">0</div>
+<div class="cartbar" id="cartbar" onclick="openCart()">
+<span>Warenkorb</span>
+<span class="count" id="cartcount">0</span>
 </div>
 
-<div class="cart-screen" id="cartScreen">
+<div class="cartpanel" id="cartpanel">
 
-<h2>Warenkorb</h2>
+<h2>Ihr Warenkorb</h2>
 
-<div id="cartItems"></div>
+<div id="cartitems"></div>
 
-<h3 id="totalPrice">Total: 0 €</h3>
+<h3 id="total">Total: 0 €</h3>
 
-<button onclick="sendOrder()">WhatsApp Bestellung</button> <button onclick="downloadPDF()">PDF</button>
+<button onclick="sendOrder()">WhatsApp Bestellung</button>
 
 </div>
 
-<div class="admin-btn" onclick="adminLogin()">ADMIN</div>
+<div class="admin" onclick="adminLogin()">ADMIN</div>
 
-<div class="panel" id="adminPanel">
+<div class="panel" id="adminpanel">
 
 <h2>Produkt hinzufügen</h2>
 
@@ -149,67 +267,28 @@ button{padding:12px;border:none;border-radius:10px;background:#16a34a;color:whit
 
 <input type="file" id="pimg" accept="image/*" capture="environment">
 
-<button onclick="saveProduct()">Produkt speichern</button>
-
-<h3>Statistik</h3>
-
-<div class="stat" id="totalOrders"></div>
-<div class="stat" id="totalRevenue"></div>
-
-<canvas id="salesChart"></canvas>
-
-</div>
+<button onclick="addProduct()">Speichern</button>
 
 </div>
 
 <script>
 
-/* DATA */
-
 let products=JSON.parse(localStorage.getItem("products"))||[]
-let orders=JSON.parse(localStorage.getItem("orders"))||[]
 let cart=[]
-let currentCategory=null
-let customer=null
+let current="all"
 
-function saveDB(){
+function save(){
 localStorage.setItem("products",JSON.stringify(products))
-localStorage.setItem("orders",JSON.stringify(orders))
 }
 
-/* CUSTOMER LOGIN */
+/* RENDER PRODUCTS */
 
-function loginCustomer(){
+function render(){
 
-customer={
-name:custName.value,
-phone:custPhone.value
-}
-
-localStorage.setItem("customer",JSON.stringify(customer))
-
-loginBox.style.display="none"
-mainApp.style.display="block"
-
-}
-
-/* CATEGORY */
-
-function openCategory(cat){
-currentCategory=cat
-categories.style.display="none"
-productArea.style.display="block"
-renderProducts()
-}
-
-/* PRODUCTS */
-
-function renderProducts(){
-
-productArea.innerHTML=""
+productList.innerHTML=""
 
 products
-.filter(p=>p.category===currentCategory)
+.filter(p=>current==="all"||p.category===current)
 .forEach((p,i)=>{
 
 let div=document.createElement("div")
@@ -217,18 +296,14 @@ let div=document.createElement("div")
 div.className="card"
 
 div.innerHTML=`
-
 <img src="${p.img}">
-
 <div class="name">${p.name}</div>
-
 <div class="price">${p.price} €</div>
-
-<button onclick="addToCart(${i})">+</button>
-
+<div class="stock">Stock: ${p.stock}</div>
+<button class="add" onclick="addCart(${i})">+</button>
 `
 
-productArea.appendChild(div)
+productList.appendChild(div)
 
 })
 
@@ -240,20 +315,28 @@ function searchProducts(q){
 
 q=q.toLowerCase()
 
-document.querySelectorAll(".card").forEach(p=>{
-p.style.display=p.innerText.toLowerCase().includes(q)?"block":"none"
+document.querySelectorAll(".card").forEach(c=>{
+c.style.display=c.innerText.toLowerCase().includes(q)?"block":"none"
 })
 
 }
 
+/* CATEGORY */
+
+function filterCategory(c){
+current=c
+render()
+}
+
 /* CART */
 
-function addToCart(i){
+function addCart(i){
 
 cart.push(products[i])
 
-cartCount.innerText=cart.length
-cartBar.classList.add("active")
+cartcount.innerText=cart.length
+
+cartbar.classList.add("active")
 
 renderCart()
 
@@ -261,89 +344,58 @@ renderCart()
 
 function renderCart(){
 
-cartItems.innerHTML=""
+cartitems.innerHTML=""
 
 let total=0
 
-cart.forEach((item,i)=>{
+cart.forEach((c,i)=>{
 
-total+=parseFloat(item.price)
+total+=parseFloat(c.price)
 
 let div=document.createElement("div")
 
-div.className="cart-item"
+div.className="cartitem"
 
 div.innerHTML=`
-${item.name} - ${item.price} €
-<span onclick="removeItem(${i})">❌</span>
+${c.name} - ${c.price} €
+<span onclick="removeCart(${i})">❌</span>
 `
 
-cartItems.appendChild(div)
+cartitems.appendChild(div)
 
 })
 
-document.getElementById("totalPrice").innerText="Total: "+total+" €"
+document.getElementById("total").innerText="Total: "+total+" €"
 
 }
 
-function removeItem(i){
+function removeCart(i){
 
 cart.splice(i,1)
 
-cartCount.innerText=cart.length
+cartcount.innerText=cart.length
 
 renderCart()
 
 }
 
+/* CART PANEL */
+
 function openCart(){
-cartScreen.classList.add("active")
+cartpanel.classList.add("active")
 }
 
 /* ORDER */
 
 function sendOrder(){
 
-let order={
-customer:customer,
-items:cart,
-date:new Date().toLocaleString()
-}
+let msg="FreshMaximum Bestellung:%0A"
 
-orders.push(order)
-
-/* STOCK AUTO */
-
-cart.forEach(item=>{
-let p=products.find(x=>x.name===item.name)
-if(p) p.stock--
+cart.forEach(i=>{
+msg+=i.name+" "+i.price+"€%0A"
 })
 
-saveDB()
-
-window.open("https://wa.me/491727117489")
-
-updateStats()
-
-}
-
-/* PDF */
-
-function downloadPDF(){
-
-const {jsPDF}=window.jspdf
-
-let doc=new jsPDF()
-
-doc.text("FreshMaximum Bestellung",20,20)
-
-cart.forEach((i,index)=>{
-
-doc.text(i.name+" "+i.price+" €",20,40+(index*10))
-
-})
-
-doc.save("bestellung.pdf")
+window.open("https://wa.me/491727117489?text="+msg)
 
 }
 
@@ -355,17 +407,13 @@ let pass=prompt("Admin Passwort")
 
 if(pass!=="1234")return
 
-adminPanel.classList.add("active")
-
-updateStats()
+adminpanel.classList.add("active")
 
 }
 
-/* SAVE PRODUCT */
+function addProduct(){
 
-function saveProduct(){
-
-let file=document.getElementById("pimg").files[0]
+let file=pimg.files[0]
 
 let reader=new FileReader()
 
@@ -379,7 +427,9 @@ category:pcat.value,
 img:reader.result
 })
 
-saveDB()
+save()
+
+render()
 
 }
 
@@ -387,68 +437,7 @@ reader.readAsDataURL(file)
 
 }
 
-/* STATS */
-
-function updateStats(){
-
-document.getElementById("totalOrders").innerText="Bestellungen: "+orders.length
-
-let total=0
-
-let productSales={}
-
-orders.forEach(o=>{
-o.items.forEach(i=>{
-total+=parseFloat(i.price)
-productSales[i.name]=(productSales[i.name]||0)+1
-})
-})
-
-document.getElementById("totalRevenue").innerText="Umsatz: "+total+" €"
-
-let ctx=document.getElementById("salesChart")
-
-new Chart(ctx,{
-type:"bar",
-data:{
-labels:Object.keys(productSales),
-datasets:[{
-label:"Sales",
-data:Object.values(productSales)
-}]
-}
-})
-
-}
-
-/* LANGUAGE */
-
-function setLang(l){
-
-if(l==="tr") cartText.innerText="Sepeti Gör"
-if(l==="en") cartText.innerText="View Cart"
-if(l==="de") cartText.innerText="Bestellung anzeigen"
-
-}
-
-/* OFFLINE */
-
-if("serviceWorker" in navigator){
-
-const swCode=`
-self.addEventListener('install',e=>self.skipWaiting());
-self.addEventListener('fetch',e=>{});
-`
-
-const blob=new Blob([swCode],{type:'text/javascript'})
-
-const swURL=URL.createObjectURL(blob)
-
-navigator.serviceWorker.register(swURL)
-
-}
-
-updateStats()
+render()
 
 </script>
 
