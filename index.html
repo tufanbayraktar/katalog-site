@@ -1,61 +1,239 @@
 <!DOCTYPE html>
 
-<html lang="de">
+<html>
 <head>
+
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 <title>FreshMaximum</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
+
 *{box-sizing:border-box}
-body{margin:0;font-family:'Inter',sans-serif;background:#f4f6f8;overflow-x:hidden}
+
+body{
+margin:0;
+font-family:'Inter',sans-serif;
+background:#f4f6f8
+}
 
 /* TOP */
-.topbar{display:flex;gap:10px;padding:15px;align-items:center}
-.search{flex:1;height:45px;border-radius:25px;border:none;padding:0 15px;background:#e6e9ed}
+
+.topbar{
+display:flex;
+gap:10px;
+padding:15px;
+}
+
+.search{
+flex:1;
+height:45px;
+border-radius:25px;
+border:none;
+padding:0 15px;
+background:#e6e9ed
+}
 
 /* LOGO */
-.logo-area{text-align:center;padding:25px}
-.logo-card{background:white;display:inline-block;padding:25px;border-radius:25px;box-shadow:0 8px 20px rgba(0,0,0,0.08)}
-.logo-card img{height:90px}
-.brand{font-size:28px;font-weight:700;margin-top:10px}
+
+.logo-area{
+text-align:center;
+padding:25px
+}
+
+.logo-card{
+background:white;
+display:inline-block;
+padding:25px;
+border-radius:25px;
+box-shadow:0 8px 20px rgba(0,0,0,0.08)
+}
+
+.logo-card img{
+height:90px
+}
+
+.brand{
+font-size:28px;
+font-weight:700;
+margin-top:10px
+}
 
 /* CATEGORIES */
-.categories{padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.cat{background:white;border-radius:20px;padding:10px;box-shadow:0 8px 20px rgba(0,0,0,0.08);cursor:pointer}
-.cat img{width:100%;height:120px;object-fit:cover;border-radius:15px}
-.cat-title{text-align:center;font-weight:600;margin-top:8px}
+
+.categories{
+padding:20px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px
+}
+
+.cat{
+background:white;
+border-radius:20px;
+padding:10px;
+box-shadow:0 8px 20px rgba(0,0,0,0.08);
+cursor:pointer
+}
+
+.cat img{
+width:100%;
+height:120px;
+object-fit:cover;
+border-radius:15px
+}
+
+.cat-title{
+text-align:center;
+font-weight:600;
+margin-top:8px
+}
 
 /* PRODUCTS */
-.products{display:none;padding:20px}
-.card{background:white;border-radius:20px;padding:15px;box-shadow:0 8px 20px rgba(0,0,0,0.08);margin-bottom:20px}
-.card img{width:100%;border-radius:15px}
-.name{text-align:center;font-size:20px;font-weight:700;margin-top:10px}
-.price{text-align:center;color:#16a34a;font-weight:700}
 
-/* VARIANT */
-.variant{margin-top:10px;text-align:center}
+.products{
+display:none;
+padding:20px
+}
 
-/* CART BAR */
-.cart-bar{position:fixed;bottom:-100px;left:20px;right:20px;background:#16a34a;color:white;padding:15px;border-radius:20px;display:flex;justify-content:space-between;transition:0.4s}
-.cart-bar.active{bottom:20px}
-.count{background:white;color:#16a34a;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.card{
+background:white;
+border-radius:20px;
+padding:15px;
+box-shadow:0 8px 20px rgba(0,0,0,0.08);
+margin-bottom:20px
+}
+
+.card img{
+width:100%;
+border-radius:15px
+}
+
+.name{
+text-align:center;
+font-size:20px;
+font-weight:700;
+margin-top:10px
+}
+
+.price{
+text-align:center;
+color:#16a34a;
+font-weight:700
+}
 
 /* CART */
-.cart-screen{position:fixed;inset:0;background:white;transform:translateY(100%);transition:0.4s;z-index:1000;padding:20px;overflow:auto}
-.cart-screen.active{transform:translateY(0)}
-.cart-item{background:#f4f6f8;padding:15px;border-radius:12px;margin-bottom:10px;display:flex;justify-content:space-between}
+
+.cart-bar{
+position:fixed;
+bottom:-100px;
+left:20px;
+right:20px;
+background:#16a34a;
+color:white;
+padding:15px;
+border-radius:20px;
+display:flex;
+justify-content:space-between;
+transition:0.4s
+}
+
+.cart-bar.active{
+bottom:20px
+}
+
+.count{
+background:white;
+color:#16a34a;
+width:28px;
+height:28px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center
+}
+
+/* CART SCREEN */
+
+.cart-screen{
+position:fixed;
+inset:0;
+background:white;
+transform:translateY(100%);
+transition:0.4s;
+z-index:1000;
+padding:20px;
+overflow:auto
+}
+
+.cart-screen.active{
+transform:translateY(0)
+}
+
+.cart-item{
+background:#f4f6f8;
+padding:15px;
+border-radius:12px;
+margin-bottom:10px;
+display:flex;
+justify-content:space-between
+}
 
 /* ADMIN */
-.admin-btn{position:fixed;right:10px;bottom:120px;background:black;color:white;padding:10px;border-radius:10px;cursor:pointer}
 
-/* ADMIN PANEL */
-.panel{position:fixed;inset:0;background:white;transform:translateY(100%);transition:0.4s;z-index:2000;padding:20px;overflow:auto}
-.panel.active{transform:translateY(0)}
-input,select{width:100%;padding:10px;margin-bottom:10px;border-radius:8px;border:1px solid #ddd}
-button{padding:12px;border:none;border-radius:10px;background:#16a34a;color:white;margin-top:5px}
+.admin-btn{
+position:fixed;
+right:10px;
+bottom:120px;
+background:black;
+color:white;
+padding:10px;
+border-radius:10px;
+cursor:pointer
+}
+
+/* PANEL */
+
+.panel{
+position:fixed;
+inset:0;
+background:white;
+transform:translateY(100%);
+transition:0.4s;
+z-index:2000;
+padding:20px;
+overflow:auto
+}
+
+.panel.active{
+transform:translateY(0)
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ddd
+}
+
+button{
+padding:12px;
+border:none;
+border-radius:10px;
+background:#16a34a;
+color:white
+}
+
+.stat{
+background:#f4f6f8;
+padding:10px;
+border-radius:10px;
+margin-top:10px
+}
+
 </style>
 
 </head>
@@ -67,10 +245,13 @@ button{padding:12px;border:none;border-radius:10px;background:#16a34a;color:whit
 </div>
 
 <div class="logo-area">
+
 <div class="logo-card">
 <img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
 </div>
+
 <div class="brand">FreshMaximum</div>
+
 </div>
 
 <div class="categories" id="categories">
@@ -102,10 +283,9 @@ button{padding:12px;border:none;border-radius:10px;background:#16a34a;color:whit
 
 <input id="customerName" placeholder="Ihr Name">
 
-<button onclick="sendOrder()">WhatsApp Bestellung senden</button> <button onclick="downloadPDF()">PDF erstellen</button>
+<h3 id="totalPrice">Total: 0 €</h3>
 
-<h3>Bestellverlauf</h3>
-<div id="history"></div>
+<button onclick="sendOrder()">WhatsApp Bestellung senden</button>
 
 </div>
 
@@ -113,39 +293,37 @@ button{padding:12px;border:none;border-radius:10px;background:#16a34a;color:whit
 
 <div class="panel" id="adminPanel">
 
-<h2>Produkt hinzufügen / bearbeiten</h2>
+<h2>Produkt hinzufügen</h2>
 
 <input id="pname" placeholder="Produktname">
-<input id="pprice" placeholder="Preis €/kg">
+<input id="pprice" placeholder="Preis €">
 <input id="pstock" placeholder="Stock">
-
-<select id="pvariant">
-<option value="kg">kg</option>
-<option value="kiste">kiste</option>
-</select>
 
 <select id="pcat">
 <option value="Obst">Obst</option>
 <option value="Gemüse">Gemüse</option>
 </select>
 
-<input id="pimg" placeholder="Bild URL">
+<input type="file" id="pimg">
 
-<button onclick="saveProduct()">Speichern</button>
+<button onclick="saveProduct()">Produkt speichern</button>
 
-<h3>Produkte</h3>
-<div id="adminProducts"></div>
+<h3>Statistik</h3>
+
+<div class="stat" id="totalOrders"></div>
+<div class="stat" id="totalRevenue"></div>
 
 </div>
 
 <script>
+
+/* DATA */
 
 let products=JSON.parse(localStorage.getItem("products"))||[]
 let orders=JSON.parse(localStorage.getItem("orders"))||[]
 
 let cart=[]
 let currentCategory=null
-let editIndex=null
 
 function saveDB(){
 localStorage.setItem("products",JSON.stringify(products))
@@ -181,11 +359,9 @@ div.innerHTML=`
 
 <div class="name">${p.name}</div>
 
-<div class="price">${p.price} / ${p.variant}</div>
+<div class="price">${p.price} €</div>
 
-<div class="variant">
 <button onclick="addToCart(${i})">+</button>
-</div>
 
 `
 
@@ -207,9 +383,7 @@ p.style.display=p.innerText.toLowerCase().includes(q)?"block":"none"
 
 function addToCart(i){
 
-let p=products[i]
-
-cart.push(p)
+cart.push(products[i])
 
 cartCount.innerText=cart.length
 cartBar.classList.add("active")
@@ -222,20 +396,26 @@ function renderCart(){
 
 cartItems.innerHTML=""
 
+let total=0
+
 cart.forEach((item,i)=>{
+
+total+=parseFloat(item.price)
 
 let div=document.createElement("div")
 
 div.className="cart-item"
 
 div.innerHTML=`
-${item.name} - ${item.price}
+${item.name} - ${item.price} €
 <span onclick="removeItem(${i})">❌</span>
 `
 
 cartItems.appendChild(div)
 
 })
+
+document.getElementById("totalPrice").innerText="Total: "+total+" €"
 
 }
 
@@ -267,46 +447,9 @@ orders.push(order)
 
 saveDB()
 
-let msg="Bestellung von "+name+"%0A"
+window.open("https://wa.me/491727117489")
 
-cart.forEach(i=>msg+=i.name+" "+i.price+"%0A")
-
-window.open("https://wa.me/491727117489?text="+msg)
-
-renderHistory()
-
-}
-
-function renderHistory(){
-
-history.innerHTML=""
-
-orders.forEach(o=>{
-
-let div=document.createElement("div")
-
-div.innerHTML=o.customer+" - "+o.date
-
-history.appendChild(div)
-
-})
-
-}
-
-function downloadPDF(){
-
-const {jsPDF}=window.jspdf
-let doc=new jsPDF()
-
-doc.text("FreshMaximum Bestellung",20,20)
-
-cart.forEach((i,index)=>{
-
-doc.text(i.name+" "+i.price,20,40+(index*10))
-
-})
-
-doc.save("bestellung.pdf")
+updateStats()
 
 }
 
@@ -318,81 +461,51 @@ if(pass!=="1234")return
 
 adminPanel.classList.add("active")
 
-renderAdmin()
-
-}
-
-function renderAdmin(){
-
-adminProducts.innerHTML=""
-
-products.forEach((p,i)=>{
-
-let div=document.createElement("div")
-
-div.innerHTML=`
-${p.name}
-<button onclick="editProduct(${i})">edit</button>
-<button onclick="deleteProduct(${i})">delete</button>
-`
-
-adminProducts.appendChild(div)
-
-})
+updateStats()
 
 }
 
 function saveProduct(){
 
-let p={
+let file=document.getElementById("pimg").files[0]
+
+let reader=new FileReader()
+
+reader.onload=function(){
+
+products.push({
 name:pname.value,
 price:pprice.value,
 stock:pstock.value,
-variant:pvariant.value,
 category:pcat.value,
-img:pimg.value
-}
-
-if(editIndex!==null){
-products[editIndex]=p
-editIndex=null
-}else{
-products.push(p)
-}
+img:reader.result
+})
 
 saveDB()
 
-renderAdmin()
-renderProducts()
+}
+
+reader.readAsDataURL(file)
 
 }
 
-function editProduct(i){
+function updateStats(){
 
-let p=products[i]
+document.getElementById("totalOrders").innerText="Bestellungen: "+orders.length
 
-pname.value=p.name
-pprice.value=p.price
-pstock.value=p.stock
-pvariant.value=p.variant
-pcat.value=p.category
-pimg.value=p.img
+let total=0
 
-editIndex=i
+orders.forEach(o=>{
+o.items.forEach(i=>{
+total+=parseFloat(i.price)
+})
+})
 
-}
-
-function deleteProduct(i){
-
-products.splice(i,1)
-
-saveDB()
-
-renderAdmin()
+document.getElementById("totalRevenue").innerText="Umsatz: "+total+" €"
 
 }
 
-renderHistory()
+updateStats()
 
 </script>
 
