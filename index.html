@@ -9,6 +9,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
 <style>
 
 *{box-sizing:border-box}
@@ -18,7 +20,6 @@ margin:0;
 font-family:'Inter',sans-serif;
 background:#f4f6f8;
 overflow-x:hidden;
-touch-action:manipulation;
 }
 
 /* TOP */
@@ -118,12 +119,11 @@ margin-bottom:20px;
 .card img{
 width:100%;
 border-radius:15px;
-cursor:pointer;
 }
 
 .name{
 text-align:center;
-font-size:24px;
+font-size:22px;
 font-weight:700;
 margin-top:10px;
 }
@@ -134,113 +134,7 @@ color:#16a34a;
 font-weight:700;
 }
 
-/* MODAL */
-
-.modal{
-position:fixed;
-inset:0;
-background:white;
-transform:translateY(100%);
-transition:0.4s;
-z-index:999;
-overflow:auto;
-}
-
-.modal.active{
-transform:translateY(0);
-}
-
-.modal-header{
-position:relative;
-padding:20px;
-}
-
-.close{
-position:absolute;
-right:20px;
-top:20px;
-width:40px;
-height:40px;
-border-radius:50%;
-background:#eee;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:20px;
-cursor:pointer;
-}
-
-.modal img{
-width:100%;
-border-radius:20px;
-}
-
-.modal-body{
-padding:20px;
-}
-
-.modal-title{
-font-size:30px;
-font-weight:700;
-}
-
-.stock{
-color:#888;
-margin-bottom:10px;
-}
-
-.qty{
-display:flex;
-align-items:center;
-gap:10px;
-margin-bottom:15px;
-}
-
-.qty button{
-width:35px;
-height:35px;
-border:none;
-border-radius:50%;
-background:#16a34a;
-color:white;
-font-size:18px;
-}
-
-/* BUTTON */
-
-.cart-btn{
-width:100%;
-background:#16a34a;
-color:white;
-padding:16px;
-border:none;
-border-radius:15px;
-font-size:18px;
-font-weight:600;
-}
-
-/* DESC */
-
-.desc-title{
-margin-top:20px;
-padding:15px;
-background:#f4f6f8;
-border-radius:12px;
-display:flex;
-justify-content:space-between;
-cursor:pointer;
-}
-
-.desc-card{
-margin-top:10px;
-padding:15px;
-background:white;
-border-radius:12px;
-box-shadow:0 5px 10px rgba(0,0,0,0.08);
-display:none;
-}
-
-/* CART BAR */
+/* CART */
 
 .cart-bar{
 position:fixed;
@@ -253,7 +147,6 @@ padding:15px;
 border-radius:20px;
 display:flex;
 justify-content:space-between;
-align-items:center;
 transition:0.4s;
 }
 
@@ -272,44 +165,50 @@ align-items:center;
 justify-content:center;
 }
 
-/* CART SCREEN */
+/* ADMIN */
 
-.cart-screen{
+.admin-btn{
+position:fixed;
+right:10px;
+bottom:120px;
+background:black;
+color:white;
+padding:10px;
+border-radius:10px;
+cursor:pointer;
+}
+
+/* PANEL */
+
+.panel{
 position:fixed;
 inset:0;
 background:white;
 transform:translateY(100%);
 transition:0.4s;
-z-index:1000;
-padding:20px;
+z-index:2000;
 overflow:auto;
+padding:20px;
 }
 
-.cart-screen.active{
+.panel.active{
 transform:translateY(0);
 }
 
-.cart-item{
-background:#f4f6f8;
-padding:15px;
-border-radius:12px;
+input{
+width:100%;
+padding:10px;
 margin-bottom:10px;
-display:flex;
-justify-content:space-between;
+border-radius:8px;
+border:1px solid #ddd;
 }
 
-/* ADMIN */
-
-.admin{
-position:fixed;
-right:10px;
-bottom:110px;
-background:black;
-color:white;
-padding:10px;
+button{
+padding:12px;
+border:none;
 border-radius:10px;
-font-size:12px;
-cursor:pointer;
+background:#16a34a;
+color:white;
 }
 
 </style>
@@ -324,23 +223,20 @@ cursor:pointer;
 </div>
 
 <div class="logo-area" id="logoArea">
-
 <div class="logo-card">
 <img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
 </div>
-
 <div class="brand">FreshMaximum</div>
-
 </div>
 
 <div class="categories" id="categories">
 
-<div class="cat" onclick="openCategory()">
+<div class="cat" onclick="openCategory('Obst')">
 <img src="https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png">
 <div class="cat-title">Obst</div>
 </div>
 
-<div class="cat">
+<div class="cat" onclick="openCategory('Gemüse')">
 <img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png">
 <div class="cat-title">Gemüse</div>
 </div>
@@ -349,98 +245,57 @@ cursor:pointer;
 
 <div class="products" id="productArea"></div>
 
-<!-- MODAL -->
-
-<div class="modal" id="modal">
-
-<div class="modal-header">
-<div class="close" onclick="closeModal()">✕</div>
-<img id="modalImg">
-</div>
-
-<div class="modal-body">
-
-<div class="modal-title" id="modalName"></div>
-<div class="price" id="modalPrice"></div>
-<div class="stock" id="modalStock"></div>
-
-<div class="qty">
-<button onclick="changeQty(-1)">−</button>
-<span id="qty">1</span>
-<button onclick="changeQty(1)">+</button>
-</div>
-
-<button class="cart-btn" onclick="addToCart()">In den Warenkorb</button>
-
-<div class="desc-title" onclick="toggleDesc()">
-<span>Produktbeschreibung</span>
-<span>›</span>
-</div>
-
-<div class="desc-card" id="descCard">
-Frisches Produkt aus kontrolliertem Anbau.
-</div>
-
-</div>
-</div>
-
-<div class="cart-bar" id="cartBar" onclick="openCart()">
+<div class="cart-bar" id="cartBar">
 <span>Bestellung anzeigen</span>
 <div class="count" id="cartCount">0</div>
 </div>
 
-<div class="cart-screen" id="cartScreen">
+<div class="admin-btn" onclick="adminLogin()">ADMIN</div>
 
-<h2>Warenkorb</h2>
+<div class="panel" id="adminPanel">
 
-<div id="cartItems"></div>
+<h2>Admin Panel</h2>
 
-<input id="customerName" placeholder="Ihr Name" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;margin-top:15px">
+<input id="pname" placeholder="Produktname">
+<input id="pprice" placeholder="Preis €/kg">
+<input id="pstock" placeholder="Stock">
+<input id="pcat" placeholder="Kategorie (Obst/Gemüse)">
+<input type="file" id="pimg">
 
-<button class="cart-btn" onclick="sendOrder()">WhatsApp Bestellung senden</button>
+<button onclick="saveProduct()">Produkt speichern</button>
+
+<h3>Produkte</h3>
+
+<div id="adminProducts"></div>
 
 </div>
 
-<div class="admin" onclick="adminAdd()">Admin +</div>
-
 <script>
 
-/* ZOOM LOCK */
-
-document.addEventListener('gesturestart',e=>e.preventDefault())
-
-/* DATA */
-
-let products=[
-{
-name:"Granatapfel",
-price:"€8,99/kg",
-stock:50,
-img:"https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png"
-}
-]
+let products=JSON.parse(localStorage.getItem("products"))||[]
 
 let cart=[]
-let qty=1
-let currentProduct=null
+let currentCategory=null
 
-/* RENDER PRODUCTS */
+function saveDB(){
+localStorage.setItem("products",JSON.stringify(products))
+}
 
 function renderProducts(){
 
 productArea.innerHTML=""
 
-products.forEach((p,i)=>{
+products
+.filter(p=>p.category===currentCategory)
+.forEach((p,i)=>{
 
 let div=document.createElement("div")
 
-div.className="card product"
-
-div.dataset.name=p.name
+div.className="card"
 
 div.innerHTML=`
 
-<img src="${p.img}" onclick="openModal(${i})">
+<img src="${p.img}">
 
 <div class="name">${p.name}</div>
 
@@ -454,16 +309,16 @@ productArea.appendChild(div)
 
 }
 
-renderProducts()
+function openCategory(cat){
 
-/* CATEGORY */
-
-function openCategory(){
+currentCategory=cat
 
 categories.style.display="none"
 logoArea.style.display="none"
 productArea.style.display="block"
 backBtn.style.display="block"
+
+renderProducts()
 
 }
 
@@ -476,159 +331,103 @@ backBtn.style.display="none"
 
 }
 
-/* MODAL */
-
-function openModal(i){
-
-let p=products[i]
-
-currentProduct=i
-
-modal.classList.add("active")
-
-modalImg.src=p.img
-
-modalName.innerText=p.name
-
-modalPrice.innerText=p.price
-
-modalStock.innerText="Stock: "+p.stock
-
-}
-
-function closeModal(){
-
-modal.classList.remove("active")
-
-}
-
-/* QTY */
-
-function changeQty(v){
-
-qty+=v
-
-if(qty<1)qty=1
-
-qty.innerText=qty
-
-}
-
-/* CART */
-
-function addToCart(){
-
-let p=products[currentProduct]
-
-cart.push({
-name:p.name,
-qty:qty
-})
-
-cartCount.innerText=cart.length
-
-cartBar.classList.add("active")
-
-renderCart()
-
-closeModal()
-
-}
-
-function renderCart(){
-
-cartItems.innerHTML=""
-
-cart.forEach((item,i)=>{
-
-let div=document.createElement("div")
-
-div.className="cart-item"
-
-div.innerHTML=`
-${item.qty} x ${item.name}
-<span onclick="removeItem(${i})">❌</span>
-`
-
-cartItems.appendChild(div)
-
-})
-
-}
-
-function removeItem(i){
-
-cart.splice(i,1)
-
-cartCount.innerText=cart.length
-
-renderCart()
-
-}
-
-/* CART SCREEN */
-
-function openCart(){
-
-cartScreen.classList.add("active")
-
-}
-
-/* SEARCH */
-
 function searchProducts(q){
 
 q=q.toLowerCase()
 
-document.querySelectorAll(".product").forEach(p=>{
+document.querySelectorAll(".card").forEach(p=>{
+p.style.display=p.innerText.toLowerCase().includes(q)?"block":"none"
+})
 
-p.style.display=
-p.dataset.name.toLowerCase().includes(q)?"block":"none"
+}
+
+function adminLogin(){
+
+let pass=prompt("Admin Passwort")
+
+if(pass!=="1234")return
+
+adminPanel.classList.add("active")
+
+renderAdmin()
+
+}
+
+function renderAdmin(){
+
+adminProducts.innerHTML=""
+
+products.forEach((p,i)=>{
+
+let div=document.createElement("div")
+
+div.innerHTML=`
+${p.name}
+<button onclick="editProduct(${i})">edit</button>
+<button onclick="deleteProduct(${i})">delete</button>
+`
+
+adminProducts.appendChild(div)
 
 })
 
 }
 
-/* WHATSAPP */
+function saveProduct(){
 
-function sendOrder(){
+let file=document.getElementById("pimg").files[0]
 
-let name=document.getElementById("customerName").value
+let reader=new FileReader()
 
-let msg="Bestellung von "+name+"%0A%0A"
-
-cart.forEach(i=>{
-
-msg+=i.qty+" x "+i.name+"%0A"
-
-})
-
-window.open("https://wa.me/491727117489?text="+msg)
-
-}
-
-/* ADMIN */
-
-function adminAdd(){
-
-let name=prompt("Produktname")
-
-let price=prompt("Preis")
-
-let stock=prompt("Stock")
-
-let img=prompt("Bild URL")
+reader.onload=function(){
 
 products.push({
-name,
-price,
-stock,
-img
+
+name:pname.value,
+price:pprice.value,
+stock:pstock.value,
+category:pcat.value,
+img:reader.result
+
 })
 
-renderProducts()
+saveDB()
+
+renderAdmin()
 
 }
+
+reader.readAsDataURL(file)
+
+}
+
+function deleteProduct(i){
+
+products.splice(i,1)
+
+saveDB()
+
+renderAdmin()
+
+}
+
+function editProduct(i){
+
+let p=products[i]
+
+p.name=prompt("Name",p.name)
+p.price=prompt("Preis",p.price)
+p.stock=prompt("Stock",p.stock)
+
+saveDB()
+
+renderAdmin()
+
+}
+
+new Sortable(productArea,{
+animation:150
+})
 
 </script>
 
