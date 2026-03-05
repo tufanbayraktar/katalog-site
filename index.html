@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 <head>
 
@@ -20,13 +21,13 @@ overflow-x:hidden;
 touch-action:manipulation;
 }
 
-/* TOP BAR */
+/* TOP */
 
 .topbar{
 display:flex;
-align-items:center;
 gap:10px;
 padding:15px;
+align-items:center;
 }
 
 .back{
@@ -99,7 +100,7 @@ font-weight:600;
 margin-top:8px;
 }
 
-/* PRODUCT */
+/* PRODUCTS */
 
 .products{
 display:none;
@@ -122,12 +123,18 @@ cursor:pointer;
 
 .name{
 text-align:center;
-font-size:26px;
+font-size:24px;
 font-weight:700;
-margin-top:15px;
+margin-top:10px;
 }
 
-/* PRODUCT MODAL */
+.price{
+text-align:center;
+color:#16a34a;
+font-weight:700;
+}
+
+/* MODAL */
 
 .modal{
 position:fixed;
@@ -173,22 +180,19 @@ padding:20px;
 }
 
 .modal-title{
-font-size:34px;
+font-size:30px;
 font-weight:700;
-margin-bottom:10px;
 }
 
-.price{
-font-size:22px;
-color:#16a34a;
-font-weight:700;
-margin-bottom:20px;
+.stock{
+color:#888;
+margin-bottom:10px;
 }
 
 .qty{
 display:flex;
-gap:10px;
 align-items:center;
+gap:10px;
 margin-bottom:15px;
 }
 
@@ -202,6 +206,8 @@ color:white;
 font-size:18px;
 }
 
+/* BUTTON */
+
 .cart-btn{
 width:100%;
 background:#16a34a;
@@ -213,25 +219,24 @@ font-size:18px;
 font-weight:600;
 }
 
-/* DESCRIPTION */
+/* DESC */
 
 .desc-title{
-margin-top:25px;
-padding:18px;
+margin-top:20px;
+padding:15px;
 background:#f4f6f8;
-border-radius:15px;
-font-weight:600;
+border-radius:12px;
 display:flex;
 justify-content:space-between;
 cursor:pointer;
 }
 
 .desc-card{
-margin-top:15px;
-padding:18px;
+margin-top:10px;
+padding:15px;
 background:white;
-border-radius:15px;
-box-shadow:0 6px 15px rgba(0,0,0,0.08);
+border-radius:12px;
+box-shadow:0 5px 10px rgba(0,0,0,0.08);
 display:none;
 }
 
@@ -249,7 +254,6 @@ border-radius:20px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-font-weight:600;
 transition:0.4s;
 }
 
@@ -278,6 +282,7 @@ transform:translateY(100%);
 transition:0.4s;
 z-index:1000;
 padding:20px;
+overflow:auto;
 }
 
 .cart-screen.active{
@@ -287,28 +292,45 @@ transform:translateY(0);
 .cart-item{
 background:#f4f6f8;
 padding:15px;
-border-radius:15px;
+border-radius:12px;
 margin-bottom:10px;
 display:flex;
 justify-content:space-between;
-align-items:center;
+}
+
+/* ADMIN */
+
+.admin{
+position:fixed;
+right:10px;
+bottom:110px;
+background:black;
+color:white;
+padding:10px;
+border-radius:10px;
+font-size:12px;
+cursor:pointer;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div class="topbar">
 <div class="back" id="backBtn" onclick="goBack()">←</div>
-<input class="search" placeholder="Suchen">
+<input class="search" placeholder="Suchen" onkeyup="searchProducts(this.value)">
 </div>
 
 <div class="logo-area" id="logoArea">
+
 <div class="logo-card">
 <img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
 </div>
+
 <div class="brand">FreshMaximum</div>
+
 </div>
 
 <div class="categories" id="categories">
@@ -325,35 +347,27 @@ align-items:center;
 
 </div>
 
-<div class="products" id="productArea">
+<div class="products" id="productArea"></div>
 
-<div class="card">
-<img src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png" onclick="openModal()">
-<div class="name">Granatapfel</div>
-</div>
-
-</div>
-
-<!-- PRODUCT MODAL -->
+<!-- MODAL -->
 
 <div class="modal" id="modal">
 
 <div class="modal-header">
 <div class="close" onclick="closeModal()">✕</div>
-
-<img src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png">
-
+<img id="modalImg">
 </div>
 
 <div class="modal-body">
 
-<div class="modal-title">Granatapfel</div>
-<div class="price">€8,99/kg</div>
+<div class="modal-title" id="modalName"></div>
+<div class="price" id="modalPrice"></div>
+<div class="stock" id="modalStock"></div>
 
 <div class="qty">
-<button onclick="qty--">−</button>
+<button onclick="changeQty(-1)">−</button>
 <span id="qty">1</span>
-<button onclick="qty++">+</button>
+<button onclick="changeQty(1)">+</button>
 </div>
 
 <button class="cart-btn" onclick="addToCart()">In den Warenkorb</button>
@@ -364,7 +378,7 @@ align-items:center;
 </div>
 
 <div class="desc-card" id="descCard">
-Frischer Granatapfel aus kontrolliertem Anbau. Reich an Vitaminen und Antioxidantien.
+Frisches Produkt aus kontrolliertem Anbau.
 </div>
 
 </div>
@@ -381,15 +395,66 @@ Frischer Granatapfel aus kontrolliertem Anbau. Reich an Vitaminen und Antioxidan
 
 <div id="cartItems"></div>
 
+<input id="customerName" placeholder="Ihr Name" style="width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;margin-top:15px">
+
+<button class="cart-btn" onclick="sendOrder()">WhatsApp Bestellung senden</button>
+
 </div>
+
+<div class="admin" onclick="adminAdd()">Admin +</div>
 
 <script>
 
 /* ZOOM LOCK */
 
-document.addEventListener('gesturestart', function (e) {
-e.preventDefault();
-});
+document.addEventListener('gesturestart',e=>e.preventDefault())
+
+/* DATA */
+
+let products=[
+{
+name:"Granatapfel",
+price:"€8,99/kg",
+stock:50,
+img:"https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png"
+}
+]
+
+let cart=[]
+let qty=1
+let currentProduct=null
+
+/* RENDER PRODUCTS */
+
+function renderProducts(){
+
+productArea.innerHTML=""
+
+products.forEach((p,i)=>{
+
+let div=document.createElement("div")
+
+div.className="card product"
+
+div.dataset.name=p.name
+
+div.innerHTML=`
+
+<img src="${p.img}" onclick="openModal(${i})">
+
+<div class="name">${p.name}</div>
+
+<div class="price">${p.price}</div>
+
+`
+
+productArea.appendChild(div)
+
+})
+
+}
+
+renderProducts()
 
 /* CATEGORY */
 
@@ -413,9 +478,21 @@ backBtn.style.display="none"
 
 /* MODAL */
 
-function openModal(){
+function openModal(i){
+
+let p=products[i]
+
+currentProduct=i
 
 modal.classList.add("active")
+
+modalImg.src=p.img
+
+modalName.innerText=p.name
+
+modalPrice.innerText=p.price
+
+modalStock.innerText="Stock: "+p.stock
 
 }
 
@@ -425,24 +502,26 @@ modal.classList.remove("active")
 
 }
 
-/* DESCRIPTION */
+/* QTY */
 
-function toggleDesc(){
+function changeQty(v){
 
-descCard.style.display=
-descCard.style.display==="block"?"none":"block"
+qty+=v
+
+if(qty<1)qty=1
+
+qty.innerText=qty
 
 }
 
 /* CART */
 
-let cart=[]
-let qty=1
-
 function addToCart(){
 
+let p=products[currentProduct]
+
 cart.push({
-name:"Granatapfel",
+name:p.name,
 qty:qty
 })
 
@@ -450,9 +529,9 @@ cartCount.innerText=cart.length
 
 cartBar.classList.add("active")
 
-closeModal()
-
 renderCart()
+
+closeModal()
 
 }
 
@@ -468,6 +547,7 @@ div.className="cart-item"
 
 div.innerHTML=`
 ${item.qty} x ${item.name}
+<span onclick="removeItem(${i})">❌</span>
 `
 
 cartItems.appendChild(div)
@@ -476,11 +556,77 @@ cartItems.appendChild(div)
 
 }
 
+function removeItem(i){
+
+cart.splice(i,1)
+
+cartCount.innerText=cart.length
+
+renderCart()
+
+}
+
 /* CART SCREEN */
 
 function openCart(){
 
 cartScreen.classList.add("active")
+
+}
+
+/* SEARCH */
+
+function searchProducts(q){
+
+q=q.toLowerCase()
+
+document.querySelectorAll(".product").forEach(p=>{
+
+p.style.display=
+p.dataset.name.toLowerCase().includes(q)?"block":"none"
+
+})
+
+}
+
+/* WHATSAPP */
+
+function sendOrder(){
+
+let name=document.getElementById("customerName").value
+
+let msg="Bestellung von "+name+"%0A%0A"
+
+cart.forEach(i=>{
+
+msg+=i.qty+" x "+i.name+"%0A"
+
+})
+
+window.open("https://wa.me/491727117489?text="+msg)
+
+}
+
+/* ADMIN */
+
+function adminAdd(){
+
+let name=prompt("Produktname")
+
+let price=prompt("Preis")
+
+let stock=prompt("Stock")
+
+let img=prompt("Bild URL")
+
+products.push({
+name,
+price,
+stock,
+img
+})
+
+renderProducts()
 
 }
 
