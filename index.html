@@ -9,6 +9,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 
 *{box-sizing:border-box}
@@ -43,26 +45,28 @@ border:none;
 background:#eef0f2
 }
 
-/* CATEGORY SLIDER */
+/* CATEGORY */
 
 .categories{
 display:flex;
 overflow-x:auto;
 gap:10px;
-padding:10px
+padding:10px;
+background:white;
+position:sticky;
+top:0;
+z-index:5
 }
 
 .cat{
-background:white;
-padding:10px 14px;
+background:#f1f1f1;
+padding:8px 14px;
 border-radius:20px;
-white-space:nowrap;
 font-weight:600;
-box-shadow:0 2px 6px rgba(0,0,0,0.08);
 cursor:pointer
 }
 
-/* PRODUCT GRID */
+/* GRID */
 
 .products{
 display:grid;
@@ -97,8 +101,11 @@ font-weight:700
 }
 
 .stock{
-font-size:12px;
-color:#666
+font-size:12px
+}
+
+.lowstock{
+color:red
 }
 
 .add{
@@ -114,7 +121,15 @@ border-radius:50%;
 font-size:18px
 }
 
-/* CART BAR */
+.fav{
+position:absolute;
+right:10px;
+top:10px;
+font-size:18px;
+cursor:pointer
+}
+
+/* CART */
 
 .cartbar{
 position:fixed;
@@ -127,7 +142,6 @@ padding:14px;
 border-radius:16px;
 display:flex;
 justify-content:space-between;
-align-items:center;
 transition:0.3s
 }
 
@@ -209,26 +223,43 @@ background:#16a34a;
 color:white
 }
 
+.delete{
+background:red
+}
+
+.productrow{
+display:flex;
+justify-content:space-between;
+margin-top:6px;
+background:#f3f3f3;
+padding:8px;
+border-radius:8px
+}
+
+.stat{
+background:#f2f2f2;
+padding:10px;
+border-radius:10px;
+margin-top:10px
+}
+
 </style>
 
 </head>
 
 <body>
 
-<div class="header">
-FreshMaximum
-</div>
+<div class="header">FreshMaximum</div>
 
 <div class="searchbar">
 <input placeholder="Suchen..." onkeyup="searchProducts(this.value)">
 </div>
 
-<div class="categories" id="categories">
-
+<div class="categories">
 <div class="cat" onclick="filterCategory('all')">Alle</div>
 <div class="cat" onclick="filterCategory('Obst')">Obst</div>
 <div class="cat" onclick="filterCategory('Gemüse')">Gemüse</div>
-
+<div class="cat" onclick="showFavorites()">Favoriten</div>
 </div>
 
 <div class="products" id="productList"></div>
@@ -245,6 +276,8 @@ FreshMaximum
 <div id="cartitems"></div>
 
 <h3 id="total">Total: 0 €</h3>
+
+<button onclick="repeatLastOrder()">Letzte Bestellung wiederholen</button>
 
 <button onclick="sendOrder()">WhatsApp Bestellung</button>
 
@@ -269,19 +302,34 @@ FreshMaximum
 
 <button onclick="addProduct()">Speichern</button>
 
+<h3>Produkte</h3>
+
+<div id="adminlist"></div>
+
+<h3>Dashboard</h3>
+
+<div class="stat" id="ordercount"></div>
+<div class="stat" id="revenue"></div>
+
+<canvas id="saleschart"></canvas>
+
 </div>
 
 <script>
 
 let products=JSON.parse(localStorage.getItem("products"))||[]
+let orders=JSON.parse(localStorage.getItem("orders"))||[]
+let favorites=JSON.parse(localStorage.getItem("favorites"))||[]
 let cart=[]
 let current="all"
 
 function save(){
 localStorage.setItem("products",JSON.stringify(products))
+localStorage.setItem("orders",JSON.stringify(orders))
+localStorage.setItem("favorites",JSON.stringify(favorites))
 }
 
-/* RENDER PRODUCTS */
+/* RENDER */
 
 function render(){
 
@@ -289,6 +337,59 @@ productList.innerHTML=""
 
 products
 .filter(p=>current==="all"||p.category===current)
+.forEach((p,i)=>{
+
+let fav=favorites.includes(p.name)?"❤️":"🤍"
+
+let stockClass=p.stock<=5?"stock lowstock":"stock"
+
+let div=document.createElement("div")
+
+div.className="card"
+
+div.innerHTML=`
+<span class="fav" onclick="toggleFav('${p.name}')">${fav}</span>
+
+<img src="${p.img}">
+
+<div class="name">${p.name}</div>
+
+<div class="price">${p.price} €</div>
+
+<div class="${stockClass}">Stock: ${p.stock}</div>
+
+<button class="add" onclick="addCart(${i})">+</button>
+`
+
+productList.appendChild(div)
+
+})
+
+renderAdmin()
+
+}
+
+/* FAVORITES */
+
+function toggleFav(name){
+
+if(favorites.includes(name)){
+favorites=favorites.filter(f=>f!==name)
+}else{
+favorites.push(name)
+}
+
+save()
+render()
+
+}
+
+function showFavorites(){
+
+productList.innerHTML=""
+
+products
+.filter(p=>favorites.includes(p.name))
 .forEach((p,i)=>{
 
 let div=document.createElement("div")
@@ -299,7 +400,6 @@ div.innerHTML=`
 <img src="${p.img}">
 <div class="name">${p.name}</div>
 <div class="price">${p.price} €</div>
-<div class="stock">Stock: ${p.stock}</div>
 <button class="add" onclick="addCart(${i})">+</button>
 `
 
@@ -379,6 +479,20 @@ renderCart()
 
 }
 
+/* REPEAT ORDER */
+
+function repeatLastOrder(){
+
+if(orders.length===0)return
+
+cart=[...orders[orders.length-1]]
+
+cartcount.innerText=cart.length
+
+renderCart()
+
+}
+
 /* CART PANEL */
 
 function openCart(){
@@ -389,6 +503,15 @@ cartpanel.classList.add("active")
 
 function sendOrder(){
 
+orders.push([...cart])
+
+cart.forEach(c=>{
+let p=products.find(x=>x.name===c.name)
+if(p) p.stock--
+})
+
+save()
+
 let msg="FreshMaximum Bestellung:%0A"
 
 cart.forEach(i=>{
@@ -396,6 +519,8 @@ msg+=i.name+" "+i.price+"€%0A"
 })
 
 window.open("https://wa.me/491727117489?text="+msg)
+
+updateStats()
 
 }
 
@@ -409,7 +534,11 @@ if(pass!=="1234")return
 
 adminpanel.classList.add("active")
 
+updateStats()
+
 }
+
+/* ADD PRODUCT */
 
 function addProduct(){
 
@@ -428,12 +557,78 @@ img:reader.result
 })
 
 save()
-
 render()
 
 }
 
 reader.readAsDataURL(file)
+
+}
+
+/* DELETE PRODUCT */
+
+function deleteProduct(i){
+
+products.splice(i,1)
+
+save()
+render()
+
+}
+
+/* ADMIN LIST */
+
+function renderAdmin(){
+
+adminlist.innerHTML=""
+
+products.forEach((p,i)=>{
+
+let div=document.createElement("div")
+
+div.className="productrow"
+
+div.innerHTML=`
+${p.name}
+<button class="delete" onclick="deleteProduct(${i})">Sil</button>
+`
+
+adminlist.appendChild(div)
+
+})
+
+}
+
+/* DASHBOARD */
+
+function updateStats(){
+
+document.getElementById("ordercount").innerText="Bestellungen: "+orders.length
+
+let revenue=0
+let sales={}
+
+orders.forEach(o=>{
+o.forEach(i=>{
+revenue+=parseFloat(i.price)
+sales[i.name]=(sales[i.name]||0)+1
+})
+})
+
+document.getElementById("revenue").innerText="Umsatz: "+revenue+" €"
+
+let ctx=document.getElementById("saleschart")
+
+new Chart(ctx,{
+type:"bar",
+data:{
+labels:Object.keys(sales),
+datasets:[{
+label:"Sales",
+data:Object.values(sales)
+}]
+}
+})
 
 }
 
