@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="de">
 <head>
-
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
 <title>FreshMaximum</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Chart -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- PDF -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
 
@@ -25,6 +31,7 @@ background:#f4f6f8
 display:flex;
 gap:10px;
 padding:15px;
+align-items:center
 }
 
 .search{
@@ -34,6 +41,10 @@ border-radius:25px;
 border:none;
 padding:0 15px;
 background:#e6e9ed
+}
+
+.lang{
+margin-left:5px
 }
 
 /* LOGO */
@@ -224,7 +235,8 @@ padding:12px;
 border:none;
 border-radius:10px;
 background:#16a34a;
-color:white
+color:white;
+margin-top:5px
 }
 
 .stat{
@@ -241,7 +253,15 @@ margin-top:10px
 <body>
 
 <div class="topbar">
+
 <input class="search" placeholder="Suchen" onkeyup="searchProducts(this.value)">
+
+<select class="lang" onchange="setLang(this.value)">
+<option value="de">DE</option>
+<option value="tr">TR</option>
+<option value="en">EN</option>
+</select>
+
 </div>
 
 <div class="logo-area">
@@ -271,7 +291,7 @@ margin-top:10px
 <div class="products" id="productArea"></div>
 
 <div class="cart-bar" id="cartBar" onclick="openCart()">
-<span>Bestellung anzeigen</span>
+<span id="cartText">Bestellung anzeigen</span>
 <div class="count" id="cartCount">0</div>
 </div>
 
@@ -285,7 +305,7 @@ margin-top:10px
 
 <h3 id="totalPrice">Total: 0 €</h3>
 
-<button onclick="sendOrder()">WhatsApp Bestellung senden</button>
+<button onclick="sendOrder()">WhatsApp Bestellung</button> <button onclick="downloadPDF()">PDF</button>
 
 </div>
 
@@ -304,7 +324,7 @@ margin-top:10px
 <option value="Gemüse">Gemüse</option>
 </select>
 
-<input type="file" id="pimg">
+<input type="file" id="pimg" accept="image/*" capture="environment">
 
 <button onclick="saveProduct()">Produkt speichern</button>
 
@@ -312,6 +332,8 @@ margin-top:10px
 
 <div class="stat" id="totalOrders"></div>
 <div class="stat" id="totalRevenue"></div>
+
+<canvas id="salesChart"></canvas>
 
 </div>
 
@@ -330,6 +352,8 @@ localStorage.setItem("products",JSON.stringify(products))
 localStorage.setItem("orders",JSON.stringify(orders))
 }
 
+/* CATEGORY */
+
 function openCategory(cat){
 
 currentCategory=cat
@@ -340,6 +364,8 @@ productArea.style.display="block"
 renderProducts()
 
 }
+
+/* RENDER */
 
 function renderProducts(){
 
@@ -371,6 +397,8 @@ productArea.appendChild(div)
 
 }
 
+/* SEARCH */
+
 function searchProducts(q){
 
 q=q.toLowerCase()
@@ -380,6 +408,8 @@ p.style.display=p.innerText.toLowerCase().includes(q)?"block":"none"
 })
 
 }
+
+/* CART */
 
 function addToCart(i){
 
@@ -433,6 +463,8 @@ function openCart(){
 cartScreen.classList.add("active")
 }
 
+/* ORDER */
+
 function sendOrder(){
 
 let name=document.getElementById("customerName").value
@@ -453,6 +485,28 @@ updateStats()
 
 }
 
+/* PDF */
+
+function downloadPDF(){
+
+const {jsPDF}=window.jspdf
+
+let doc=new jsPDF()
+
+doc.text("FreshMaximum Bestellung",20,20)
+
+cart.forEach((i,index)=>{
+
+doc.text(i.name+" "+i.price+" €",20,40+(index*10))
+
+})
+
+doc.save("bestellung.pdf")
+
+}
+
+/* ADMIN */
+
 function adminLogin(){
 
 let pass=prompt("Admin Passwort")
@@ -464,6 +518,8 @@ adminPanel.classList.add("active")
 updateStats()
 
 }
+
+/* SAVE PRODUCT */
 
 function saveProduct(){
 
@@ -489,6 +545,8 @@ reader.readAsDataURL(file)
 
 }
 
+/* STATS */
+
 function updateStats(){
 
 document.getElementById("totalOrders").innerText="Bestellungen: "+orders.length
@@ -503,9 +561,57 @@ total+=parseFloat(i.price)
 
 document.getElementById("totalRevenue").innerText="Umsatz: "+total+" €"
 
+let ctx=document.getElementById("salesChart")
+
+new Chart(ctx,{
+type:"bar",
+data:{
+labels:["Sales"],
+datasets:[{
+label:"Revenue",
+data:[total]
+}]
+}
+})
+
+}
+
+/* LANG */
+
+function setLang(l){
+
+if(l==="tr"){
+document.getElementById("cartText").innerText="Sepeti Gör"
+}
+
+if(l==="en"){
+document.getElementById("cartText").innerText="View Cart"
+}
+
+if(l==="de"){
+document.getElementById("cartText").innerText="Bestellung anzeigen"
+}
+
 }
 
 updateStats()
+
+/* PWA */
+
+if("serviceWorker" in navigator){
+
+const swCode=`
+self.addEventListener('install',e=>self.skipWaiting());
+self.addEventListener('fetch',e=>{});
+`
+
+const blob=new Blob([swCode],{type:'text/javascript'})
+
+const swURL=URL.createObjectURL(blob)
+
+navigator.serviceWorker.register(swURL)
+
+}
 
 </script>
 
