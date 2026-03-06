@@ -24,57 +24,89 @@ overflow-x:hidden;
 touch-action:manipulation;
 }
 
-/* HEADER */
+/* HERO */
 
-.header{
-background:black;
-color:#16a34a;
-padding:16px;
-text-align:center;
-font-size:24px;
-font-weight:700
+.hero{
+position:relative;
+height:260px;
+overflow:hidden;
 }
 
-/* LOGO */
+.hero img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* LOGO CARD */
+
+.logo-card{
+position:absolute;
+bottom:-40px;
+left:50%;
+transform:translateX(-50%);
+text-align:center;
+}
 
 .logo{
-text-align:center;
+width:110px;
+height:110px;
 background:white;
-padding:10px
+border-radius:22px;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
 }
 
 .logo img{
-height:70px
+width:80px;
 }
 
-/* CATEGORY GRID */
+.brand{
+margin-top:14px;
+font-size:26px;
+font-weight:700;
+}
+
+/* CATEGORY */
 
 .categories{
+margin-top:80px;
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:14px;
-padding:14px
+padding:16px;
 }
 
 .cat{
 background:white;
-border-radius:16px;
+border-radius:18px;
 overflow:hidden;
-box-shadow:0 4px 8px rgba(0,0,0,0.08);
-cursor:pointer
+box-shadow:0 6px 12px rgba(0,0,0,0.08);
+cursor:pointer;
 }
 
 .cat img{
 width:100%;
 height:140px;
-object-fit:cover
+object-fit:cover;
 }
 
 .catname{
-padding:10px;
-font-weight:700;
+padding:12px;
 text-align:center;
-font-size:18px
+font-weight:600;
+font-size:18px;
+}
+
+/* BACK */
+
+.back{
+display:none;
+padding:14px;
+font-weight:600;
+cursor:pointer;
 }
 
 /* PRODUCTS */
@@ -82,81 +114,73 @@ font-size:18px
 .products{
 display:none;
 grid-template-columns:1fr 1fr;
-gap:12px;
-padding:12px
+gap:14px;
+padding:16px;
 }
 
 .card{
 background:white;
 border-radius:16px;
 padding:10px;
-box-shadow:0 4px 8px rgba(0,0,0,0.08);
-cursor:pointer
+box-shadow:0 6px 12px rgba(0,0,0,0.08);
+cursor:pointer;
 }
 
 .card img{
 width:100%;
-height:140px;
+height:150px;
 border-radius:12px;
-object-fit:cover
+object-fit:cover;
 }
 
 .name{
-font-weight:700;
 text-align:center;
-margin-top:6px
+font-weight:700;
+margin-top:8px;
+font-size:18px;
 }
 
 .price{
+text-align:center;
 color:#16a34a;
 font-weight:700;
-text-align:center
 }
 
-/* BACK */
-
-.back{
-padding:10px;
-font-weight:600;
-cursor:pointer;
-display:none
-}
-
-/* PRODUCT DETAIL */
+/* DETAIL */
 
 .detail{
 position:fixed;
 inset:0;
 background:white;
 transform:translateY(100%);
-transition:0.3s;
+transition:0.35s;
 padding:20px;
 z-index:100;
-overflow:auto
+overflow:auto;
 }
 
 .detail.active{
-transform:translateY(0)
+transform:translateY(0);
 }
 
 .detail img{
 width:100%;
-border-radius:16px
+border-radius:18px;
 }
 
 .detail h2{
-margin-top:10px
+margin-top:14px;
 }
 
 .addbtn{
-margin-top:20px;
 width:100%;
-padding:14px;
+padding:16px;
+margin-top:18px;
 background:#16a34a;
 border:none;
-color:white;
 border-radius:12px;
-font-size:16px
+color:white;
+font-size:16px;
 }
 
 /* CART BAR */
@@ -164,8 +188,8 @@ font-size:16px
 .cartbar{
 position:fixed;
 bottom:-70px;
-left:10px;
-right:10px;
+left:12px;
+right:12px;
 background:#16a34a;
 color:white;
 padding:14px;
@@ -173,11 +197,11 @@ border-radius:14px;
 display:flex;
 justify-content:space-between;
 transition:0.3s;
-cursor:pointer
+cursor:pointer;
 }
 
 .cartbar.active{
-bottom:10px
+bottom:12px;
 }
 
 /* CART PANEL */
@@ -187,43 +211,43 @@ position:fixed;
 inset:0;
 background:white;
 transform:translateY(100%);
-transition:0.3s;
+transition:0.35s;
 padding:20px;
-z-index:200
+z-index:200;
 }
 
 .cartpanel.active{
-transform:translateY(0)
+transform:translateY(0);
 }
 
 .cartitem{
 display:flex;
 justify-content:space-between;
 align-items:center;
-background:#f2f2f2;
-padding:10px;
-border-radius:8px;
-margin-bottom:10px
+background:#f3f3f3;
+padding:12px;
+border-radius:10px;
+margin-bottom:12px;
 }
 
 .qty button{
-width:28px;
-height:28px;
-background:#16a34a;
+width:30px;
+height:30px;
 border:none;
+background:#16a34a;
 color:white;
-border-radius:6px
+border-radius:6px;
 }
 
 .orderbtn{
 margin-top:20px;
 width:100%;
-padding:14px;
+padding:16px;
 background:#16a34a;
 border:none;
-color:white;
 border-radius:12px;
-font-size:16px
+color:white;
+font-size:16px;
 }
 
 </style>
@@ -232,15 +256,27 @@ font-size:16px
 
 <body>
 
-<div class="header">Fresh Maximum</div>
+<!-- HERO -->
+
+<div class="hero">
+
+<img src="https://i.postimg.cc/bJB4bPp8/IMG-3971.jpg">
+
+<div class="logo-card">
 
 <div class="logo">
 <img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
 </div>
 
+<div class="brand">Fresh Maximum</div>
+
+</div>
+
+</div>
+
 <div class="back" id="backBtn" onclick="goHome()">← Zurück</div>
 
-<!-- CATEGORY -->
+<!-- CATEGORIES -->
 
 <div class="categories" id="categories">
 
@@ -256,7 +292,7 @@ font-size:16px
 
 </div>
 
-<!-- OBST PRODUCTS -->
+<!-- OBST -->
 
 <div class="products" id="obstProducts">
 
@@ -272,7 +308,7 @@ font-size:16px
 
 </div>
 
-<!-- PRODUCT DETAIL -->
+<!-- DETAIL -->
 
 <div class="detail" id="detail">
 
@@ -286,7 +322,7 @@ font-size:16px
 
 <button class="addbtn" onclick="addCart()">In den Warenkorb</button>
 
-<button class="addbtn" onclick="closeDetail()" style="background:#999;margin-top:10px;">
+<button class="addbtn" onclick="closeDetail()" style="background:#888">
 Schließen
 </button>
 
@@ -299,7 +335,7 @@ Schließen
 <span id="cartcount">0</span>
 </div>
 
-<!-- CART PANEL -->
+<!-- CART -->
 
 <div class="cartpanel" id="cartpanel">
 
@@ -317,25 +353,29 @@ WhatsApp Bestellung senden
 
 <script>
 
-/* ZOOM ENGELLE */
+/* zoom engelle */
 
-document.addEventListener("gesturestart",e=>e.preventDefault())
+document.addEventListener("gesturestart", e => e.preventDefault())
 
-/* CATEGORY */
+/* category */
 
 function openObst(){
+
 categories.style.display="none"
 obstProducts.style.display="grid"
 backBtn.style.display="block"
+
 }
 
 function goHome(){
+
 categories.style.display="grid"
 obstProducts.style.display="none"
 backBtn.style.display="none"
+
 }
 
-/* DETAIL */
+/* detail */
 
 function openDetail(){
 detail.classList.add("active")
@@ -345,7 +385,7 @@ function closeDetail(){
 detail.classList.remove("active")
 }
 
-/* CART */
+/* cart */
 
 let cartQty=0
 
@@ -400,10 +440,12 @@ renderCart()
 }
 
 function openCart(){
+
 cartpanel.classList.add("active")
+
 }
 
-/* ORDER */
+/* order */
 
 function sendOrder(){
 
