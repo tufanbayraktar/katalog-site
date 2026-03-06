@@ -50,27 +50,6 @@ border:none;
 background:#eef0f2
 }
 
-/* CATEGORY */
-
-.categories{
-display:flex;
-gap:8px;
-overflow-x:auto;
-padding:10px;
-background:white;
-position:sticky;
-top:0;
-z-index:5
-}
-
-.cat{
-background:#f1f1f1;
-padding:8px 12px;
-border-radius:20px;
-cursor:pointer;
-font-weight:600
-}
-
 /* GRID */
 
 .products{
@@ -91,8 +70,8 @@ position:relative
 .card img{
 width:100%;
 height:120px;
-object-fit:cover;
-border-radius:12px
+border-radius:12px;
+object-fit:cover
 }
 
 .name{
@@ -121,6 +100,23 @@ height:32px;
 border-radius:50%
 }
 
+/* DETAIL PANEL */
+
+.detail{
+position:fixed;
+inset:0;
+background:white;
+transform:translateY(100%);
+transition:0.3s;
+overflow:auto;
+padding:20px;
+z-index:100
+}
+
+.detail.active{
+transform:translateY(0)
+}
+
 /* CART */
 
 .cartbar{
@@ -139,6 +135,40 @@ transition:0.3s
 
 .cartbar.active{
 bottom:10px
+}
+
+.cartpanel{
+position:fixed;
+inset:0;
+background:white;
+transform:translateY(100%);
+transition:0.3s;
+overflow:auto;
+padding:20px;
+z-index:101
+}
+
+.cartpanel.active{
+transform:translateY(0)
+}
+
+.cartitem{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px;
+background:#f2f2f2;
+border-radius:8px;
+margin-bottom:8px
+}
+
+.qty button{
+width:26px;
+height:26px;
+border:none;
+background:#16a34a;
+color:white;
+border-radius:6px
 }
 
 /* ADMIN */
@@ -208,20 +238,26 @@ border-radius:8px
 <input placeholder="Suchen..." onkeyup="searchProducts(this.value)">
 </div>
 
-<div class="categories">
-
-<div class="cat" onclick="filterCategory('all')">Alle</div>
-<div class="cat" onclick="filterCategory('Obst')">Obst</div>
-<div class="cat" onclick="filterCategory('Gemüse')">Gemüse</div>
-
-</div>
-
 <div class="products" id="productList"></div>
 
-<div class="cartbar" id="cartbar">
+<div class="cartbar" id="cartbar" onclick="openCart()">
 <span>Warenkorb</span>
 <span id="cartcount">0</span>
 </div>
+
+<div class="cartpanel" id="cartpanel">
+
+<h2>Ihr Warenkorb</h2>
+
+<div id="cartitems"></div>
+
+<h3 id="total">Total: 0 €</h3>
+
+<button onclick="sendOrder()">WhatsApp Bestellung</button>
+
+</div>
+
+<div class="detail" id="detail"></div>
 
 <div class="admin" onclick="adminLogin()">ADMIN</div>
 
@@ -230,17 +266,13 @@ border-radius:8px
 <h2>Produkt hinzufügen</h2>
 
 <input id="pname" placeholder="Produktname">
-
 <input id="pbrand" placeholder="Marke">
-
 <input id="porigin" placeholder="Herkunft">
-
 <input id="pcontent" placeholder="Inhalt">
 
 <textarea id="pdesc" placeholder="Beschreibung"></textarea>
 
 <input id="pprice" placeholder="Preis €">
-
 <input id="pstock" placeholder="Stock">
 
 <select id="pcat">
@@ -262,18 +294,15 @@ border-radius:8px
 
 /* ZOOM ENGELLE */
 
-document.addEventListener("gesturestart", function(e){
-e.preventDefault();
-});
+document.addEventListener("gesturestart", e=>e.preventDefault())
 
 /* DATA */
 
 let products=JSON.parse(localStorage.getItem("products"))||[]
+let cart=[]
 
 function save(){
-
 localStorage.setItem("products",JSON.stringify(products))
-
 }
 
 /* RENDER */
@@ -285,18 +314,17 @@ productList.innerHTML=""
 products.forEach((p,i)=>{
 
 let div=document.createElement("div")
-
 div.className="card"
 
 div.innerHTML=`
 
-<img src="${p.img}">
+<img src="${p.img}" onclick="openDetail(${i})">
 
 <div class="name">${p.name}</div>
-
 <div class="brand">${p.brand}</div>
-
 <div class="price">${p.price} €</div>
+
+<button class="add" onclick="addCart(${i})">+</button>
 
 `
 
@@ -305,6 +333,39 @@ productList.appendChild(div)
 })
 
 renderAdmin()
+
+}
+
+/* DETAIL */
+
+function openDetail(i){
+
+let p=products[i]
+
+detail.innerHTML=`
+
+<h2>${p.name}</h2>
+
+<img src="${p.img}" style="width:100%;border-radius:12px">
+
+<p><b>Marke:</b> ${p.brand}</p>
+<p><b>Herkunft:</b> ${p.origin}</p>
+<p><b>Inhalt:</b> ${p.content}</p>
+<p>${p.desc}</p>
+
+<button onclick="addCart(${i})">In den Warenkorb</button>
+
+<button onclick="closeDetail()">Schließen</button>
+
+`
+
+detail.classList.add("active")
+
+}
+
+function closeDetail(){
+
+detail.classList.remove("active")
 
 }
 
@@ -320,35 +381,85 @@ c.style.display=c.innerText.toLowerCase().includes(q)?"block":"none"
 
 }
 
-/* CATEGORY */
+/* CART */
 
-function filterCategory(cat){
+function addCart(i){
 
-productList.innerHTML=""
+let item=cart.find(c=>c.index===i)
 
-products
-.filter(p=>cat==="all"||p.category===cat)
-.forEach((p,i)=>{
+if(item){
+item.qty++
+}else{
+cart.push({index:i,qty:1})
+}
+
+cartcount.innerText=cart.length
+
+cartbar.classList.add("active")
+
+renderCart()
+
+}
+
+function renderCart(){
+
+cartitems.innerHTML=""
+
+let total=0
+
+cart.forEach((c,i)=>{
+
+let p=products[c.index]
+
+total+=p.price*c.qty
 
 let div=document.createElement("div")
-
-div.className="card"
+div.className="cartitem"
 
 div.innerHTML=`
+${p.name}
 
-<img src="${p.img}">
-
-<div class="name">${p.name}</div>
-
-<div class="brand">${p.brand}</div>
-
-<div class="price">${p.price} €</div>
-
+<div class="qty">
+<button onclick="changeQty(${i},-1)">-</button>
+${c.qty}
+<button onclick="changeQty(${i},1)">+</button>
+</div>
 `
 
-productList.appendChild(div)
+cartitems.appendChild(div)
 
 })
+
+document.getElementById("total").innerText="Total: "+total+" €"
+
+}
+
+function changeQty(i,v){
+
+cart[i].qty+=v
+
+if(cart[i].qty<=0) cart.splice(i,1)
+
+renderCart()
+
+}
+
+function openCart(){
+cartpanel.classList.add("active")
+}
+
+/* ORDER */
+
+function sendOrder(){
+
+let msg="FreshMaximum Bestellung:%0A"
+
+cart.forEach(c=>{
+let p=products[c.index]
+msg+=p.name+" x"+c.qty+"%0A"
+})
+
+window.open("https://wa.me/491727117489?text="+msg)
 
 }
 
@@ -364,46 +475,29 @@ adminpanel.classList.add("active")
 
 }
 
-/* ADD PRODUCT */
-
 function addProduct(){
 
-let file=document.getElementById("pimg").files[0]
+let file=pimg.files[0]
 
 if(!file){
-
 alert("Bitte Bild auswählen")
-
 return
-
 }
 
 let reader=new FileReader()
 
 reader.onload=function(e){
 
-let image=e.target.result
-
 products.push({
-
 name:pname.value,
-
 brand:pbrand.value,
-
 origin:porigin.value,
-
 content:pcontent.value,
-
 desc:pdesc.value,
-
-price:pprice.value,
-
+price:parseFloat(pprice.value),
 stock:pstock.value,
-
 category:pcat.value,
-
-img:image
-
+img:e.target.result
 })
 
 save()
@@ -416,8 +510,6 @@ reader.readAsDataURL(file)
 
 }
 
-/* DELETE */
-
 function deleteProduct(i){
 
 products.splice(i,1)
@@ -428,8 +520,6 @@ render()
 
 }
 
-/* ADMIN LIST */
-
 function renderAdmin(){
 
 adminlist.innerHTML=""
@@ -437,7 +527,6 @@ adminlist.innerHTML=""
 products.forEach((p,i)=>{
 
 let div=document.createElement("div")
-
 div.className="productrow"
 
 div.innerHTML=`
