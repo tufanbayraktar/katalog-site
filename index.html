@@ -47,144 +47,34 @@ padding:10px
 height:70px
 }
 
-/* SEARCH */
+/* CATEGORY GRID */
 
-.searchbar{
-padding:10px;
-background:white
-}
-
-.searchbar input{
-width:100%;
-padding:12px;
-border-radius:10px;
-border:none;
-background:#eef0f2
-}
-
-/* GRID */
-
-.products{
+.categories{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:12px;
-padding:12px
+gap:14px;
+padding:14px
 }
 
-.card{
+.cat{
 background:white;
 border-radius:16px;
-padding:10px;
+overflow:hidden;
 box-shadow:0 4px 8px rgba(0,0,0,0.08);
-position:relative
+cursor:pointer
 }
 
-.card img{
+.cat img{
 width:100%;
-height:120px;
-border-radius:12px;
+height:140px;
 object-fit:cover
 }
 
-.name{
-font-weight:700
-}
-
-.brand{
-font-size:13px;
-color:#555
-}
-
-.price{
-color:#16a34a;
-font-weight:700
-}
-
-.add{
-position:absolute;
-bottom:10px;
-right:10px;
-background:#16a34a;
-color:white;
-border:none;
-width:32px;
-height:32px;
-border-radius:50%
-}
-
-/* DETAIL PANEL */
-
-.detail{
-position:fixed;
-inset:0;
-background:white;
-transform:translateY(100%);
-transition:0.3s;
-overflow:auto;
-padding:20px;
-z-index:100
-}
-
-.detail.active{
-transform:translateY(0)
-}
-
-/* CART */
-
-.cartbar{
-position:fixed;
-bottom:-70px;
-left:10px;
-right:10px;
-background:#16a34a;
-color:white;
-padding:14px;
-border-radius:14px;
-display:flex;
-justify-content:space-between;
-transition:0.3s
-}
-
-.cartbar.active{
-bottom:10px
-}
-
-.cartpanel{
-position:fixed;
-inset:0;
-background:white;
-transform:translateY(100%);
-transition:0.3s;
-overflow:auto;
-padding:20px;
-z-index:101
-}
-
-.cartpanel.active{
-transform:translateY(0)
-}
-
-.cartitem{
-display:flex;
-justify-content:space-between;
-align-items:center;
+.catname{
 padding:10px;
-background:#f2f2f2;
-border-radius:8px;
-margin-bottom:8px
-}
-
-.qty button{
-width:26px;
-height:26px;
-border:none;
-background:#16a34a;
-color:white;
-border-radius:6px
-}
-
-button{
-cursor:pointer
+font-weight:700;
+text-align:center;
+font-size:18px
 }
 
 </style>
@@ -201,223 +91,35 @@ Fresh Maximum
 <img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
 </div>
 
-<div class="searchbar">
-<input placeholder="Suchen..." onkeyup="searchProducts(this.value)">
+<div class="categories">
+
+<div class="cat">
+
+<img src="https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png">
+
+<div class="catname">
+Obst
 </div>
-
-<div class="products" id="productList"></div>
-
-<div class="cartbar" id="cartbar" onclick="openCart()">
-<span>Warenkorb</span>
-<span id="cartcount">0</span>
-</div>
-
-<div class="cartpanel" id="cartpanel">
-
-<h2>Ihr Warenkorb</h2>
-
-<div id="cartitems"></div>
-
-<h3 id="total">Total: 0 €</h3>
-
-<button onclick="sendOrder()">WhatsApp Bestellung</button>
 
 </div>
 
-<div class="detail" id="detail"></div>
+<div class="cat">
+
+<img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png">
+
+<div class="catname">
+Gemüse
+</div>
+
+</div>
+
+</div>
 
 <script>
 
 /* ZOOM ENGELLE */
 
 document.addEventListener("gesturestart", e=>e.preventDefault())
-
-/* DATA */
-
-let products=[]
-let cart=[]
-
-/* DEMO PRODUCTS */
-
-products=[
-{
-name:"Granatapfel",
-brand:"Fresh",
-price:3.99,
-img:"https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png",
-desc:"Frischer Granatapfel"
-},
-{
-name:"Avocado",
-brand:"Premium",
-price:2.49,
-img:"https://i.postimg.cc/qqQFqG0v/avocado.jpg",
-desc:"Reife Avocado"
-}
-]
-
-/* RENDER */
-
-function render(){
-
-productList.innerHTML=""
-
-products.forEach((p,i)=>{
-
-let div=document.createElement("div")
-
-div.className="card"
-
-div.innerHTML=`
-
-<img src="${p.img}" onclick="openDetail(${i})">
-
-<div class="name">${p.name}</div>
-
-<div class="brand">${p.brand}</div>
-
-<div class="price">${p.price} €</div>
-
-<button class="add" onclick="addCart(${i})">+</button>
-
-`
-
-productList.appendChild(div)
-
-})
-
-}
-
-/* DETAIL */
-
-function openDetail(i){
-
-let p=products[i]
-
-detail.innerHTML=`
-
-<h2>${p.name}</h2>
-
-<img src="${p.img}" style="width:100%;border-radius:12px">
-
-<p><b>Marke:</b> ${p.brand}</p>
-
-<p>${p.desc}</p>
-
-<button onclick="addCart(${i})">In den Warenkorb</button>
-
-<button onclick="closeDetail()">Schließen</button>
-
-`
-
-detail.classList.add("active")
-
-}
-
-function closeDetail(){
-
-detail.classList.remove("active")
-
-}
-
-/* SEARCH */
-
-function searchProducts(q){
-
-q=q.toLowerCase()
-
-document.querySelectorAll(".card").forEach(c=>{
-c.style.display=c.innerText.toLowerCase().includes(q)?"block":"none"
-})
-
-}
-
-/* CART */
-
-function addCart(i){
-
-let item=cart.find(c=>c.index===i)
-
-if(item){
-item.qty++
-}else{
-cart.push({index:i,qty:1})
-}
-
-cartcount.innerText=cart.length
-
-cartbar.classList.add("active")
-
-renderCart()
-
-}
-
-function renderCart(){
-
-cartitems.innerHTML=""
-
-let total=0
-
-cart.forEach((c,i)=>{
-
-let p=products[c.index]
-
-total+=p.price*c.qty
-
-let div=document.createElement("div")
-
-div.className="cartitem"
-
-div.innerHTML=`
-${p.name}
-
-<div class="qty">
-<button onclick="changeQty(${i},-1)">-</button>
-${c.qty}
-<button onclick="changeQty(${i},1)">+</button>
-</div>
-`
-
-cartitems.appendChild(div)
-
-})
-
-document.getElementById("total").innerText="Total: "+total+" €"
-
-}
-
-function changeQty(i,v){
-
-cart[i].qty+=v
-
-if(cart[i].qty<=0) cart.splice(i,1)
-
-renderCart()
-
-}
-
-function openCart(){
-
-cartpanel.classList.add("active")
-
-}
-
-/* ORDER */
-
-function sendOrder(){
-
-let msg="FreshMaximum Bestellung:%0A"
-
-cart.forEach(c=>{
-let p=products[c.index]
-msg+=p.name+" x"+c.qty+"%0A"
-})
-
-window.open("https://wa.me/491727117489?text="+msg)
-
-}
-
-render()
 
 </script>
 
