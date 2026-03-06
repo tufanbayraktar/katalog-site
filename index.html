@@ -12,13 +12,16 @@
 
 <style>
 
-*{box-sizing:border-box;}
+*{
+box-sizing:border-box;
+}
 
 body{
 margin:0;
 font-family:Inter;
 background:#f6f7f9;
 overflow-x:hidden;
+touch-action:manipulation;
 }
 
 /* HEADER */
@@ -88,7 +91,7 @@ background:white;
 border-radius:16px;
 padding:10px;
 box-shadow:0 4px 8px rgba(0,0,0,0.08);
-position:relative
+cursor:pointer
 }
 
 .card img{
@@ -110,19 +113,6 @@ font-weight:700;
 text-align:center
 }
 
-.add{
-position:absolute;
-bottom:10px;
-right:10px;
-width:34px;
-height:34px;
-border:none;
-background:#16a34a;
-color:white;
-border-radius:50%;
-font-size:20px
-}
-
 /* BACK */
 
 .back{
@@ -130,6 +120,43 @@ padding:10px;
 font-weight:600;
 cursor:pointer;
 display:none
+}
+
+/* PRODUCT DETAIL */
+
+.detail{
+position:fixed;
+inset:0;
+background:white;
+transform:translateY(100%);
+transition:0.3s;
+padding:20px;
+z-index:100;
+overflow:auto
+}
+
+.detail.active{
+transform:translateY(0)
+}
+
+.detail img{
+width:100%;
+border-radius:16px
+}
+
+.detail h2{
+margin-top:10px
+}
+
+.addbtn{
+margin-top:20px;
+width:100%;
+padding:14px;
+background:#16a34a;
+border:none;
+color:white;
+border-radius:12px;
+font-size:16px
 }
 
 /* CART BAR */
@@ -162,7 +189,7 @@ background:white;
 transform:translateY(100%);
 transition:0.3s;
 padding:20px;
-z-index:100
+z-index:200
 }
 
 .cartpanel.active{
@@ -173,8 +200,8 @@ transform:translateY(0)
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:10px;
 background:#f2f2f2;
+padding:10px;
 border-radius:8px;
 margin-bottom:10px
 }
@@ -182,17 +209,17 @@ margin-bottom:10px
 .qty button{
 width:28px;
 height:28px;
-border:none;
 background:#16a34a;
+border:none;
 color:white;
 border-radius:6px
 }
 
 .orderbtn{
-width:100%;
 margin-top:20px;
-background:#16a34a;
+width:100%;
 padding:14px;
+background:#16a34a;
 border:none;
 color:white;
 border-radius:12px;
@@ -229,11 +256,11 @@ font-size:16px
 
 </div>
 
-<!-- OBST -->
+<!-- OBST PRODUCTS -->
 
 <div class="products" id="obstProducts">
 
-<div class="card">
+<div class="card" onclick="openDetail()">
 
 <img src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png">
 
@@ -241,20 +268,35 @@ font-size:16px
 
 <div class="price">€ / kg</div>
 
-<button class="add" onclick="addCart()">+</button>
+</div>
 
 </div>
+
+<!-- PRODUCT DETAIL -->
+
+<div class="detail" id="detail">
+
+<img src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png">
+
+<h2>Granatäpfel</h2>
+
+<p>Frische Granatäpfel bester Qualität.</p>
+
+<p><b>Preis:</b> € / kg</p>
+
+<button class="addbtn" onclick="addCart()">In den Warenkorb</button>
+
+<button class="addbtn" onclick="closeDetail()" style="background:#999;margin-top:10px;">
+Schließen
+</button>
 
 </div>
 
 <!-- CART BAR -->
 
 <div class="cartbar" id="cartbar" onclick="openCart()">
-
 <span>Warenkorb</span>
-
 <span id="cartcount">0</span>
-
 </div>
 
 <!-- CART PANEL -->
@@ -293,6 +335,16 @@ obstProducts.style.display="none"
 backBtn.style.display="none"
 }
 
+/* DETAIL */
+
+function openDetail(){
+detail.classList.add("active")
+}
+
+function closeDetail(){
+detail.classList.remove("active")
+}
+
 /* CART */
 
 let cartQty=0
@@ -321,7 +373,7 @@ Granatäpfel
 
 <button onclick="changeQty(-1)">-</button>
 
-<span id="qty">${cartQty}</span>
+<span>${cartQty}</span>
 
 <button onclick="changeQty(1)">+</button>
 
