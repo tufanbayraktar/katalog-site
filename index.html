@@ -1,256 +1,101 @@
 <!DOCTYPE html>
 
 <html lang="de">
-
 <head>
-
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-
 <title>FreshMaximum</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
 <style>
-
-*{
-box-sizing:border-box;
-}
-
-body{
-margin:0;
-font-family:Inter;
-background:#f6f7f9;
-overflow-x:hidden;
-touch-action:manipulation;
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter;background:#f6f7f9;overflow-x:hidden;touch-action:manipulation}
 
 /* HERO */
+.hero{position:relative;height:260px;overflow:hidden}
+.hero img{width:100%;height:100%;object-fit:cover}
 
-.hero{
-position:relative;
-height:260px;
-overflow:hidden;
+/* SEARCH */
+.searchbar{
+position:absolute;top:18px;left:50%;transform:translateX(-50%);
+width:80%;height:46px;background:rgba(0,0,0,.6);
+border-radius:30px;display:flex;align-items:center;justify-content:center;
+color:#fff;backdrop-filter:blur(6px)
 }
-
-.hero img{
-width:100%;
-height:100%;
-object-fit:cover;
+.searchbar input{
+border:none;background:none;color:#fff;font-size:16px;outline:none;text-align:center;width:80%
 }
+.searchicon{margin-right:6px}
 
 /* LOGO CARD */
-
-.logo-card{
-position:absolute;
-bottom:-40px;
-left:50%;
-transform:translateX(-50%);
-text-align:center;
-}
-
+.logo-card{position:absolute;bottom:-50px;left:50%;transform:translateX(-50%);text-align:center}
 .logo{
-width:110px;
-height:110px;
-background:white;
-border-radius:22px;
-display:flex;
-align-items:center;
-justify-content:center;
-box-shadow:0 10px 30px rgba(0,0,0,0.2);
+width:120px;height:120px;background:#fff;border-radius:22px;display:flex;
+align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,.25);margin:auto
 }
+.logo img{width:90px}
+.brand{margin-top:12px;font-size:28px;font-weight:700}
 
-.logo img{
-width:80px;
-}
-
-.brand{
-margin-top:14px;
-font-size:26px;
-font-weight:700;
-}
-
-/* CATEGORY */
-
-.categories{
-margin-top:80px;
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:14px;
-padding:16px;
-}
-
+/* CATEGORIES */
+.categories{margin-top:90px;display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px}
 .cat{
-background:white;
-border-radius:18px;
-overflow:hidden;
-box-shadow:0 6px 12px rgba(0,0,0,0.08);
-cursor:pointer;
+background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 6px 12px rgba(0,0,0,.08);cursor:pointer
 }
-
-.cat img{
-width:100%;
-height:140px;
-object-fit:cover;
-}
-
-.catname{
-padding:12px;
-text-align:center;
-font-weight:600;
-font-size:18px;
-}
+.cat img{width:100%;height:150px;object-fit:cover}
+.catname{padding:12px;text-align:center;font-weight:600;font-size:18px}
 
 /* BACK */
-
-.back{
-display:none;
-padding:14px;
-font-weight:600;
-cursor:pointer;
-}
+.back{display:none;padding:14px;font-weight:600;cursor:pointer}
 
 /* PRODUCTS */
-
-.products{
-display:none;
-grid-template-columns:1fr 1fr;
-gap:14px;
-padding:16px;
-}
-
+.products{display:none;grid-template-columns:1fr 1fr;gap:14px;padding:16px}
 .card{
-background:white;
-border-radius:16px;
-padding:10px;
-box-shadow:0 6px 12px rgba(0,0,0,0.08);
-cursor:pointer;
+background:#fff;border-radius:16px;padding:10px;box-shadow:0 6px 12px rgba(0,0,0,.08);position:relative
 }
-
-.card img{
-width:100%;
-height:150px;
-border-radius:12px;
-object-fit:cover;
-}
-
-.name{
-text-align:center;
-font-weight:700;
-margin-top:8px;
-font-size:18px;
-}
-
-.price{
-text-align:center;
-color:#16a34a;
-font-weight:700;
+.card img{width:100%;height:150px;border-radius:12px;object-fit:cover}
+.name{text-align:center;font-weight:700;margin-top:8px;font-size:18px}
+.price{text-align:center;color:#16a34a;font-weight:700}
+.addbtn{
+position:absolute;right:10px;bottom:10px;width:36px;height:36px;border:none;border-radius:50%;
+background:#16a34a;color:#fff;font-size:20px;cursor:pointer
 }
 
 /* DETAIL */
-
 .detail{
-position:fixed;
-inset:0;
-background:white;
-transform:translateY(100%);
-transition:0.35s;
-padding:20px;
-z-index:100;
-overflow:auto;
+position:fixed;inset:0;background:#fff;transform:translateY(100%);transition:.35s;
+padding:20px;z-index:100;overflow:auto
 }
-
-.detail.active{
-transform:translateY(0);
+.detail.active{transform:translateY(0)}
+.detail img{width:100%;border-radius:18px}
+.detail h2{margin-top:12px}
+.detail .price{font-size:18px;margin-top:4px}
+.detail .cta{
+width:100%;padding:16px;margin-top:16px;background:#16a34a;border:none;border-radius:12px;color:#fff;font-size:16px
 }
-
-.detail img{
-width:100%;
-border-radius:18px;
-}
-
-.detail h2{
-margin-top:14px;
-}
-
-.addbtn{
-width:100%;
-padding:16px;
-margin-top:18px;
-background:#16a34a;
-border:none;
-border-radius:12px;
-color:white;
-font-size:16px;
+.detail .close{
+width:100%;padding:14px;margin-top:10px;background:#888;border:none;border-radius:12px;color:#fff;font-size:14px
 }
 
 /* CART BAR */
-
 .cartbar{
-position:fixed;
-bottom:-70px;
-left:12px;
-right:12px;
-background:#16a34a;
-color:white;
-padding:14px;
-border-radius:14px;
-display:flex;
-justify-content:space-between;
-transition:0.3s;
-cursor:pointer;
+position:fixed;bottom:-80px;left:12px;right:12px;background:#16a34a;color:#fff;
+padding:14px;border-radius:14px;display:flex;justify-content:space-between;transition:.3s;cursor:pointer
 }
-
-.cartbar.active{
-bottom:12px;
-}
+.cartbar.active{bottom:12px}
 
 /* CART PANEL */
-
 .cartpanel{
-position:fixed;
-inset:0;
-background:white;
-transform:translateY(100%);
-transition:0.35s;
-padding:20px;
-z-index:200;
+position:fixed;inset:0;background:#fff;transform:translateY(100%);transition:.35s;padding:20px;z-index:200
 }
-
-.cartpanel.active{
-transform:translateY(0);
-}
-
+.cartpanel.active{transform:translateY(0)}
 .cartitem{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#f3f3f3;
-padding:12px;
-border-radius:10px;
-margin-bottom:12px;
+display:flex;justify-content:space-between;align-items:center;background:#f3f3f3;
+padding:12px;border-radius:10px;margin-bottom:12px
 }
-
 .qty button{
-width:30px;
-height:30px;
-border:none;
-background:#16a34a;
-color:white;
-border-radius:6px;
+width:30px;height:30px;border:none;background:#16a34a;color:#fff;border-radius:6px
 }
-
 .orderbtn{
-margin-top:20px;
-width:100%;
-padding:16px;
-background:#16a34a;
-border:none;
-border-radius:12px;
-color:white;
-font-size:16px;
-}
-
-</style>
+margin-top:20px;width:100%;padding:16px;background:#16a34a;border:none;border-radius:12px;color:#fff;font-size:16px
+} </style>
 
 </head>
 
@@ -259,19 +104,18 @@ font-size:16px;
 <!-- HERO -->
 
 <div class="hero">
+  <img src="https://i.postimg.cc/bJB4bPp8/IMG-3971.jpg">
+  <div class="searchbar">
+    <span class="searchicon">🔍</span>
+    <input id="searchInput" type="text" placeholder="Suchen" onkeyup="searchProducts()">
+  </div>
 
-<img src="https://i.postimg.cc/bJB4bPp8/IMG-3971.jpg">
-
-<div class="logo-card">
-
-<div class="logo">
-<img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
-</div>
-
-<div class="brand">Fresh Maximum</div>
-
-</div>
-
+  <div class="logo-card">
+    <div class="logo">
+      <img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
+    </div>
+    <div class="brand">Fresh Maximum</div>
+  </div>
 </div>
 
 <div class="back" id="backBtn" onclick="goHome()">← Zurück</div>
@@ -279,184 +123,120 @@ font-size:16px;
 <!-- CATEGORIES -->
 
 <div class="categories" id="categories">
+  <div class="cat" onclick="openObst()">
+    <img src="https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png">
+    <div class="catname">Obst</div>
+  </div>
 
-<div class="cat" onclick="openObst()">
-<img src="https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png">
-<div class="catname">Obst</div>
+  <div class="cat">
+    <img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png">
+    <div class="catname">Gemüse</div>
+  </div>
 </div>
 
-<div class="cat">
-<img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png">
-<div class="catname">Gemüse</div>
-</div>
-
-</div>
-
-<!-- OBST -->
+<!-- PRODUCTS -->
 
 <div class="products" id="obstProducts">
-
-<div class="card" onclick="openDetail()">
-
-<img src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png">
-
-<div class="name">Granatäpfel</div>
-
-<div class="price">€ / kg</div>
-
-</div>
-
+  <div class="card product">
+    <img onclick="openDetail()" src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png">
+    <div class="name">Granatäpfel</div>
+    <div class="price">€ / kg</div>
+    <button class="addbtn" onclick="addCart()">+</button>
+  </div>
 </div>
 
 <!-- DETAIL -->
 
 <div class="detail" id="detail">
-
-<img src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png">
-
-<h2>Granatäpfel</h2>
-
-<p>Frische Granatäpfel bester Qualität.</p>
-
-<p><b>Preis:</b> € / kg</p>
-
-<button class="addbtn" onclick="addCart()">In den Warenkorb</button>
-
-<button class="addbtn" onclick="closeDetail()" style="background:#888">
-Schließen
-</button>
-
+  <img src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png">
+  <h2>Granatäpfel</h2>
+  <div class="price">€ / kg</div>
+  <button class="cta" onclick="addCart()">In den Warenkorb</button>
+  <button class="close" onclick="closeDetail()">Schließen</button>
 </div>
 
 <!-- CART BAR -->
 
 <div class="cartbar" id="cartbar" onclick="openCart()">
-<span>Warenkorb</span>
-<span id="cartcount">0</span>
+  <span>Warenkorb</span>
+  <span id="cartcount">0</span>
 </div>
 
-<!-- CART -->
+<!-- CART PANEL -->
 
 <div class="cartpanel" id="cartpanel">
-
-<h2>Ihr Warenkorb</h2>
-
-<div id="cartitems"></div>
-
-<h3 id="total">Total: 0 €</h3>
-
-<button class="orderbtn" onclick="sendOrder()">
-WhatsApp Bestellung senden
-</button>
-
+  <h2>Ihr Warenkorb</h2>
+  <div id="cartitems"></div>
+  <h3 id="total">Total: 0 €</h3>
+  <button class="orderbtn" onclick="sendOrder()">WhatsApp Bestellung senden</button>
 </div>
 
 <script>
 
-/* zoom engelle */
+/* ZOOM ENGELLE */
+document.addEventListener("gesturestart",e=>e.preventDefault())
 
-document.addEventListener("gesturestart", e => e.preventDefault())
-
-/* category */
-
+/* CATEGORY */
 function openObst(){
-
 categories.style.display="none"
 obstProducts.style.display="grid"
 backBtn.style.display="block"
-
 }
-
 function goHome(){
-
 categories.style.display="grid"
 obstProducts.style.display="none"
 backBtn.style.display="none"
-
 }
 
-/* detail */
-
-function openDetail(){
-detail.classList.add("active")
+/* SEARCH */
+function searchProducts(){
+let input=document.getElementById("searchInput").value.toLowerCase()
+let products=document.querySelectorAll(".product")
+products.forEach(p=>{
+let name=p.innerText.toLowerCase()
+p.style.display=name.includes(input)?"block":"none"
+})
 }
 
-function closeDetail(){
-detail.classList.remove("active")
-}
+/* DETAIL */
+function openDetail(){detail.classList.add("active")}
+function closeDetail(){detail.classList.remove("active")}
 
-/* cart */
-
+/* CART */
 let cartQty=0
-
 function addCart(){
-
 cartQty++
-
 cartcount.innerText=cartQty
-
 cartbar.classList.add("active")
-
 renderCart()
-
 }
-
 function renderCart(){
-
 cartitems.innerHTML=`
-
 <div class="cartitem">
-
 Granatäpfel
-
 <div class="qty">
-
 <button onclick="changeQty(-1)">-</button>
-
 <span>${cartQty}</span>
-
 <button onclick="changeQty(1)">+</button>
-
 </div>
-
-</div>
-
-`
-
+</div>`
 total.innerText="Total: "+cartQty+" €"
-
 }
-
 function changeQty(v){
-
 cartQty+=v
-
-if(cartQty<0) cartQty=0
-
+if(cartQty<0)cartQty=0
 cartcount.innerText=cartQty
-
 renderCart()
-
 }
+function openCart(){cartpanel.classList.add("active")}
 
-function openCart(){
-
-cartpanel.classList.add("active")
-
-}
-
-/* order */
-
+/* ORDER */
 function sendOrder(){
-
 let msg="FreshMaximum Bestellung:%0AGranatäpfel x"+cartQty
-
 window.open("https://wa.me/491727117489?text="+msg)
-
 }
 
 </script>
 
 </body>
-
 </html>
