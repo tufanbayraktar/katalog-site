@@ -63,15 +63,13 @@ text-align:center;
 width:80%;
 }
 
-.searchicon{
-margin-right:6px;
-}
-
 /* LOGO */
 
 .logo-section{
+position:relative;
 text-align:center;
-margin-top:-40px;
+margin-top:-60px;
+z-index:5;
 }
 
 .logo{
@@ -127,15 +125,6 @@ font-weight:600;
 font-size:18px;
 }
 
-/* BACK */
-
-.back{
-display:none;
-padding:14px;
-font-weight:600;
-cursor:pointer;
-}
-
 /* PRODUCTS */
 
 .products{
@@ -186,54 +175,7 @@ color:white;
 font-size:20px;
 }
 
-/* DETAIL */
-
-.detail{
-position:fixed;
-inset:0;
-background:white;
-transform:translateY(100%);
-transition:0.35s;
-padding:20px;
-z-index:100;
-overflow:auto;
-}
-
-.detail.active{
-transform:translateY(0);
-}
-
-.detail img{
-width:100%;
-border-radius:18px;
-}
-
-.detail h2{
-margin-top:10px;
-}
-
-.cta{
-width:100%;
-padding:16px;
-margin-top:16px;
-background:#16a34a;
-border:none;
-border-radius:12px;
-color:white;
-font-size:16px;
-}
-
-.closebtn{
-width:100%;
-padding:14px;
-margin-top:10px;
-background:#888;
-border:none;
-border-radius:12px;
-color:white;
-}
-
-/* CART BAR */
+/* CART */
 
 .cartbar{
 position:fixed;
@@ -254,52 +196,6 @@ cursor:pointer;
 bottom:12px;
 }
 
-/* CART PANEL */
-
-.cartpanel{
-position:fixed;
-inset:0;
-background:white;
-transform:translateY(100%);
-transition:0.35s;
-padding:20px;
-z-index:200;
-}
-
-.cartpanel.active{
-transform:translateY(0);
-}
-
-.cartitem{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#f3f3f3;
-padding:12px;
-border-radius:10px;
-margin-bottom:12px;
-}
-
-.qty button{
-width:30px;
-height:30px;
-border:none;
-background:#16a34a;
-color:white;
-border-radius:6px;
-}
-
-.orderbtn{
-margin-top:20px;
-width:100%;
-padding:16px;
-background:#16a34a;
-border:none;
-border-radius:12px;
-color:white;
-font-size:16px;
-}
-
 </style>
 
 </head>
@@ -311,11 +207,7 @@ font-size:16px;
 <img src="https://i.postimg.cc/bJB4bPp8/IMG-3971.jpg">
 
 <div class="searchbar">
-
-<span class="searchicon">🔍</span>
-
-<input id="searchInput" type="text" placeholder="Suchen" oninput="searchProducts()">
-
+<input id="searchInput" type="text" placeholder="🔍 Suchen" oninput="searchProducts()">
 </div>
 
 </div>
@@ -330,196 +222,126 @@ font-size:16px;
 
 </div>
 
-<div class="back" id="backBtn" onclick="goHome()">← Zurück</div>
-
 <div class="categories" id="categories">
 
-<div class="cat" onclick="openObst()">
+<div class="cat" onclick="openCategory('Obst')">
 <img src="https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png">
 <div class="catname">Obst</div>
 </div>
 
-<div class="cat">
+<div class="cat" onclick="openCategory('Gemüse')">
 <img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png">
 <div class="catname">Gemüse</div>
 </div>
 
 </div>
 
-<div class="products" id="obstProducts">
+<div class="products" id="productList"></div>
+
+<div class="cartbar" id="cartbar">
+<span>Warenkorb</span>
+<span id="cartcount">0</span>
+</div>
+
+<script>
+
+/* PRODUCTS */
+
+let products = [
+
+{
+name:"Granatäpfel",
+price:"€ / kg",
+category:"Obst",
+img:"https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png"
+},
+
+{
+name:"Apfel",
+price:"€ / kg",
+category:"Obst",
+img:"https://i.postimg.cc/Vkq7yq8R/apple.jpg"
+},
+
+{
+name:"Banane",
+price:"€ / kg",
+category:"Obst",
+img:"https://i.postimg.cc/yxQ9Tz4b/banana.jpg"
+},
+
+{
+name:"Tomate",
+price:"€ / kg",
+category:"Gemüse",
+img:"https://i.postimg.cc/tJ4rXr9K/tomato.jpg"
+}
+
+]
+
+let cart=0
+
+/* OPEN CATEGORY */
+
+function openCategory(cat){
+
+categories.style.display="none"
+
+let list=document.getElementById("productList")
+
+list.style.display="grid"
+
+list.innerHTML=""
+
+products
+.filter(p=>p.category===cat)
+.forEach(p=>{
+
+list.innerHTML+=`
 
 <div class="card product">
 
-<img onclick="openDetail()" src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png">
+<img src="${p.img}">
 
-<div class="name">Granatäpfel</div>
+<div class="name">${p.name}</div>
 
-<div class="price">€ / kg</div>
+<div class="price">${p.price}</div>
 
 <button class="addbtn" onclick="addCart()">+</button>
 
 </div>
 
-</div>
-
-<div class="detail" id="detail">
-
-<img src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png">
-
-<h2>Granatäpfel</h2>
-
-<p>Frische Granatäpfel bester Qualität.</p>
-
-<p><b>Preis:</b> € / kg</p>
-
-<button class="cta" onclick="addCart()">In den Warenkorb</button>
-
-<button class="closebtn" onclick="closeDetail()">Schließen</button>
-
-</div>
-
-<div class="cartbar" id="cartbar" onclick="openCart()">
-<span>Warenkorb</span>
-<span id="cartcount">0</span>
-</div>
-
-<div class="cartpanel" id="cartpanel">
-
-<h2>Ihr Warenkorb</h2>
-
-<div id="cartitems"></div>
-
-<h3 id="total">Total: 0 €</h3>
-
-<button class="orderbtn" onclick="sendOrder()">
-WhatsApp Bestellung senden
-</button>
-
-</div>
-
-<script>
-
-/* zoom kapat */
-
-document.addEventListener("gesturestart", e => e.preventDefault())
-
-/* category */
-
-function openObst(){
-
-categories.style.display="none"
-obstProducts.style.display="grid"
-backBtn.style.display="block"
-
-}
-
-function goHome(){
-
-categories.style.display="grid"
-obstProducts.style.display="none"
-backBtn.style.display="none"
-
-}
-
-/* search */
-
-function searchProducts(){
-
-let input=document.getElementById("searchInput").value.toLowerCase()
-
-let products=document.querySelectorAll(".product")
-
-products.forEach(p=>{
-
-let name=p.innerText.toLowerCase()
-
-if(name.includes(input)){
-p.style.display="block"
-}else{
-p.style.display="none"
-}
+`
 
 })
 
 }
 
-/* detail */
+/* SEARCH */
 
-function openDetail(){
-detail.classList.add("active")
+function searchProducts(){
+
+let input=document.getElementById("searchInput").value.toLowerCase()
+
+document.querySelectorAll(".product").forEach(p=>{
+
+let name=p.innerText.toLowerCase()
+
+p.style.display=name.includes(input)?"block":"none"
+
+})
+
 }
 
-function closeDetail(){
-detail.classList.remove("active")
-}
-
-/* cart */
-
-let cartQty=0
+/* CART */
 
 function addCart(){
 
-cartQty++
+cart++
 
-cartcount.innerText=cartQty
+cartcount.innerText=cart
 
 cartbar.classList.add("active")
-
-renderCart()
-
-}
-
-function renderCart(){
-
-cartitems.innerHTML=`
-
-<div class="cartitem">
-
-Granatäpfel
-
-<div class="qty">
-
-<button onclick="changeQty(-1)">-</button>
-
-<span>${cartQty}</span>
-
-<button onclick="changeQty(1)">+</button>
-
-</div>
-
-</div>
-
-`
-
-total.innerText="Total: "+cartQty+" €"
-
-}
-
-function changeQty(v){
-
-cartQty+=v
-
-if(cartQty<0)cartQty=0
-
-cartcount.innerText=cartQty
-
-renderCart()
-
-}
-
-function openCart(){
-
-cartpanel.classList.add("active")
-
-}
-
-/* order */
-
-function sendOrder(){
-
-let msg="FreshMaximum Bestellung:%0AGranatäpfel x"+cartQty
-
-window.open("https://wa.me/491727117489?text="+msg)
 
 }
 
