@@ -9,6 +9,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
 
 body{
@@ -53,7 +55,8 @@ overflow-x:auto;
 padding:10px;
 background:white;
 position:sticky;
-top:0
+top:0;
+z-index:10
 }
 
 .cat{
@@ -62,6 +65,16 @@ padding:8px 12px;
 border-radius:20px;
 cursor:pointer;
 font-weight:600
+}
+
+/* BESTSELLER */
+
+.bestseller{
+padding:10px
+}
+
+.bestseller h3{
+margin:6px 0
 }
 
 /* GRID */
@@ -175,7 +188,7 @@ color:white;
 border-radius:6px
 }
 
-/* PRODUCT DETAIL */
+/* DETAIL */
 
 .detail{
 position:fixed;
@@ -246,6 +259,13 @@ margin-top:6px;
 border-radius:8px
 }
 
+.stat{
+background:#f2f2f2;
+padding:10px;
+border-radius:10px;
+margin-top:10px
+}
+
 </style>
 
 </head>
@@ -259,10 +279,15 @@ border-radius:8px
 </div>
 
 <div class="categories">
-<div class="cat" onclick="filterCategory('all')">Alle</div>
-<div class="cat" onclick="filterCategory('Obst')">Obst</div>
-<div class="cat" onclick="filterCategory('Gemüse')">Gemüse</div>
+<div class="cat" onclick="scrollCategory('all')">Alle</div>
+<div class="cat" onclick="scrollCategory('Obst')">Obst</div>
+<div class="cat" onclick="scrollCategory('Gemüse')">Gemüse</div>
 <div class="cat" onclick="showFavorites()">Favoriten</div>
+</div>
+
+<div class="bestseller">
+<h3>🔥 Bestseller</h3>
+<div id="bestseller"></div>
 </div>
 
 <div class="products" id="productList"></div>
@@ -273,10 +298,15 @@ border-radius:8px
 </div>
 
 <div class="cartpanel" id="cartpanel">
+
 <h2>Ihr Warenkorb</h2>
+
 <div id="cartitems"></div>
+
 <h3 id="total">Total: 0 €</h3>
+
 <button onclick="sendOrder()">WhatsApp Bestellung</button>
+
 </div>
 
 <div class="detail" id="detail"></div>
@@ -308,25 +338,30 @@ border-radius:8px
 <h3>Produkte</h3>
 <div id="adminlist"></div>
 
+<h3>Dashboard</h3>
+<div class="stat" id="orders"></div>
+<div class="stat" id="revenue"></div>
+<canvas id="chart"></canvas>
+
 </div>
 
 <script>
 
 /* ZOOM ENGELLE */
 
-document.addEventListener('gesturestart', function (e) {
-e.preventDefault();
-});
+document.addEventListener('gesturestart', e=>e.preventDefault())
 
 /* DATA */
 
 let products=JSON.parse(localStorage.getItem("products"))||[]
 let favorites=JSON.parse(localStorage.getItem("favorites"))||[]
+let orders=JSON.parse(localStorage.getItem("orders"))||[]
 let cart=[]
 
 function save(){
 localStorage.setItem("products",JSON.stringify(products))
 localStorage.setItem("favorites",JSON.stringify(favorites))
+localStorage.setItem("orders",JSON.stringify(orders))
 }
 
 /* RENDER */
@@ -341,6 +376,7 @@ let fav=favorites.includes(p.name)?"❤️":"🤍"
 
 let div=document.createElement("div")
 div.className="card"
+div.dataset.cat=p.category
 
 div.innerHTML=`
 
@@ -349,13 +385,10 @@ div.innerHTML=`
 <img src="${p.img}" onclick="openDetail(${i})">
 
 <div class="name">${p.name}</div>
-
 <div class="brand">${p.brand}</div>
-
 <div class="price">${p.price} €</div>
 
 <button class="add" onclick="addCart(${i})">+</button>
-
 `
 
 productList.appendChild(div)
@@ -363,44 +396,52 @@ productList.appendChild(div)
 })
 
 renderAdmin()
+renderBest()
 
 }
 
-/* ADD PRODUCT */
+/* BESTSELLER */
 
-function addProduct(){
+function renderBest(){
 
-let file=pimg.files[0]
+let sales={}
 
-if(!file){
-alert("Bitte Bild wählen")
+orders.forEach(o=>{
+o.forEach(i=>{
+sales[i.name]=(sales[i.name]||0)+1
+})
+})
+
+let sorted=Object.entries(sales).sort((a,b)=>b[1]-a[1]).slice(0,4)
+
+bestseller.innerHTML=""
+
+sorted.forEach(s=>{
+
+let p=products.find(x=>x.name===s[0])
+
+if(!p)return
+
+let div=document.createElement("div")
+div.innerHTML=p.name+" ⭐"
+bestseller.appendChild(div)
+
+})
+
+}
+
+/* CATEGORY SCROLL */
+
+function scrollCategory(cat){
+
+if(cat==="all"){
+window.scrollTo({top:0,behavior:"smooth"})
 return
 }
 
-let reader=new FileReader()
+let el=[...document.querySelectorAll(".card")].find(c=>c.dataset.cat===cat)
 
-reader.onload=function(){
-
-products.push({
-name:pname.value,
-brand:pbrand.value,
-origin:porigin.value,
-content:pcontent.value,
-desc:pdesc.value,
-price:parseFloat(pprice.value),
-stock:pstock.value,
-category:pcat.value,
-img:reader.result
-})
-
-save()
-render()
-
-document.querySelectorAll("#adminpanel input, #adminpanel textarea").forEach(i=>i.value="")
-
-}
-
-reader.readAsDataURL(file)
+if(el) el.scrollIntoView({behavior:"smooth"})
 
 }
 
@@ -416,6 +457,40 @@ favorites.push(name)
 
 save()
 render()
+
+}
+
+function showFavorites(){
+
+productList.innerHTML=""
+
+products.filter(p=>favorites.includes(p.name)).forEach((p,i)=>{
+
+let div=document.createElement("div")
+div.className="card"
+
+div.innerHTML=`
+<img src="${p.img}">
+<div class="name">${p.name}</div>
+<div class="price">${p.price} €</div>
+<button class="add" onclick="addCart(${i})">+</button>
+`
+
+productList.appendChild(div)
+
+})
+
+}
+
+/* SEARCH */
+
+function searchProducts(q){
+
+q=q.toLowerCase()
+
+document.querySelectorAll(".card").forEach(c=>{
+c.style.display=c.innerText.toLowerCase().includes(q)?"block":"none"
+})
 
 }
 
@@ -471,13 +546,24 @@ document.getElementById("total").innerText="Total: "+total+" €"
 
 }
 
-function changeQty(i,v){
+/* ORDER */
 
-cart[i].qty+=v
+function sendOrder(){
 
-if(cart[i].qty<=0) cart.splice(i,1)
+orders.push(cart.map(c=>({name:products[c.index].name,qty:c.qty})))
 
-renderCart()
+save()
+
+let msg="FreshMaximum Bestellung:%0A"
+
+cart.forEach(c=>{
+let p=products[c.index]
+msg+=p.name+" x"+c.qty+"%0A"
+})
+
+window.open("https://wa.me/491727117489?text="+msg)
+
+updateStats()
 
 }
 
@@ -490,6 +576,37 @@ let pass=prompt("Admin Passwort")
 if(pass!=="1234")return
 
 adminpanel.classList.add("active")
+
+updateStats()
+
+}
+
+function addProduct(){
+
+let file=pimg.files[0]
+
+let reader=new FileReader()
+
+reader.onload=function(){
+
+products.push({
+name:pname.value,
+brand:pbrand.value,
+origin:porigin.value,
+content:pcontent.value,
+desc:pdesc.value,
+price:parseFloat(pprice.value),
+stock:pstock.value,
+category:pcat.value,
+img:reader.result
+})
+
+save()
+render()
+
+}
+
+reader.readAsDataURL(file)
 
 }
 
@@ -518,6 +635,28 @@ ${p.name}
 
 adminlist.appendChild(div)
 
+})
+
+}
+
+/* DASHBOARD */
+
+function updateStats(){
+
+orders.innerText="Bestellungen: "+orders.length
+
+let revenue=orders.length*10
+
+revenue.innerText="Umsatz: "+revenue+" €"
+
+let ctx=document.getElementById("chart")
+
+new Chart(ctx,{
+type:"bar",
+data:{
+labels:["Bestellungen"],
+datasets:[{data:[orders.length]}]
+}
 })
 
 }
