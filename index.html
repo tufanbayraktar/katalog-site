@@ -48,9 +48,13 @@ background:rgba(0,0,0,0.6);
 border-radius:30px;
 display:flex;
 align-items:center;
-justify-content:center;
+padding:0 16px;
 color:white;
 backdrop-filter:blur(6px);
+}
+
+.searchicon{
+margin-right:10px;
 }
 
 .searchbar input{
@@ -59,8 +63,8 @@ background:none;
 color:white;
 font-size:16px;
 outline:none;
+width:100%;
 text-align:center;
-width:80%;
 }
 
 /* LOGO */
@@ -140,6 +144,7 @@ border-radius:16px;
 padding:10px;
 box-shadow:0 6px 12px rgba(0,0,0,0.08);
 position:relative;
+cursor:pointer;
 }
 
 .card img{
@@ -173,6 +178,50 @@ border-radius:50%;
 background:#16a34a;
 color:white;
 font-size:20px;
+cursor:pointer;
+}
+
+/* DETAIL */
+
+.detail{
+position:fixed;
+inset:0;
+background:white;
+transform:translateY(100%);
+transition:0.35s;
+padding:20px;
+z-index:100;
+overflow:auto;
+}
+
+.detail.active{
+transform:translateY(0);
+}
+
+.detail img{
+width:100%;
+border-radius:18px;
+}
+
+.cta{
+width:100%;
+padding:16px;
+margin-top:16px;
+background:#16a34a;
+border:none;
+border-radius:12px;
+color:white;
+font-size:16px;
+}
+
+.closebtn{
+width:100%;
+padding:14px;
+margin-top:10px;
+background:#888;
+border:none;
+border-radius:12px;
+color:white;
 }
 
 /* CART */
@@ -196,6 +245,52 @@ cursor:pointer;
 bottom:12px;
 }
 
+/* CART PANEL */
+
+.cartpanel{
+position:fixed;
+inset:0;
+background:white;
+transform:translateY(100%);
+transition:0.35s;
+padding:20px;
+z-index:200;
+}
+
+.cartpanel.active{
+transform:translateY(0);
+}
+
+.cartitem{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#f3f3f3;
+padding:12px;
+border-radius:10px;
+margin-bottom:12px;
+}
+
+.qty button{
+width:30px;
+height:30px;
+border:none;
+background:#16a34a;
+color:white;
+border-radius:6px;
+}
+
+.orderbtn{
+margin-top:20px;
+width:100%;
+padding:16px;
+background:#16a34a;
+border:none;
+border-radius:12px;
+color:white;
+font-size:16px;
+}
+
 </style>
 
 </head>
@@ -207,7 +302,11 @@ bottom:12px;
 <img src="https://i.postimg.cc/bJB4bPp8/IMG-3971.jpg">
 
 <div class="searchbar">
-<input id="searchInput" type="text" placeholder="🔍 Suchen" oninput="searchProducts()">
+
+<span class="searchicon">🔍</span>
+
+<input id="searchInput" type="text" placeholder="Suchen" oninput="searchProducts()">
+
 </div>
 
 </div>
@@ -238,16 +337,24 @@ bottom:12px;
 
 <div class="products" id="productList"></div>
 
-<div class="cartbar" id="cartbar">
+<div class="detail" id="detail"></div>
+
+<div class="cartbar" id="cartbar" onclick="openCart()">
 <span>Warenkorb</span>
 <span id="cartcount">0</span>
+</div>
+
+<div class="cartpanel" id="cartpanel">
+<h2>Ihr Warenkorb</h2>
+<div id="cartitems"></div>
+<button class="orderbtn" onclick="sendOrder()">WhatsApp Bestellung senden</button>
 </div>
 
 <script>
 
 /* PRODUCTS */
 
-let products = [
+let products=[
 
 {
 name:"Granatäpfel",
@@ -261,27 +368,11 @@ name:"Apfel",
 price:"€ / kg",
 category:"Obst",
 img:"https://i.postimg.cc/Vkq7yq8R/apple.jpg"
-},
-
-{
-name:"Banane",
-price:"€ / kg",
-category:"Obst",
-img:"https://i.postimg.cc/yxQ9Tz4b/banana.jpg"
-},
-
-{
-name:"Tomate",
-price:"€ / kg",
-category:"Gemüse",
-img:"https://i.postimg.cc/tJ4rXr9K/tomato.jpg"
 }
 
 ]
 
 let cart=0
-
-/* OPEN CATEGORY */
 
 function openCategory(cat){
 
@@ -293,15 +384,14 @@ list.style.display="grid"
 
 list.innerHTML=""
 
-products
-.filter(p=>p.category===cat)
-.forEach(p=>{
+products.filter(p=>p.category===cat).forEach(p=>{
 
 list.innerHTML+=`
 
 <div class="card product">
 
-<img src="${p.img}">
+<img onclick="openDetail('${p.name}','${p.img}','${p.price}')"
+src="${p.img}">
 
 <div class="name">${p.name}</div>
 
@@ -317,7 +407,29 @@ list.innerHTML+=`
 
 }
 
-/* SEARCH */
+function openDetail(name,img,price){
+
+detail.innerHTML=`
+
+<img src="${img}">
+
+<h2>${name}</h2>
+
+<p>${price}</p>
+
+<button class="cta" onclick="addCart()">In den Warenkorb</button>
+
+<button class="closebtn" onclick="closeDetail()">Schließen</button>
+
+`
+
+detail.classList.add("active")
+
+}
+
+function closeDetail(){
+detail.classList.remove("active")
+}
 
 function searchProducts(){
 
@@ -333,8 +445,6 @@ p.style.display=name.includes(input)?"block":"none"
 
 }
 
-/* CART */
-
 function addCart(){
 
 cart++
@@ -342,6 +452,18 @@ cart++
 cartcount.innerText=cart
 
 cartbar.classList.add("active")
+
+}
+
+function openCart(){
+cartpanel.classList.add("active")
+}
+
+function sendOrder(){
+
+let msg="FreshMaximum Bestellung x"+cart
+
+window.open("https://wa.me/491727117489?text="+msg)
 
 }
 
