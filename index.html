@@ -12,16 +12,13 @@
 
 <style>
 
-*{
-box-sizing:border-box;
-}
+*{box-sizing:border-box;}
 
 body{
 margin:0;
 font-family:Inter;
 background:#f6f7f9;
 overflow-x:hidden;
-touch-action:manipulation;
 }
 
 /* HEADER */
@@ -77,41 +74,202 @@ text-align:center;
 font-size:18px
 }
 
+/* PRODUCTS */
+
+.products{
+display:none;
+grid-template-columns:1fr 1fr;
+gap:12px;
+padding:12px
+}
+
+.card{
+background:white;
+border-radius:16px;
+padding:10px;
+box-shadow:0 4px 8px rgba(0,0,0,0.08);
+position:relative
+}
+
+.card img{
+width:100%;
+height:140px;
+border-radius:12px;
+object-fit:cover
+}
+
+.name{
+font-weight:700;
+text-align:center;
+margin-top:6px
+}
+
+.price{
+color:#16a34a;
+font-weight:700;
+text-align:center
+}
+
+.add{
+position:absolute;
+bottom:10px;
+right:10px;
+width:34px;
+height:34px;
+border:none;
+background:#16a34a;
+color:white;
+border-radius:50%;
+font-size:20px
+}
+
+/* BACK */
+
+.back{
+padding:10px;
+font-weight:600;
+cursor:pointer;
+display:none
+}
+
+/* CART BAR */
+
+.cartbar{
+position:fixed;
+bottom:-70px;
+left:10px;
+right:10px;
+background:#16a34a;
+color:white;
+padding:14px;
+border-radius:14px;
+display:flex;
+justify-content:space-between;
+transition:0.3s;
+cursor:pointer
+}
+
+.cartbar.active{
+bottom:10px
+}
+
+/* CART PANEL */
+
+.cartpanel{
+position:fixed;
+inset:0;
+background:white;
+transform:translateY(100%);
+transition:0.3s;
+padding:20px;
+z-index:100
+}
+
+.cartpanel.active{
+transform:translateY(0)
+}
+
+.cartitem{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px;
+background:#f2f2f2;
+border-radius:8px;
+margin-bottom:10px
+}
+
+.qty button{
+width:28px;
+height:28px;
+border:none;
+background:#16a34a;
+color:white;
+border-radius:6px
+}
+
+.orderbtn{
+width:100%;
+margin-top:20px;
+background:#16a34a;
+padding:14px;
+border:none;
+color:white;
+border-radius:12px;
+font-size:16px
+}
+
 </style>
 
 </head>
 
 <body>
 
-<div class="header">
-Fresh Maximum
-</div>
+<div class="header">Fresh Maximum</div>
 
 <div class="logo">
 <img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
 </div>
 
-<div class="categories">
+<div class="back" id="backBtn" onclick="goHome()">← Zurück</div>
 
-<div class="cat">
+<!-- CATEGORY -->
 
+<div class="categories" id="categories">
+
+<div class="cat" onclick="openObst()">
 <img src="https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png">
-
-<div class="catname">
-Obst
-</div>
-
+<div class="catname">Obst</div>
 </div>
 
 <div class="cat">
-
 <img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png">
-
-<div class="catname">
-Gemüse
+<div class="catname">Gemüse</div>
 </div>
 
 </div>
+
+<!-- OBST -->
+
+<div class="products" id="obstProducts">
+
+<div class="card">
+
+<img src="https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png">
+
+<div class="name">Granatäpfel</div>
+
+<div class="price">€ / kg</div>
+
+<button class="add" onclick="addCart()">+</button>
+
+</div>
+
+</div>
+
+<!-- CART BAR -->
+
+<div class="cartbar" id="cartbar" onclick="openCart()">
+
+<span>Warenkorb</span>
+
+<span id="cartcount">0</span>
+
+</div>
+
+<!-- CART PANEL -->
+
+<div class="cartpanel" id="cartpanel">
+
+<h2>Ihr Warenkorb</h2>
+
+<div id="cartitems"></div>
+
+<h3 id="total">Total: 0 €</h3>
+
+<button class="orderbtn" onclick="sendOrder()">
+WhatsApp Bestellung senden
+</button>
 
 </div>
 
@@ -119,7 +277,89 @@ Gemüse
 
 /* ZOOM ENGELLE */
 
-document.addEventListener("gesturestart", e=>e.preventDefault())
+document.addEventListener("gesturestart",e=>e.preventDefault())
+
+/* CATEGORY */
+
+function openObst(){
+categories.style.display="none"
+obstProducts.style.display="grid"
+backBtn.style.display="block"
+}
+
+function goHome(){
+categories.style.display="grid"
+obstProducts.style.display="none"
+backBtn.style.display="none"
+}
+
+/* CART */
+
+let cartQty=0
+
+function addCart(){
+
+cartQty++
+
+cartcount.innerText=cartQty
+
+cartbar.classList.add("active")
+
+renderCart()
+
+}
+
+function renderCart(){
+
+cartitems.innerHTML=`
+
+<div class="cartitem">
+
+Granatäpfel
+
+<div class="qty">
+
+<button onclick="changeQty(-1)">-</button>
+
+<span id="qty">${cartQty}</span>
+
+<button onclick="changeQty(1)">+</button>
+
+</div>
+
+</div>
+
+`
+
+total.innerText="Total: "+cartQty+" €"
+
+}
+
+function changeQty(v){
+
+cartQty+=v
+
+if(cartQty<0) cartQty=0
+
+cartcount.innerText=cartQty
+
+renderCart()
+
+}
+
+function openCart(){
+cartpanel.classList.add("active")
+}
+
+/* ORDER */
+
+function sendOrder(){
+
+let msg="FreshMaximum Bestellung:%0AGranatäpfel x"+cartQty
+
+window.open("https://wa.me/491727117489?text="+msg)
+
+}
 
 </script>
 
