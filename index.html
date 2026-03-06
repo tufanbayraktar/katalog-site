@@ -27,12 +27,24 @@ touch-action:manipulation;
 /* HEADER */
 
 .header{
-background:#16a34a;
-color:white;
-padding:18px;
+background:black;
+color:#16a34a;
+padding:16px;
 text-align:center;
-font-size:22px;
+font-size:24px;
 font-weight:700
+}
+
+/* LOGO */
+
+.logo{
+text-align:center;
+background:white;
+padding:10px
+}
+
+.logo img{
+height:70px
 }
 
 /* SEARCH */
@@ -171,59 +183,8 @@ color:white;
 border-radius:6px
 }
 
-/* ADMIN */
-
-.admin{
-position:fixed;
-bottom:90px;
-right:10px;
-background:black;
-color:white;
-padding:10px;
-border-radius:10px
-}
-
-.panel{
-position:fixed;
-inset:0;
-background:white;
-transform:translateY(100%);
-transition:0.3s;
-overflow:auto;
-padding:20px
-}
-
-.panel.active{
-transform:translateY(0)
-}
-
-input,select,textarea{
-width:100%;
-padding:10px;
-margin-bottom:8px;
-border-radius:8px;
-border:1px solid #ddd
-}
-
 button{
-padding:10px;
-border:none;
-border-radius:10px;
-background:#16a34a;
-color:white
-}
-
-.delete{
-background:red
-}
-
-.productrow{
-display:flex;
-justify-content:space-between;
-background:#f2f2f2;
-padding:8px;
-margin-top:6px;
-border-radius:8px
+cursor:pointer
 }
 
 </style>
@@ -232,7 +193,13 @@ border-radius:8px
 
 <body>
 
-<div class="header">FreshMaximum</div>
+<div class="header">
+Fresh Maximum
+</div>
+
+<div class="logo">
+<img src="https://i.postimg.cc/qMnCrzdm/Fresh-Maximum-Logo.png">
+</div>
 
 <div class="searchbar">
 <input placeholder="Suchen..." onkeyup="searchProducts(this.value)">
@@ -259,37 +226,6 @@ border-radius:8px
 
 <div class="detail" id="detail"></div>
 
-<div class="admin" onclick="adminLogin()">ADMIN</div>
-
-<div class="panel" id="adminpanel">
-
-<h2>Produkt hinzufügen</h2>
-
-<input id="pname" placeholder="Produktname">
-<input id="pbrand" placeholder="Marke">
-<input id="porigin" placeholder="Herkunft">
-<input id="pcontent" placeholder="Inhalt">
-
-<textarea id="pdesc" placeholder="Beschreibung"></textarea>
-
-<input id="pprice" placeholder="Preis €">
-<input id="pstock" placeholder="Stock">
-
-<select id="pcat">
-<option value="Obst">Obst</option>
-<option value="Gemüse">Gemüse</option>
-</select>
-
-<input type="file" id="pimg" accept="image/*">
-
-<button onclick="addProduct()">Produkt speichern</button>
-
-<h3>Produkte</h3>
-
-<div id="adminlist"></div>
-
-</div>
-
 <script>
 
 /* ZOOM ENGELLE */
@@ -298,12 +234,27 @@ document.addEventListener("gesturestart", e=>e.preventDefault())
 
 /* DATA */
 
-let products=JSON.parse(localStorage.getItem("products"))||[]
+let products=[]
 let cart=[]
 
-function save(){
-localStorage.setItem("products",JSON.stringify(products))
+/* DEMO PRODUCTS */
+
+products=[
+{
+name:"Granatapfel",
+brand:"Fresh",
+price:3.99,
+img:"https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png",
+desc:"Frischer Granatapfel"
+},
+{
+name:"Avocado",
+brand:"Premium",
+price:2.49,
+img:"https://i.postimg.cc/qqQFqG0v/avocado.jpg",
+desc:"Reife Avocado"
 }
+]
 
 /* RENDER */
 
@@ -314,6 +265,7 @@ productList.innerHTML=""
 products.forEach((p,i)=>{
 
 let div=document.createElement("div")
+
 div.className="card"
 
 div.innerHTML=`
@@ -321,7 +273,9 @@ div.innerHTML=`
 <img src="${p.img}" onclick="openDetail(${i})">
 
 <div class="name">${p.name}</div>
+
 <div class="brand">${p.brand}</div>
+
 <div class="price">${p.price} €</div>
 
 <button class="add" onclick="addCart(${i})">+</button>
@@ -331,8 +285,6 @@ div.innerHTML=`
 productList.appendChild(div)
 
 })
-
-renderAdmin()
 
 }
 
@@ -349,8 +301,7 @@ detail.innerHTML=`
 <img src="${p.img}" style="width:100%;border-radius:12px">
 
 <p><b>Marke:</b> ${p.brand}</p>
-<p><b>Herkunft:</b> ${p.origin}</p>
-<p><b>Inhalt:</b> ${p.content}</p>
+
 <p>${p.desc}</p>
 
 <button onclick="addCart(${i})">In den Warenkorb</button>
@@ -414,6 +365,7 @@ let p=products[c.index]
 total+=p.price*c.qty
 
 let div=document.createElement("div")
+
 div.className="cartitem"
 
 div.innerHTML=`
@@ -445,7 +397,9 @@ renderCart()
 }
 
 function openCart(){
+
 cartpanel.classList.add("active")
+
 }
 
 /* ORDER */
@@ -460,83 +414,6 @@ msg+=p.name+" x"+c.qty+"%0A"
 })
 
 window.open("https://wa.me/491727117489?text="+msg)
-
-}
-
-/* ADMIN */
-
-function adminLogin(){
-
-let pass=prompt("Admin Passwort")
-
-if(pass!=="1234")return
-
-adminpanel.classList.add("active")
-
-}
-
-function addProduct(){
-
-let file=pimg.files[0]
-
-if(!file){
-alert("Bitte Bild auswählen")
-return
-}
-
-let reader=new FileReader()
-
-reader.onload=function(e){
-
-products.push({
-name:pname.value,
-brand:pbrand.value,
-origin:porigin.value,
-content:pcontent.value,
-desc:pdesc.value,
-price:parseFloat(pprice.value),
-stock:pstock.value,
-category:pcat.value,
-img:e.target.result
-})
-
-save()
-
-render()
-
-}
-
-reader.readAsDataURL(file)
-
-}
-
-function deleteProduct(i){
-
-products.splice(i,1)
-
-save()
-
-render()
-
-}
-
-function renderAdmin(){
-
-adminlist.innerHTML=""
-
-products.forEach((p,i)=>{
-
-let div=document.createElement("div")
-div.className="productrow"
-
-div.innerHTML=`
-${p.name}
-<button class="delete" onclick="deleteProduct(${i})">Sil</button>
-`
-
-adminlist.appendChild(div)
-
-})
 
 }
 
