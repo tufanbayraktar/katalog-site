@@ -18,7 +18,6 @@ margin:0;
 font-family:Inter;
 background:#f6f7f9;
 overflow-x:hidden;
-touch-action:manipulation;
 }
 
 /* HERO */
@@ -67,8 +66,6 @@ text-align:center;
 .logo-section{
 text-align:center;
 margin-top:-60px;
-z-index:5;
-position:relative;
 }
 
 .logo{
@@ -139,7 +136,6 @@ border-radius:16px;
 padding:10px;
 box-shadow:0 6px 12px rgba(0,0,0,0.08);
 position:relative;
-cursor:pointer;
 }
 
 .card img{
@@ -147,6 +143,7 @@ width:100%;
 height:150px;
 border-radius:12px;
 object-fit:cover;
+cursor:pointer;
 }
 
 .name{
@@ -162,21 +159,84 @@ color:#16a34a;
 font-weight:700;
 }
 
+/* ADD BUTTON */
+
 .addbtn{
 position:absolute;
 right:10px;
 bottom:10px;
-width:36px;
-height:36px;
+width:38px;
+height:38px;
 border:none;
 border-radius:50%;
 background:#16a34a;
 color:white;
-font-size:20px;
+font-size:22px;
 cursor:pointer;
+transition:0.2s;
 }
 
-/* VIEW CART BUTTON */
+.addbtn:active{
+transform:scale(1.3);
+}
+
+/* COUNTER */
+
+.counter{
+position:absolute;
+right:10px;
+bottom:10px;
+display:flex;
+align-items:center;
+gap:6px;
+background:#16a34a;
+padding:4px 8px;
+border-radius:20px;
+color:white;
+}
+
+.counter button{
+background:white;
+border:none;
+width:24px;
+height:24px;
+border-radius:50%;
+font-weight:bold;
+}
+
+/* DETAIL */
+
+.detail{
+position:fixed;
+inset:0;
+background:white;
+transform:translateY(100%);
+transition:0.35s;
+padding:20px;
+z-index:100;
+overflow:auto;
+}
+
+.detail.active{
+transform:translateY(0);
+}
+
+.detail img{
+width:100%;
+border-radius:18px;
+}
+
+.cta{
+width:100%;
+padding:16px;
+margin-top:16px;
+background:#16a34a;
+border:none;
+border-radius:12px;
+color:white;
+}
+
+/* CART */
 
 .viewcart{
 position:fixed;
@@ -191,8 +251,6 @@ text-align:center;
 display:none;
 cursor:pointer;
 }
-
-/* CART PANEL */
 
 .cartpanel{
 position:fixed;
@@ -225,17 +283,6 @@ border:none;
 background:#16a34a;
 color:white;
 border-radius:6px;
-}
-
-.orderbtn{
-margin-top:20px;
-width:100%;
-padding:16px;
-background:#16a34a;
-border:none;
-border-radius:12px;
-color:white;
-font-size:16px;
 }
 
 </style>
@@ -280,6 +327,8 @@ font-size:16px;
 
 <div class="products" id="productList"></div>
 
+<div class="detail" id="detail"></div>
+
 <div class="viewcart" id="viewcart" onclick="openCart()">
 Sepeti görüntüle
 </div>
@@ -290,9 +339,7 @@ Sepeti görüntüle
 
 <div id="cartitems"></div>
 
-<button class="orderbtn" onclick="sendOrder()">
-WhatsApp Bestellung senden
-</button>
+<button onclick="sendOrder()">WhatsApp Bestellung senden</button>
 
 </div>
 
@@ -336,13 +383,23 @@ list.innerHTML+=`
 
 <div class="card">
 
-<img src="${p.img}">
+<img onclick="openDetail('${p.name}','${p.img}','${p.price}')" src="${p.img}">
 
 <div class="name">${p.name}</div>
 
 <div class="price">${p.price}</div>
 
-<button class="addbtn" onclick="addCart('${p.name}')">+</button>
+<button class="addbtn" onclick="event.stopPropagation(); addCart('${p.name}')">+</button>
+
+<div id="counter-${p.name}" class="counter" style="display:none">
+
+<button onclick="changeQty('${p.name}',-1)">-</button>
+
+<span id="qty-${p.name}">0</span>
+
+<button onclick="changeQty('${p.name}',1)">+</button>
+
+</div>
 
 </div>
 
@@ -350,6 +407,32 @@ list.innerHTML+=`
 
 })
 
+}
+
+/* DETAIL */
+
+function openDetail(name,img,price){
+
+detail.innerHTML=`
+
+<img src="${img}">
+
+<h2>${name}</h2>
+
+<p>${price}</p>
+
+<button class="cta" onclick="addCart('${name}')">In den Warenkorb</button>
+
+<button onclick="closeDetail()">Schließen</button>
+
+`
+
+detail.classList.add("active")
+
+}
+
+function closeDetail(){
+detail.classList.remove("active")
 }
 
 /* SEARCH */
@@ -378,7 +461,37 @@ cart[name]++
 
 viewcart.style.display="block"
 
+updateCounter(name)
+
 renderCart()
+
+}
+
+function changeQty(name,val){
+
+cart[name]+=val
+
+if(cart[name]<=0){
+
+delete cart[name]
+
+document.getElementById("counter-"+name).style.display="none"
+
+}else{
+
+updateCounter(name)
+
+}
+
+renderCart()
+
+}
+
+function updateCounter(name){
+
+document.getElementById("counter-"+name).style.display="flex"
+
+document.getElementById("qty-"+name).innerText=cart[name]
 
 }
 
@@ -409,16 +522,6 @@ ${item}
 `
 
 }
-
-}
-
-function changeQty(name,val){
-
-cart[name]+=val
-
-if(cart[name]<=0) delete cart[name]
-
-renderCart()
 
 }
 
