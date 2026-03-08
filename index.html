@@ -282,7 +282,7 @@ body{
 }
 
 .card-body{
-  padding:10px 12px 14px;
+  padding:10px 12px 50px;
   position:relative;
 }
 
@@ -297,19 +297,84 @@ body{
   font-size:12px;
   color:var(--text-light);
   font-weight:600;
-  margin-bottom:6px;
+  margin-bottom:4px;
 }
 
 .price{
   font-size:16px;
   color:var(--green);
   font-weight:800;
+  margin-bottom:2px;
 }
 
-.einheit{
-  font-size:12px;
-  color:var(--text-light);
+/* ========== PRODUCT NOTE INPUT (in card) ========== */
+.note-input-wrap{
+  margin-top:6px;
+  position:relative;
+}
+
+.note-input{
+  width:100%;
+  border:1.5px solid #e5e7eb;
+  border-radius:8px;
+  padding:6px 8px 6px 26px;
+  font-family:'Nunito',sans-serif;
+  font-size:11px;
   font-weight:600;
+  color:var(--text);
+  outline:none;
+  background:var(--bg);
+  transition:border-color 0.2s, background 0.2s;
+  resize:none;
+}
+
+.note-input:focus{
+  border-color:var(--green);
+  background:white;
+}
+
+.note-input::placeholder{
+  color:#b0b5bf;
+  font-weight:500;
+  font-style:italic;
+}
+
+.note-icon{
+  position:absolute;
+  left:8px;
+  top:50%;
+  transform:translateY(-50%);
+  width:12px;
+  height:12px;
+  color:#b0b5bf;
+  pointer-events:none;
+}
+
+.note-input:focus ~ .note-icon,
+.note-input:not(:placeholder-shown) ~ .note-icon{
+  color:var(--green);
+}
+
+/* Note indicator badge */
+.note-badge{
+  display:none;
+  position:absolute;
+  top:8px;
+  left:8px;
+  background:rgba(22,163,74,0.9);
+  color:white;
+  font-size:9px;
+  font-weight:800;
+  padding:2px 6px;
+  border-radius:6px;
+  gap:3px;
+  align-items:center;
+  z-index:2;
+}
+
+.note-badge svg{
+  width:9px;
+  height:9px;
 }
 
 /* ========== ADD BUTTON ========== */
@@ -451,13 +516,6 @@ body{
   margin-bottom:4px;
 }
 
-.detail-einheit{
-  font-size:14px;
-  color:var(--text-light);
-  font-weight:600;
-  margin-bottom:20px;
-}
-
 .detail-info{
   background:var(--card);
   border-radius:var(--radius);
@@ -479,6 +537,61 @@ body{
   font-size:14px;
   line-height:1.6;
   color:var(--text);
+}
+
+/* Detail note */
+.detail-note-wrap{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:var(--shadow);
+}
+
+.detail-note-label{
+  font-size:13px;
+  font-weight:800;
+  color:var(--text-light);
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.detail-note-label svg{
+  width:14px;
+  height:14px;
+  color:var(--green);
+}
+
+.detail-note-input{
+  width:100%;
+  border:1.5px solid #e5e7eb;
+  border-radius:10px;
+  padding:12px 14px;
+  font-family:'Nunito',sans-serif;
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+  outline:none;
+  background:var(--bg);
+  transition:border-color 0.2s;
+  resize:none;
+  min-height:44px;
+  max-height:100px;
+}
+
+.detail-note-input:focus{
+  border-color:var(--green);
+  background:white;
+}
+
+.detail-note-input::placeholder{
+  color:#b0b5bf;
+  font-weight:500;
+  font-style:italic;
 }
 
 .detail-cta{
@@ -625,7 +738,7 @@ body{
 }
 
 .cart-body{
-  padding:8px 16px 160px;
+  padding:8px 16px 180px;
 }
 
 .cart-empty{
@@ -643,15 +756,19 @@ body{
 }
 
 .cartitem{
-  display:flex;
-  align-items:center;
-  gap:12px;
   background:var(--card);
-  padding:12px;
   border-radius:var(--radius-sm);
   margin-bottom:10px;
   box-shadow:var(--shadow);
+  overflow:hidden;
   animation:fadeUp 0.2s ease-out both;
+}
+
+.cartitem-main{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
 }
 
 .cartitem-img{
@@ -679,6 +796,16 @@ body{
   font-size:13px;
   color:var(--green);
   font-weight:700;
+}
+
+.cartitem-note-preview{
+  font-size:11px;
+  color:var(--text-light);
+  font-style:italic;
+  margin-top:2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .cartitem-qty{
@@ -718,6 +845,45 @@ body{
   font-size:16px;
   min-width:24px;
   text-align:center;
+}
+
+/* Cart item note row */
+.cartitem-note{
+  padding:0 12px 10px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.cartitem-note svg{
+  width:13px;
+  height:13px;
+  color:#b0b5bf;
+  flex-shrink:0;
+}
+
+.cartitem-note input{
+  flex:1;
+  border:none;
+  border-bottom:1.5px solid #e5e7eb;
+  padding:4px 0;
+  font-family:'Nunito',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  color:var(--text);
+  outline:none;
+  background:transparent;
+  transition:border-color 0.2s;
+}
+
+.cartitem-note input:focus{
+  border-bottom-color:var(--green);
+}
+
+.cartitem-note input::placeholder{
+  color:#c5c9d2;
+  font-weight:500;
+  font-style:italic;
 }
 
 .cart-footer{
@@ -785,6 +951,140 @@ body{
   height:22px;
 }
 
+/* ========== FIRMA POPUP ========== */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  z-index:300;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  backdrop-filter:blur(4px);
+}
+
+.modal-overlay.active{
+  display:flex;
+}
+
+.modal{
+  background:var(--card);
+  border-radius:20px;
+  padding:28px 24px;
+  width:100%;
+  max-width:340px;
+  box-shadow:var(--shadow-lg);
+  animation:modalPop 0.3s cubic-bezier(0.32,0.72,0,1);
+}
+
+@keyframes modalPop{
+  from{opacity:0;transform:scale(0.9)}
+  to{opacity:1;transform:scale(1)}
+}
+
+.modal-icon{
+  width:56px;
+  height:56px;
+  background:var(--green-light);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 16px;
+}
+
+.modal-icon svg{
+  width:28px;
+  height:28px;
+  color:var(--green);
+}
+
+.modal h3{
+  text-align:center;
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:6px;
+}
+
+.modal p{
+  text-align:center;
+  font-size:13px;
+  color:var(--text-light);
+  font-weight:600;
+  margin-bottom:20px;
+  line-height:1.4;
+}
+
+.modal-input{
+  width:100%;
+  border:2px solid #e5e7eb;
+  border-radius:12px;
+  padding:14px 16px;
+  font-family:'Nunito',sans-serif;
+  font-size:16px;
+  font-weight:700;
+  color:var(--text);
+  outline:none;
+  text-align:center;
+  transition:border-color 0.2s;
+  margin-bottom:16px;
+}
+
+.modal-input:focus{
+  border-color:var(--green);
+}
+
+.modal-input::placeholder{
+  color:#b0b5bf;
+  font-weight:500;
+}
+
+.modal-btn{
+  width:100%;
+  padding:14px;
+  background:#25D366;
+  border:none;
+  border-radius:12px;
+  color:white;
+  font-family:'Nunito',sans-serif;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:all 0.2s;
+}
+
+.modal-btn:active{
+  transform:scale(0.98);
+}
+
+.modal-btn:disabled{
+  background:#ccc;
+  cursor:not-allowed;
+}
+
+.modal-btn svg{
+  width:20px;
+  height:20px;
+}
+
+.modal-cancel{
+  width:100%;
+  padding:10px;
+  background:none;
+  border:none;
+  color:var(--text-light);
+  font-family:'Nunito',sans-serif;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:8px;
+}
+
 /* ========== TOAST ========== */
 .toast{
   position:fixed;
@@ -807,7 +1107,6 @@ body{
   transform:translateX(-50%) translateY(0);
 }
 
-/* ========== EMPTY STATE ========== */
 .no-results{
   display:none;
   text-align:center;
@@ -817,7 +1116,6 @@ body{
   grid-column:1/-1;
 }
 
-/* ========== SCROLLBAR ========== */
 ::-webkit-scrollbar{width:0}
 
 </style>
@@ -910,10 +1208,27 @@ body{
         <span id="summaryTotal">0 Stück</span>
       </div>
     </div>
-    <button class="cart-order-btn" onclick="sendOrder()">
+    <button class="cart-order-btn" onclick="showFirmaPopup()">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       WhatsApp Bestellung senden
     </button>
+  </div>
+</div>
+
+<!-- FIRMA NAME POPUP -->
+<div class="modal-overlay" id="firmaModal">
+  <div class="modal">
+    <div class="modal-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
+    <h3>Firmenname</h3>
+    <p>Bitte geben Sie Ihren Firmennamen ein, damit wir Ihre Bestellung zuordnen können.</p>
+    <input class="modal-input" id="firmaInput" type="text" placeholder="z.B. Muster GmbH" maxlength="60" oninput="toggleFirmaBtn()">
+    <button class="modal-btn" id="firmaBtn" onclick="confirmFirmaAndSend()" disabled>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Bestellung senden
+    </button>
+    <button class="modal-cancel" onclick="closeFirmaPopup()">Abbrechen</button>
   </div>
 </div>
 
@@ -921,7 +1236,6 @@ body{
 
 /* ========== PRODUCT DATA ========== */
 const products = [
-  /* ===== OBST ===== */
   {
     name: "Granatäpfel",
     price: "€ / kg",
@@ -938,16 +1252,14 @@ const products = [
     beschreibung: "Knackige, frische Äpfel in verschiedenen Sorten. Perfekt als Snack oder zum Backen.",
     img: "https://i.postimg.cc/Vkq7yq8R/apple.jpg"
   },
-
-  /* ===== GEMÜSE ===== */
 ];
 
 let cart = {};
+let notes = {};
 let currentCategory = "";
 
 /* ========== INIT ========== */
 function init() {
-  // Kategori sayılarını göster
   const cats = [...new Set(products.map(p => p.category))];
   cats.forEach(cat => {
     const count = products.filter(p => p.category === cat).length;
@@ -955,7 +1267,6 @@ function init() {
     if (el) el.textContent = count + " Produkte";
   });
 }
-
 init();
 
 /* ========== CATEGORY ========== */
@@ -978,33 +1289,63 @@ function openCategory(cat) {
   }
 
   filtered.forEach((p, i) => {
-    const cardEl = document.createElement("div");
-    cardEl.className = "card";
-    cardEl.style.animationDelay = (i * 0.05) + "s";
-    cardEl.dataset.name = p.name.toLowerCase();
-    cardEl.innerHTML = `
-      <div class="card-img-wrap" onclick="openDetail('${encodeStr(p.name)}')">
-        <img src="${p.img}" alt="${p.name}" loading="lazy">
-      </div>
-      <div class="card-body">
-        <div class="name">${p.name}</div>
-        ${p.herkunft ? '<div class="herkunft">' + p.herkunft + '</div>' : ''}
-        <div class="price">${p.price}</div>
-        <button class="addbtn" id="addbtn-${sanitizeId(p.name)}" onclick="event.stopPropagation(); addCart('${encodeStr(p.name)}')">+</button>
-        <div class="counter" id="counter-${sanitizeId(p.name)}">
-          <button onclick="event.stopPropagation(); changeQty('${encodeStr(p.name)}',-1)">−</button>
-          <span id="qty-${sanitizeId(p.name)}">0</span>
-          <button onclick="event.stopPropagation(); changeQty('${encodeStr(p.name)}',1)">+</button>
-        </div>
-      </div>
-    `;
-    list.appendChild(cardEl);
-
-    // Eğer zaten sepette varsa counter'ı göster
-    if (cart[p.name]) {
-      updateCounterUI(p.name);
-    }
+    list.appendChild(createProductCard(p, i, false));
   });
+}
+
+function createProductCard(p, i, showCategory) {
+  const cardEl = document.createElement("div");
+  cardEl.className = "card";
+  cardEl.style.animationDelay = (i * 0.05) + "s";
+  cardEl.dataset.name = p.name.toLowerCase();
+
+  const existingNote = notes[p.name] || "";
+  const hasNote = existingNote.length > 0;
+
+  const herkunftText = showCategory
+    ? (p.herkunft ? p.herkunft + ' · ' + p.category : p.category)
+    : (p.herkunft || '');
+
+  cardEl.innerHTML = `
+    <div class="card-img-wrap" onclick="openDetail('${encodeStr(p.name)}')">
+      <div class="note-badge" id="notebadge-${sanitizeId(p.name)}" style="display:${hasNote ? 'flex' : 'none'}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Notiz
+      </div>
+      <img src="${p.img}" alt="${p.name}" loading="lazy">
+    </div>
+    <div class="card-body">
+      <div class="name">${p.name}</div>
+      ${herkunftText ? '<div class="herkunft">' + herkunftText + '</div>' : ''}
+      <div class="price">${p.price}</div>
+
+      <div class="note-input-wrap">
+        <input class="note-input"
+               id="note-${sanitizeId(p.name)}"
+               type="text"
+               placeholder="Hinweis z.B. sehr reif"
+               maxlength="80"
+               value="${escapeHtml(existingNote)}"
+               onfocus="this.parentElement.style.zIndex='5'"
+               onblur="this.parentElement.style.zIndex=''; saveNote('${encodeStr(p.name)}', this.value)"
+               oninput="saveNote('${encodeStr(p.name)}', this.value)">
+        <svg class="note-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </div>
+
+      <button class="addbtn" id="addbtn-${sanitizeId(p.name)}" onclick="event.stopPropagation(); addCart('${encodeStr(p.name)}')">+</button>
+      <div class="counter" id="counter-${sanitizeId(p.name)}">
+        <button onclick="event.stopPropagation(); changeQty('${encodeStr(p.name)}',-1)">−</button>
+        <span id="qty-${sanitizeId(p.name)}">0</span>
+        <button onclick="event.stopPropagation(); changeQty('${encodeStr(p.name)}',1)">+</button>
+      </div>
+    </div>
+  `;
+
+  if (cart[p.name]) {
+    setTimeout(() => updateCounterUI(p.name), 10);
+  }
+
+  return cardEl;
 }
 
 function goBack() {
@@ -1016,6 +1357,21 @@ function goBack() {
   currentCategory = "";
 }
 
+/* ========== NOTE FUNCTIONS ========== */
+function saveNote(encodedName, value) {
+  const name = decodeStr(encodedName);
+  const trimmed = value.trim();
+  if (trimmed) {
+    notes[name] = trimmed;
+  } else {
+    delete notes[name];
+  }
+  const badge = document.getElementById("notebadge-" + sanitizeId(name));
+  if (badge) {
+    badge.style.display = trimmed ? "flex" : "none";
+  }
+}
+
 /* ========== DETAIL ========== */
 function openDetail(encodedName) {
   const name = decodeStr(encodedName);
@@ -1024,6 +1380,7 @@ function openDetail(encodedName) {
 
   const detail = document.getElementById("detail");
   const qtyInCart = cart[name] || 0;
+  const existingNote = notes[name] || "";
 
   detail.innerHTML = `
     <div class="detail-header">
@@ -1044,6 +1401,19 @@ function openDetail(encodedName) {
           <p>${p.beschreibung}</p>
         </div>
       ` : ''}
+
+      <div class="detail-note-wrap">
+        <div class="detail-note-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Bestellhinweis
+        </div>
+        <textarea class="detail-note-input"
+                  id="detailNote"
+                  placeholder="z.B. nicht zu reif, bestimmte Größe..."
+                  maxlength="150"
+                  oninput="saveNoteFromDetail('${encodeStr(p.name)}', this.value)">${escapeHtml(existingNote)}</textarea>
+      </div>
+
       ${qtyInCart > 0 ? `
         <div class="detail-info" style="text-align:center">
           <p style="color:var(--green);font-weight:800">${qtyInCart}x im Warenkorb</p>
@@ -1061,28 +1431,38 @@ function openDetail(encodedName) {
   document.body.style.overflow = "hidden";
 }
 
+function saveNoteFromDetail(encodedName, value) {
+  const name = decodeStr(encodedName);
+  const trimmed = value.trim();
+  if (trimmed) {
+    notes[name] = trimmed;
+  } else {
+    delete notes[name];
+  }
+}
+
 function closeDetail() {
   document.getElementById("detail").classList.remove("active");
   document.body.style.overflow = "";
+  // Kart listesini güncelle
+  if (currentCategory) {
+    openCategory(currentCategory);
+  }
 }
 
 /* ========== SEARCH ========== */
 function searchProducts() {
   const input = document.getElementById("searchInput").value.toLowerCase().trim();
 
-  // Eğer kategorideyse kategori içinde ara
   if (currentCategory) {
     const cards = document.querySelectorAll(".card");
-    let found = 0;
     cards.forEach(card => {
       const match = card.dataset.name.includes(input);
       card.style.display = match ? "block" : "none";
-      if (match) found++;
     });
     return;
   }
 
-  // Ana sayfadaysa ve arama varsa tüm ürünlerde ara
   if (input.length >= 2) {
     document.getElementById("categories").style.display = "none";
     document.getElementById("backbtn").style.display = "flex";
@@ -1100,32 +1480,10 @@ function searchProducts() {
     }
 
     filtered.forEach((p, i) => {
-      const cardEl = document.createElement("div");
-      cardEl.className = "card";
-      cardEl.style.animationDelay = (i * 0.05) + "s";
-      cardEl.dataset.name = p.name.toLowerCase();
-      cardEl.innerHTML = `
-        <div class="card-img-wrap" onclick="openDetail('${encodeStr(p.name)}')">
-          <img src="${p.img}" alt="${p.name}" loading="lazy">
-        </div>
-        <div class="card-body">
-          <div class="name">${p.name}</div>
-          ${p.herkunft ? '<div class="herkunft">' + p.herkunft + ' · ' + p.category + '</div>' : '<div class="herkunft">' + p.category + '</div>'}
-          <div class="price">${p.price}</div>
-          <button class="addbtn" id="addbtn-${sanitizeId(p.name)}" onclick="event.stopPropagation(); addCart('${encodeStr(p.name)}')">+</button>
-          <div class="counter" id="counter-${sanitizeId(p.name)}">
-            <button onclick="event.stopPropagation(); changeQty('${encodeStr(p.name)}',-1)">−</button>
-            <span id="qty-${sanitizeId(p.name)}">0</span>
-            <button onclick="event.stopPropagation(); changeQty('${encodeStr(p.name)}',1)">+</button>
-          </div>
-        </div>
-      `;
-      list.appendChild(cardEl);
-      if (cart[p.name]) updateCounterUI(p.name);
+      list.appendChild(createProductCard(p, i, true));
     });
 
   } else if (input.length === 0 && !currentCategory) {
-    // Arama temizlendi, ana sayfaya dön
     goBack();
   }
 }
@@ -1135,6 +1493,18 @@ function addCart(encodedName) {
   const name = decodeStr(encodedName);
   if (!cart[name]) cart[name] = 0;
   cart[name]++;
+
+  // Karttaki not inputundan notu kaydet
+  const noteEl = document.getElementById("note-" + sanitizeId(name));
+  if (noteEl && noteEl.value.trim()) {
+    notes[name] = noteEl.value.trim();
+  }
+  // Detaydaki not inputundan da kaydet
+  const detailNoteEl = document.getElementById("detailNote");
+  if (detailNoteEl && detailNoteEl.value.trim()) {
+    notes[name] = detailNoteEl.value.trim();
+  }
+
   updateCounterUI(name);
   updateCartButton();
   showToast(name + " hinzugefügt");
@@ -1146,7 +1516,6 @@ function changeQty(encodedName, val) {
 
   if (cart[name] <= 0) {
     delete cart[name];
-    // Counter gizle, add button göster
     const counterId = "counter-" + sanitizeId(name);
     const addId = "addbtn-" + sanitizeId(name);
     const counterEl = document.getElementById(counterId);
@@ -1159,7 +1528,6 @@ function changeQty(encodedName, val) {
 
   updateCartButton();
 
-  // Eğer sepet paneli açıksa güncelle
   if (document.getElementById("cartpanel").classList.contains("active")) {
     renderCart();
   }
@@ -1231,18 +1599,29 @@ function renderCart() {
     const p = products.find(x => x.name === name);
     const qty = cart[name];
     totalQty += qty;
+    const noteVal = notes[name] || "";
 
     html += `
       <div class="cartitem">
-        ${p ? '<img class="cartitem-img" src="' + p.img + '" alt="' + name + '">' : ''}
-        <div class="cartitem-info">
-          <div class="cartitem-name">${name}</div>
-          <div class="cartitem-price">${p ? p.price : ''}</div>
+        <div class="cartitem-main">
+          ${p ? '<img class="cartitem-img" src="' + p.img + '" alt="' + escapeHtml(name) + '">' : ''}
+          <div class="cartitem-info">
+            <div class="cartitem-name">${escapeHtml(name)}</div>
+            <div class="cartitem-price">${p ? p.price : ''}</div>
+          </div>
+          <div class="cartitem-qty">
+            <button class="minus" onclick="changeQty('${encodeStr(name)}',-1)">−</button>
+            <span>${qty}</span>
+            <button onclick="changeQty('${encodeStr(name)}',1)">+</button>
+          </div>
         </div>
-        <div class="cartitem-qty">
-          <button class="minus" onclick="changeQty('${encodeStr(name)}',-1)">−</button>
-          <span>${qty}</span>
-          <button onclick="changeQty('${encodeStr(name)}',1)">+</button>
+        <div class="cartitem-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <input type="text"
+                 placeholder="Hinweis hinzufügen..."
+                 maxlength="80"
+                 value="${escapeHtml(noteVal)}"
+                 oninput="saveNote('${encodeStr(name)}', this.value)">
         </div>
       </div>
     `;
@@ -1254,16 +1633,40 @@ function renderCart() {
   document.getElementById("summaryTotal").textContent = totalQty + " Stück";
 }
 
-/* ========== WHATSAPP ORDER ========== */
-function sendOrder() {
+/* ========== FIRMA POPUP ========== */
+function showFirmaPopup() {
+  document.getElementById("firmaModal").classList.add("active");
+  setTimeout(() => document.getElementById("firmaInput").focus(), 300);
+}
+
+function closeFirmaPopup() {
+  document.getElementById("firmaModal").classList.remove("active");
+  document.getElementById("firmaInput").value = "";
+  toggleFirmaBtn();
+}
+
+function toggleFirmaBtn() {
+  const val = document.getElementById("firmaInput").value.trim();
+  document.getElementById("firmaBtn").disabled = val.length === 0;
+}
+
+function confirmFirmaAndSend() {
+  const firma = document.getElementById("firmaInput").value.trim();
+  if (!firma) return;
+
   const keys = Object.keys(cart);
   if (keys.length === 0) return;
 
-  let msg = "🛒 *FreshMaximum Bestellung*\n";
+  let msg = `🏢 *${firma}*\n`;
+  msg += `🛒 *FreshMaximum Bestellung*\n`;
   msg += "━━━━━━━━━━━━━━━━━━\n";
 
   keys.forEach(name => {
-    msg += `▸ ${name}  ×${cart[name]}\n`;
+    let line = `▸ ${name}  ×${cart[name]}`;
+    if (notes[name]) {
+      line += `\n   📝 ${notes[name]}`;
+    }
+    msg += line + "\n";
   });
 
   msg += "━━━━━━━━━━━━━━━━━━\n";
@@ -1272,6 +1675,7 @@ function sendOrder() {
   msg += `📦 Gesamt: ${keys.length} Produkte, ${totalQty} Stück\n`;
   msg += `📅 Datum: ${new Date().toLocaleDateString('de-DE')}\n`;
 
+  closeFirmaPopup();
   window.open("https://wa.me/491727117489?text=" + encodeURIComponent(msg));
 }
 
@@ -1294,6 +1698,12 @@ function encodeStr(str) {
 
 function decodeStr(encoded) {
   return decodeURIComponent(atob(encoded));
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 </script>
