@@ -1169,6 +1169,13 @@ body{
       <div class="catcount" id="count-Gemüse"></div>
     </div>
   </div>
+  <div class="cat" onclick="openCategory('Kräuter')">
+    <img src="https://i.postimg.cc/bwbTY0Ph/IMG_4029.jpg" alt="Kräuter">
+    <div class="cat-overlay">
+      <div class="catname">Kräuter</div>
+      <div class="catcount" id="count-Kräuter"></div>
+    </div>
+  </div>
 </div>
 
 <!-- PRODUCTS -->
@@ -1236,13 +1243,14 @@ body{
 
 /* ========== PRODUCT DATA ========== */
 const products = [
+  /* ===== OBST ===== */
   {
-    name: "Granatäpfel",
+    name: "Granatapfel",
     price: "€ / kg",
     category: "Obst",
     herkunft: "Türkei",
     beschreibung: "Frische, saftige Granatäpfel direkt vom Erzeuger. Ideal für Säfte, Salate und Desserts.",
-    img: "https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png"
+    img: "https://i.postimg.cc/RC24Jtyq/IMG_4034.jpg"
   },
   {
     name: "Apfel",
@@ -1251,6 +1259,130 @@ const products = [
     herkunft: "Deutschland",
     beschreibung: "Knackige, frische Äpfel in verschiedenen Sorten. Perfekt als Snack oder zum Backen.",
     img: "https://i.postimg.cc/Vkq7yq8R/apple.jpg"
+  },
+  {
+    name: "Kiwi",
+    price: "€ / kg",
+    category: "Obst",
+    herkunft: "",
+    beschreibung: "Saftige Kiwis mit süß-saurem Geschmack. Reich an Vitamin C.",
+    img: "https://i.postimg.cc/fRBPmnyJ/IMG_4035.jpg"
+  },
+  {
+    name: "Ananas",
+    price: "€ / Stück",
+    category: "Obst",
+    herkunft: "",
+    beschreibung: "Tropische Ananas, süß und aromatisch. Perfekt für Desserts und Smoothies.",
+    img: "https://i.postimg.cc/9fDL9Dvj/IMG_4036.jpg"
+  },
+  {
+    name: "Gelbe Melone",
+    price: "€ / Stück",
+    category: "Obst",
+    herkunft: "",
+    beschreibung: "Süße, aromatische gelbe Melone. Erfrischend und saftig.",
+    img: "https://i.postimg.cc/DZVPbBrZ/IMG_4038.jpg"
+  },
+  {
+    name: "Datteln",
+    price: "€ / kg",
+    category: "Obst",
+    herkunft: "",
+    beschreibung: "Natürlich süße Datteln, perfekt als Snack oder zum Backen.",
+    img: "https://i.postimg.cc/MTJgKZNm/IMG_4028.jpg"
+  },
+  {
+    name: "Zitronen Netz",
+    price: "€ / Netz",
+    category: "Obst",
+    herkunft: "",
+    beschreibung: "Frische Zitronen im Netz. Vielseitig einsetzbar in Küche und Getränken.",
+    img: "https://i.postimg.cc/d1SQxyLL/IMG_4026.jpg"
+  },
+
+  /* ===== GEMÜSE ===== */
+  {
+    name: "Çarliston",
+    price: "€ / kg",
+    category: "Gemüse",
+    herkunft: "Türkei",
+    beschreibung: "Milde, lange Spitzpaprika. Ideal zum Braten und Grillen.",
+    img: "https://i.postimg.cc/0NRkgvkf/IMG_4023.jpg"
+  },
+  {
+    name: "Capia Rot",
+    price: "€ / kg",
+    category: "Gemüse",
+    herkunft: "Türkei",
+    beschreibung: "Süße rote Capia-Paprika. Perfekt zum Grillen, Rösten und für Salate.",
+    img: "https://i.postimg.cc/9fpvxHr5/IMG_4024.jpg"
+  },
+  {
+    name: "Aubergine",
+    price: "€ / kg",
+    category: "Gemüse",
+    herkunft: "",
+    beschreibung: "Frische Auberginen, vielseitig einsetzbar. Ideal für Aufläufe und orientalische Gerichte.",
+    img: "https://i.postimg.cc/VNnj1zj5/IMG_4025.jpg"
+  },
+  {
+    name: "Zucchini Grün",
+    price: "€ / kg",
+    category: "Gemüse",
+    herkunft: "",
+    beschreibung: "Knackige grüne Zucchini. Perfekt für Pfannengerichte, Suppen und zum Grillen.",
+    img: "https://i.postimg.cc/d1SQxyLL/IMG_4026.jpg"
+  },
+  {
+    name: "Knoblauch Netz",
+    price: "€ / Netz",
+    category: "Gemüse",
+    herkunft: "",
+    beschreibung: "Aromatischer Knoblauch im Netz. Unverzichtbar in jeder Küche.",
+    img: "https://i.postimg.cc/HWtSG92r/IMG_4022.jpg"
+  },
+  {
+    name: "Metzger Zwiebeln",
+    price: "€ / kg",
+    category: "Gemüse",
+    herkunft: "",
+    beschreibung: "Große Metzger-Zwiebeln, kräftig im Geschmack. Perfekt zum Kochen und Braten.",
+    img: "https://i.postimg.cc/Hk22Rw1q/IMG_4031.jpg"
+  },
+  {
+    name: "Einlage Gurken",
+    price: "€ / kg",
+    category: "Gemüse",
+    herkunft: "",
+    beschreibung: "Frische Einlegegurken, ideal zum Einlegen und Fermentieren.",
+    img: "https://i.postimg.cc/5yVQfrwn/IMG_4032.jpg"
+  },
+  {
+    name: "Mini Gurken",
+    price: "€ / kg",
+    category: "Gemüse",
+    herkunft: "",
+    beschreibung: "Knackige Mini-Gurken, perfekt als Snack oder für Salate.",
+    img: "https://i.postimg.cc/QxnNbPHn/IMG_4033.jpg"
+  },
+
+  /* ===== KRÄUTER ===== */
+  {
+    name: "Petersilie",
+    price: "€ / Bund",
+    category: "Kräuter",
+    herkunft: "",
+    beschreibung: "Frische Petersilie, aromatisch und vielseitig. Für Salate, Suppen und als Garnitur.",
+    img: "https://i.postimg.cc/bwbTY0Ph/IMG_4029.jpg"
+  },
+  {
+    name: "Dill",
+    price: "€ / Bund",
+    category: "Kräuter",
+    herkunft: "",
+    beschreibung: "Frischer Dill mit feinem Aroma. Ideal für Fischgerichte, Salate und Dips.",
+    img: "https://i.postimg.cc/k5Jjgjyq/IMG_4030.jpg"
   },
 ];
 
