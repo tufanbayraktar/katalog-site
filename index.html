@@ -158,7 +158,23 @@ body{
 .cart-empty{text-align:center;padding:40px 20px;color:var(--text-light);font-weight:600}
 .cart-empty svg{width:60px;height:60px;margin-bottom:12px;opacity:0.3}
 
-.cartitem{background:var(--card);border-radius:var(--radius-sm);margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden;animation:fadeUp 0.2s ease-out both}
+.cartitem{background:var(--card);border-radius:var(--radius-sm);margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden;animation:fadeUp 0.2s ease-out both;position:relative}
+
+/* Swipe to delete wrapper */
+.cartitem-swipe-wrap{position:relative;overflow:hidden;border-radius:var(--radius-sm)}
+.cartitem-delete-bg{position:absolute;top:0;right:0;bottom:0;width:90px;background:#ef4444;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:12px;flex-direction:column;gap:2px;border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.cartitem-delete-bg svg{width:22px;height:22px}
+.cartitem-inner{position:relative;background:var(--card);transition:transform 0.25s ease;z-index:1;border-radius:var(--radius-sm)}
+.cartitem-inner.swiped{transform:translateX(-90px)}
+
+@keyframes slideOut{
+  to{transform:translateX(-100%);opacity:0;max-height:0;margin-bottom:0;padding:0}
+}
+.cartitem.removing{animation:slideOut 0.3s ease forwards;overflow:hidden}
+
+/* Clear all button */
+.cart-clear-btn{background:none;border:none;color:#ef4444;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;padding:4px 10px;border-radius:8px;transition:all 0.2s;display:none}
+.cart-clear-btn:active{transform:scale(0.95);background:rgba(239,68,68,0.1)}
 .cartitem-main{display:flex;align-items:center;gap:12px;padding:12px}
 .cartitem-img{width:56px;height:56px;border-radius:10px;object-fit:cover;flex-shrink:0}
 .cartitem-info{flex:1;min-width:0}
@@ -306,9 +322,15 @@ body{
 <div class="cartpanel" id="cartpanel">
   <div class="cart-header">
     <h2>Warenkorb</h2>
-    <button class="cart-close" onclick="closeCart()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="cart-clear-btn" id="cartClearBtn" onclick="clearAllCart()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Alle löschen
+      </button>
+      <button class="cart-close" onclick="closeCart()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
   </div>
   <div class="cart-body" id="cartitems"></div>
   <div class="cart-footer" id="cartFooter" style="display:none">
@@ -723,12 +745,17 @@ function closeCart(){document.getElementById("cartpanel").classList.remove("acti
 function renderCart(){
   const container=document.getElementById("cartitems");
   const footer=document.getElementById("cartFooter");
+  const clearBtn=document.getElementById("cartClearBtn");
   const keys=Object.keys(cart);
 
   if(keys.length===0){
     container.innerHTML=`<div class="cart-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><div>Ihr Warenkorb ist leer</div></div>`;
-    footer.style.display="none";return;
+    footer.style.display="none";
+    clearBtn.style.display="none";
+    return;
   }
+
+  clearBtn.style.display="inline-flex";
 
   let html="";let totalQty=0;
 
@@ -738,25 +765,34 @@ function renderCart(){
     const qty=cart[key];
     totalQty+=qty;
     const noteVal=notes[key]||"";
+    const safeKey=encodeStr(key);
 
     html+=`
-      <div class="cartitem">
-        <div class="cartitem-main">
-          ${p?'<img class="cartitem-img" src="'+p.img+'" alt="'+escapeHtml(name)+'">':''}
-          <div class="cartitem-info">
-            <div class="cartitem-name">${escapeHtml(name)}</div>
-            <div class="cartitem-price">${p?p.price:''}</div>
-            ${unit?'<span class="cartitem-unit-tag">'+escapeHtml(unit)+'</span>':''}
+      <div class="cartitem" id="cartitem-${safeKey}">
+        <div class="cartitem-swipe-wrap">
+          <div class="cartitem-delete-bg" onclick="removeCartItem('${safeKey}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Löschen
           </div>
-          <div class="cartitem-qty">
-            <button class="minus" onclick="changeQtyDirect('${encodeStr(key)}',-1)">−</button>
-            <span>${qty}</span>
-            <button onclick="changeQtyDirect('${encodeStr(key)}',1)">+</button>
+          <div class="cartitem-inner" id="cartinner-${safeKey}" ontouchstart="swipeStart(event,'${safeKey}')" ontouchmove="swipeMove(event,'${safeKey}')" ontouchend="swipeEnd(event,'${safeKey}')">
+            <div class="cartitem-main">
+              ${p?'<img class="cartitem-img" src="'+p.img+'" alt="'+escapeHtml(name)+'">':''}
+              <div class="cartitem-info">
+                <div class="cartitem-name">${escapeHtml(name)}</div>
+                <div class="cartitem-price">${p?p.price:''}</div>
+                ${unit?'<span class="cartitem-unit-tag">'+escapeHtml(unit)+'</span>':''}
+              </div>
+              <div class="cartitem-qty">
+                <button class="minus" onclick="changeQtyDirect('${safeKey}',-1)">−</button>
+                <span>${qty}</span>
+                <button onclick="changeQtyDirect('${safeKey}',1)">+</button>
+              </div>
+            </div>
+            <div class="cartitem-note">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <input type="text" placeholder="Hinweis hinzufügen..." maxlength="80" value="${escapeHtml(noteVal)}" oninput="notes['${key}']=this.value.trim();if(!this.value.trim())delete notes['${key}']">
+            </div>
           </div>
-        </div>
-        <div class="cartitem-note">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          <input type="text" placeholder="Hinweis hinzufügen..." maxlength="80" value="${escapeHtml(noteVal)}" oninput="notes['${key}']=this.value.trim();if(!this.value.trim())delete notes['${key}']">
         </div>
       </div>
     `;
@@ -775,6 +811,84 @@ function changeQtyDirect(encKey,val){
   if(cart[key]<=0||isNaN(cart[key])){delete cart[key]}
   updateCartButton();
   renderCart();
+}
+
+/* ========== SWIPE TO DELETE ========== */
+let swipeState={};
+
+function swipeStart(e,safeKey){
+  const touch=e.touches[0];
+  swipeState[safeKey]={startX:touch.clientX,startY:touch.clientY,moved:false};
+}
+
+function swipeMove(e,safeKey){
+  if(!swipeState[safeKey]) return;
+  const touch=e.touches[0];
+  const diffX=swipeState[safeKey].startX-touch.clientX;
+  const diffY=Math.abs(swipeState[safeKey].startY-touch.clientY);
+
+  // If vertical scroll is dominant, ignore
+  if(!swipeState[safeKey].moved && diffY>Math.abs(diffX)){
+    delete swipeState[safeKey];
+    return;
+  }
+
+  if(diffX>10){
+    swipeState[safeKey].moved=true;
+    e.preventDefault();
+    const el=document.getElementById("cartinner-"+safeKey);
+    const clamp=Math.min(Math.max(diffX,0),100);
+    el.style.transition="none";
+    el.style.transform="translateX(-"+clamp+"px)";
+  }
+}
+
+function swipeEnd(e,safeKey){
+  if(!swipeState[safeKey]) return;
+  const el=document.getElementById("cartinner-"+safeKey);
+  el.style.transition="transform 0.25s ease";
+
+  if(swipeState[safeKey].moved){
+    const touch=e.changedTouches[0];
+    const diffX=swipeState[safeKey].startX-touch.clientX;
+    if(diffX>60){
+      el.classList.add("swiped");
+    }else{
+      el.style.transform="translateX(0)";
+    }
+  }else{
+    el.style.transform="translateX(0)";
+  }
+  delete swipeState[safeKey];
+}
+
+function removeCartItem(safeKey){
+  const key=decodeStr(safeKey);
+  const itemEl=document.getElementById("cartitem-"+safeKey);
+  if(itemEl){
+    itemEl.classList.add("removing");
+    setTimeout(()=>{
+      delete cart[key];
+      delete notes[key];
+      updateCartButton();
+      renderCart();
+    },300);
+  }else{
+    delete cart[key];
+    delete notes[key];
+    updateCartButton();
+    renderCart();
+  }
+}
+
+/* ========== CLEAR ALL CART ========== */
+function clearAllCart(){
+  if(!confirm("Warenkorb komplett leeren?")) return;
+  cart={};
+  notes={};
+  updateCartButton();
+  renderCart();
+  showToast("Warenkorb geleert");
 }
 
 /* ========== FIRMA POPUP (2 STEPS) ========== */
