@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+<meta name="HandheldFriendly" content="true">
 <title>FreshMaximum</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 
 *{box-sizing:border-box;margin:0;padding:0}
-html{overflow-x:hidden;width:100%;position:relative}
+html{overflow-x:hidden;width:100%;position:relative;touch-action:manipulation;-ms-touch-action:manipulation}
 
 :root{
   --green:#16a34a;
@@ -34,7 +35,7 @@ body{
   -webkit-tap-highlight-color:transparent;
   -webkit-text-size-adjust:100%;
   -ms-text-size-adjust:100%;
-  touch-action:pan-y;
+  touch-action:manipulation;
   padding-bottom:80px;
 }
 
@@ -138,7 +139,7 @@ body{
 .detail-cta button:active{transform:scale(0.98);background:var(--green-dark)}
 
 /* VIEWCART */
-.viewcart{position:fixed;bottom:16px;left:16px;right:16px;background:var(--green);color:white;padding:16px 20px;border-radius:var(--radius);display:none;cursor:pointer;z-index:50;box-shadow:0 6px 24px rgba(22,163,74,0.35);font-family:'Nunito',sans-serif;border:none;transition:all 0.2s}
+.viewcart{position:fixed;bottom:16px;left:16px;right:16px;background:var(--green);color:white;padding:16px 20px;border-radius:var(--radius);display:none;cursor:pointer;z-index:90;box-shadow:0 6px 24px rgba(22,163,74,0.35);font-family:'Nunito',sans-serif;border:none;transition:all 0.2s}
 .viewcart:active{transform:scale(0.98)}
 .viewcart-inner{display:flex;justify-content:space-between;align-items:center}
 .viewcart-left{display:flex;align-items:center;gap:10px}
@@ -502,7 +503,8 @@ function createProductCard(p,i,showCat){
     </div>
   `;
 
-  if(cart[getCartKey(p.name)]){
+  const hasInCart=Object.keys(cart).some(k=>k===p.name||k.startsWith(p.name+"|"));
+  if(hasInCart){
     setTimeout(()=>updateCounterUI(p.name),10);
   }
   return card;
@@ -642,7 +644,7 @@ function searchProducts(){
 function addCart(encName){
   const name=decodeStr(encName);
   const cartKey=getCartKey(name);
-  if(!cart[cartKey]) cart[cartKey]=0;
+  if(!cart[cartKey]||isNaN(cart[cartKey])) cart[cartKey]=0;
   cart[cartKey]++;
 
   const noteEl=document.getElementById("note-"+sanitizeId(name));
@@ -660,9 +662,17 @@ function addCart(encName){
 
 function changeQty(encName,val){
   const name=decodeStr(encName);
-  const cartKey=getCartKey(name);
+  // Find any existing cart key for this product (could be name|Bund or name|Kiste)
+  let cartKey=null;
+  const possibleKeys=Object.keys(cart).filter(k=>k===name||k.startsWith(name+"|"));
+  if(possibleKeys.length>0){
+    cartKey=possibleKeys[0];
+  }else{
+    cartKey=getCartKey(name);
+  }
+  if(!cart[cartKey]||isNaN(cart[cartKey])) cart[cartKey]=0;
   cart[cartKey]+=val;
-  if(cart[cartKey]<=0){
+  if(cart[cartKey]<=0||isNaN(cart[cartKey])){
     delete cart[cartKey];
     const ce=document.getElementById("counter-"+sanitizeId(name));
     const ae=document.getElementById("addbtn-"+sanitizeId(name));
@@ -676,16 +686,28 @@ function changeQty(encName,val){
 }
 
 function updateCounterUI(name){
-  const cartKey=getCartKey(name);
+  // Find any existing cart key for this product
+  let qty=0;
+  Object.keys(cart).forEach(k=>{
+    if(k===name||k.startsWith(name+"|")){
+      qty+=cart[k]||0;
+    }
+  });
   const ce=document.getElementById("counter-"+sanitizeId(name));
   const qe=document.getElementById("qty-"+sanitizeId(name));
   const ae=document.getElementById("addbtn-"+sanitizeId(name));
-  if(ce&&qe){ce.style.display="flex";qe.textContent=cart[cartKey]}
-  if(ae) ae.style.display="none";
+  if(qty>0){
+    if(ce&&qe){ce.style.display="flex";qe.textContent=qty}
+    if(ae) ae.style.display="none";
+  }else{
+    if(ce) ce.style.display="none";
+    if(ae) ae.style.display="flex";
+  }
 }
 
 function updateCartButton(){
-  const totalItems=Object.values(cart).reduce((a,b)=>a+b,0);
+  const vals=Object.values(cart).filter(v=>typeof v==='number'&&!isNaN(v));
+  const totalItems=vals.reduce((a,b)=>a+b,0);
   const vc=document.getElementById("viewcart");
   if(totalItems>0){
     vc.style.display="block";
@@ -748,8 +770,9 @@ function renderCart(){
 
 function changeQtyDirect(encKey,val){
   const key=decodeStr(encKey);
+  if(!cart[key]||isNaN(cart[key])) cart[key]=0;
   cart[key]+=val;
-  if(cart[key]<=0){delete cart[key]}
+  if(cart[key]<=0||isNaN(cart[key])){delete cart[key]}
   updateCartButton();
   renderCart();
 }
@@ -817,7 +840,7 @@ function sendToContact(phone){
   });
 
   msg+="━━━━━━━━━━━━━━━━━━\n";
-  const totalQty=Object.values(cart).reduce((a,b)=>a+b,0);
+  const totalQty=Object.values(cart).filter(v=>typeof v==='number'&&!isNaN(v)).reduce((a,b)=>a+b,0);
   msg+=`📦 Gesamt: ${keys.length} Produkte, ${totalQty} Stück\n`;
   msg+=`📅 Datum: ${new Date().toLocaleDateString('de-DE')}\n`;
 
@@ -832,6 +855,25 @@ function showToast(text){
   t.classList.add("show");
   setTimeout(()=>t.classList.remove("show"),1800);
 }
+
+/* ========== ZOOM PREVENTION ========== */
+// Prevent double-tap zoom
+let lastTouchEnd=0;
+document.addEventListener('touchend',function(e){
+  const now=Date.now();
+  if(now-lastTouchEnd<=300){e.preventDefault()}
+  lastTouchEnd=now;
+},false);
+
+// Prevent pinch zoom
+document.addEventListener('gesturestart',function(e){e.preventDefault()},false);
+document.addEventListener('gesturechange',function(e){e.preventDefault()},false);
+document.addEventListener('gestureend',function(e){e.preventDefault()},false);
+
+// Prevent ctrl+scroll zoom on desktop
+document.addEventListener('wheel',function(e){
+  if(e.ctrlKey){e.preventDefault()}
+},{passive:false});
 
 </script>
 </body>
