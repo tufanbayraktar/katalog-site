@@ -809,19 +809,31 @@ function loadCartFromStorage(){
   try{
     const c=localStorage.getItem('fm_cart');
     const n=localStorage.getItem('fm_notes');
-    if(c) cart=JSON.parse(c);
+    if(c){
+      const parsed=JSON.parse(c);
+      // NaN temizliği
+      Object.keys(parsed).forEach(k=>{
+        if(typeof parsed[k]!=='number'||isNaN(parsed[k])) delete parsed[k];
+      });
+      cart=parsed;
+    }
     if(n) notes=JSON.parse(n);
+    // Sepet butonunu güncelle
     updateCartButton();
     // Eğer bir kategorideyken ayrıldıysa geri yükle
     const savedCat=localStorage.getItem('fm_category');
     if(savedCat){
-      openCategory(savedCat);
+      setTimeout(()=>openCategory(savedCat),50);
     }
   }catch(e){}
 }
 
-// Sayfa yüklendiğinde sepeti geri yükle
-loadCartFromStorage();
+// DOM hazır olduğunda sepeti yükle
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',loadCartFromStorage);
+}else{
+  loadCartFromStorage();
+}
 
 /* ========== CART PANEL ========== */
 function openCart(){renderCart();document.getElementById("cartpanel").classList.add("active");document.body.style.overflow="hidden"}
@@ -1049,18 +1061,15 @@ function sendToContact(phone){
 
   // Sepeti kaydet
   saveCartToStorage();
-  try{ localStorage.setItem('orderPending','1'); }catch(e){}
+  // Zaman damgası ile kaydet — sadece son 5 dakika içindeki flag'ler geçerli
+  try{ localStorage.setItem('orderPending', Date.now().toString()); }catch(e){}
 
   const waUrl="https://wa.me/"+phone+"?text="+encodeURIComponent(msg);
   const isStandalone=window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
 
   if(isStandalone){
-    // iOS PWA: Önce onay popup'ını göster, sonra WhatsApp'a yönlendir
-    // Kullanıcı geri geldiğinde popup hazır olacak
-    document.getElementById("confirmSent").classList.add("active");
-    setTimeout(()=>{
-      window.location.href=waUrl;
-    },300);
+    // iOS PWA: doğrudan WhatsApp'a yönlendir
+    window.location.href=waUrl;
   }else{
     // Normal tarayıcı
     window.open(waUrl);
@@ -1081,14 +1090,19 @@ function onReturnFromWhatsApp(){
   }
 }
 
-// Sayfa yüklendiğinde: sipariş bekliyor mu kontrol et (iOS PWA tam yeniden yükleme durumu)
+// Sayfa yüklendiğinde: sipariş bekliyor mu kontrol et
 window.addEventListener('load',function(){
   try{
-    if(localStorage.getItem('orderPending')==='1'){
+    const pendingTime=localStorage.getItem('orderPending');
+    if(pendingTime){
+      const elapsed=Date.now()-parseInt(pendingTime);
       localStorage.removeItem('orderPending');
-      setTimeout(()=>{
-        document.getElementById("confirmSent").classList.add("active");
-      },600);
+      // Sadece son 5 dakika içinde WhatsApp'a gidildiyse popup göster
+      if(elapsed < 300000){
+        setTimeout(()=>{
+          document.getElementById("confirmSent").classList.add("active");
+        },600);
+      }
     }
   }catch(e){}
 });
