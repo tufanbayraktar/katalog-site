@@ -1040,22 +1040,23 @@ function sendToContact(phone){
   closeFirmaPopup();
   closeCart();
 
-  // Sipariş bekliyor olarak işaretle (sayfa yeniden yüklendiğinde kontrol için)
+  // Sepeti kaydet
+  saveCartToStorage();
   try{ localStorage.setItem('orderPending','1'); }catch(e){}
 
-  // WhatsApp aç — iOS PWA'da window.open yerine location.href kullan
   const waUrl="https://wa.me/"+phone+"?text="+encodeURIComponent(msg);
-
-  // iOS standalone (ana ekrandan açılmış) mı kontrol et
   const isStandalone=window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
 
   if(isStandalone){
-    // iOS PWA: aynı pencerede yönlendir, geri geldiğinde sayfa yeniden yüklenir
-    window.location.href=waUrl;
+    // iOS PWA: Önce onay popup'ını göster, sonra WhatsApp'a yönlendir
+    // Kullanıcı geri geldiğinde popup hazır olacak
+    document.getElementById("confirmSent").classList.add("active");
+    setTimeout(()=>{
+      window.location.href=waUrl;
+    },300);
   }else{
-    // Normal tarayıcı: yeni pencere aç
+    // Normal tarayıcı
     window.open(waUrl);
-    // Geri dönüşte onay sor
     waitForReturn=true;
     document.addEventListener('visibilitychange', onReturnFromWhatsApp);
   }
@@ -1073,14 +1074,14 @@ function onReturnFromWhatsApp(){
   }
 }
 
-// Sayfa yüklendiğinde: sipariş bekliyor mu kontrol et (iOS PWA geri dönüş)
+// Sayfa yüklendiğinde: sipariş bekliyor mu kontrol et (iOS PWA tam yeniden yükleme durumu)
 window.addEventListener('load',function(){
   try{
     if(localStorage.getItem('orderPending')==='1'){
       localStorage.removeItem('orderPending');
       setTimeout(()=>{
         document.getElementById("confirmSent").classList.add("active");
-      },800);
+      },600);
     }
   }catch(e){}
 });
