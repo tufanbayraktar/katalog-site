@@ -514,6 +514,7 @@ init();
 /* ========== CATEGORY ========== */
 function openCategory(cat){
   currentCategory=cat;
+  try{localStorage.setItem('fm_category',cat);}catch(e){}
   document.getElementById("categories").style.display="none";
   document.getElementById("backbtn").style.display="flex";
   document.getElementById("sectionTitle").textContent=cat;
@@ -605,6 +606,7 @@ function goBack(){
   document.getElementById("sectionTitle").textContent="Kategorien";
   document.getElementById("searchInput").value="";
   currentCategory="";
+  try{localStorage.removeItem('fm_category');}catch(e){}
 }
 
 /* ========== NOTES ========== */
@@ -810,6 +812,11 @@ function loadCartFromStorage(){
     if(c) cart=JSON.parse(c);
     if(n) notes=JSON.parse(n);
     updateCartButton();
+    // Eğer bir kategorideyken ayrıldıysa geri yükle
+    const savedCat=localStorage.getItem('fm_category');
+    if(savedCat){
+      openCategory(savedCat);
+    }
   }catch(e){}
 }
 
@@ -1088,12 +1095,10 @@ window.addEventListener('load',function(){
 
 function orderConfirmed(){
   document.getElementById("confirmSent").classList.remove("active");
-  // Sepeti temizle
   cart={};
   notes={};
-  try{localStorage.removeItem('fm_cart');localStorage.removeItem('fm_notes');}catch(e){}
+  try{localStorage.removeItem('fm_cart');localStorage.removeItem('fm_notes');localStorage.removeItem('fm_category');}catch(e){}
   updateCartButton();
-  // Teşekkür ekranını göster
   document.getElementById("thankyouScreen").classList.add("active");
 }
 
