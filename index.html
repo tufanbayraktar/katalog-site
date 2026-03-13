@@ -792,7 +792,29 @@ function updateCartButton(){
     document.getElementById("cartBadge").textContent=totalItems;
     document.getElementById("cartTotalItems").textContent=totalItems+" Artikel";
   }else{vc.style.display="none"}
+  // Sepeti sessionStorage'a kaydet
+  saveCartToStorage();
 }
+
+function saveCartToStorage(){
+  try{
+    sessionStorage.setItem('fm_cart',JSON.stringify(cart));
+    sessionStorage.setItem('fm_notes',JSON.stringify(notes));
+  }catch(e){}
+}
+
+function loadCartFromStorage(){
+  try{
+    const c=sessionStorage.getItem('fm_cart');
+    const n=sessionStorage.getItem('fm_notes');
+    if(c) cart=JSON.parse(c);
+    if(n) notes=JSON.parse(n);
+    updateCartButton();
+  }catch(e){}
+}
+
+// Sayfa yüklendiğinde sepeti geri yükle
+loadCartFromStorage();
 
 /* ========== CART PANEL ========== */
 function openCart(){renderCart();document.getElementById("cartpanel").classList.add("active");document.body.style.overflow="hidden"}
@@ -942,6 +964,7 @@ function clearAllCart(){
   if(!confirm("Warenkorb komplett leeren?")) return;
   cart={};
   notes={};
+  try{sessionStorage.removeItem('fm_cart');sessionStorage.removeItem('fm_notes');}catch(e){}
   updateCartButton();
   renderCart();
   showToast("Warenkorb geleert");
@@ -1017,12 +1040,25 @@ function sendToContact(phone){
   closeFirmaPopup();
   closeCart();
 
-  // WhatsApp aç
-  window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(msg));
+  // Sipariş bekliyor olarak işaretle (sayfa yeniden yüklendiğinde kontrol için)
+  try{ sessionStorage.setItem('orderPending','1'); }catch(e){}
 
-  // Kullanıcı geri döndüğünde onay sor
-  waitForReturn=true;
-  document.addEventListener('visibilitychange', onReturnFromWhatsApp);
+  // WhatsApp aç — iOS PWA'da window.open yerine location.href kullan
+  const waUrl="https://wa.me/"+phone+"?text="+encodeURIComponent(msg);
+
+  // iOS standalone (ana ekrandan açılmış) mı kontrol et
+  const isStandalone=window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+
+  if(isStandalone){
+    // iOS PWA: aynı pencerede yönlendir, geri geldiğinde sayfa yeniden yüklenir
+    window.location.href=waUrl;
+  }else{
+    // Normal tarayıcı: yeni pencere aç
+    window.open(waUrl);
+    // Geri dönüşte onay sor
+    waitForReturn=true;
+    document.addEventListener('visibilitychange', onReturnFromWhatsApp);
+  }
 }
 
 let waitForReturn=false;
@@ -1031,18 +1067,30 @@ function onReturnFromWhatsApp(){
   if(document.visibilityState==='visible' && waitForReturn){
     waitForReturn=false;
     document.removeEventListener('visibilitychange', onReturnFromWhatsApp);
-    // Küçük gecikme ile onay popup göster
     setTimeout(()=>{
       document.getElementById("confirmSent").classList.add("active");
     },500);
   }
 }
 
+// Sayfa yüklendiğinde: sipariş bekliyor mu kontrol et (iOS PWA geri dönüş)
+window.addEventListener('load',function(){
+  try{
+    if(sessionStorage.getItem('orderPending')==='1'){
+      sessionStorage.removeItem('orderPending');
+      setTimeout(()=>{
+        document.getElementById("confirmSent").classList.add("active");
+      },800);
+    }
+  }catch(e){}
+});
+
 function orderConfirmed(){
   document.getElementById("confirmSent").classList.remove("active");
   // Sepeti temizle
   cart={};
   notes={};
+  try{sessionStorage.removeItem('fm_cart');sessionStorage.removeItem('fm_notes');}catch(e){}
   updateCartButton();
   // Teşekkür ekranını göster
   document.getElementById("thankyouScreen").classList.add("active");
