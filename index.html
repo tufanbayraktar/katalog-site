@@ -236,6 +236,30 @@ body{
 .modal-step{display:none}
 .modal-step.active{display:block}
 
+/* Confirm sent modal */
+.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:400;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.confirm-overlay.active{display:flex}
+.confirm-box{background:var(--card);border-radius:20px;padding:28px 24px;width:100%;max-width:340px;box-shadow:var(--shadow-lg);animation:modalPop 0.3s cubic-bezier(0.32,0.72,0,1);text-align:center}
+.confirm-emoji{font-size:48px;margin-bottom:12px}
+.confirm-title{font-size:18px;font-weight:900;margin-bottom:6px}
+.confirm-text{font-size:13px;color:var(--text-light);font-weight:600;line-height:1.5;margin-bottom:20px}
+.confirm-btns{display:flex;flex-direction:column;gap:8px}
+.confirm-yes{width:100%;padding:14px;background:var(--green);border:none;border-radius:12px;color:white;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all 0.2s}
+.confirm-yes:active{transform:scale(0.98)}
+.confirm-no{width:100%;padding:12px;background:var(--bg);border:none;border-radius:12px;color:var(--text);font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s}
+.confirm-no:active{transform:scale(0.98)}
+
+/* Thank you screen */
+.thankyou-overlay{position:fixed;inset:0;background:var(--bg);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;flex-direction:column}
+.thankyou-overlay.active{display:flex}
+.thankyou-icon{width:100px;height:100px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:20px;animation:thankPulse 0.6s ease}
+.thankyou-icon svg{width:50px;height:50px;color:var(--green)}
+@keyframes thankPulse{0%{transform:scale(0)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+.thankyou-title{font-size:24px;font-weight:900;margin-bottom:8px}
+.thankyou-text{font-size:14px;color:var(--text-light);font-weight:600;text-align:center;line-height:1.5;margin-bottom:28px}
+.thankyou-btn{padding:16px 40px;background:var(--green);border:none;border-radius:12px;color:white;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:all 0.2s}
+.thankyou-btn:active{transform:scale(0.98)}
+
 .modal-subtitle{text-align:center;font-size:13px;color:var(--text-light);font-weight:600;margin-bottom:16px}
 
 .contact-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
@@ -387,6 +411,29 @@ body{
     </div>
 
   </div>
+</div>
+
+<!-- CONFIRM SENT MODAL -->
+<div class="confirm-overlay" id="confirmSent">
+  <div class="confirm-box">
+    <div class="confirm-emoji">📲</div>
+    <div class="confirm-title">Bestellung gesendet?</div>
+    <div class="confirm-text">Haben Sie die Bestellung über WhatsApp erfolgreich gesendet?</div>
+    <div class="confirm-btns">
+      <button class="confirm-yes" onclick="orderConfirmed()">Ja, wurde gesendet ✓</button>
+      <button class="confirm-no" onclick="orderNotSent()">Nein, noch nicht gesendet</button>
+    </div>
+  </div>
+</div>
+
+<!-- THANK YOU SCREEN -->
+<div class="thankyou-overlay" id="thankyouScreen">
+  <div class="thankyou-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  </div>
+  <div class="thankyou-title">Vielen Dank!</div>
+  <div class="thankyou-text">Ihre Bestellung wurde erfolgreich gesendet.<br>Wir werden sie schnellstmöglich bearbeiten.</div>
+  <button class="thankyou-btn" onclick="closeThankYou()">Weiter einkaufen</button>
 </div>
 
 <script>
@@ -968,7 +1015,47 @@ function sendToContact(phone){
   msg+=`📅 Datum: ${new Date().toLocaleDateString('de-DE')}\n`;
 
   closeFirmaPopup();
+  closeCart();
+
+  // WhatsApp aç
   window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(msg));
+
+  // Kullanıcı geri döndüğünde onay sor
+  waitForReturn=true;
+  document.addEventListener('visibilitychange', onReturnFromWhatsApp);
+}
+
+let waitForReturn=false;
+
+function onReturnFromWhatsApp(){
+  if(document.visibilityState==='visible' && waitForReturn){
+    waitForReturn=false;
+    document.removeEventListener('visibilitychange', onReturnFromWhatsApp);
+    // Küçük gecikme ile onay popup göster
+    setTimeout(()=>{
+      document.getElementById("confirmSent").classList.add("active");
+    },500);
+  }
+}
+
+function orderConfirmed(){
+  document.getElementById("confirmSent").classList.remove("active");
+  // Sepeti temizle
+  cart={};
+  notes={};
+  updateCartButton();
+  // Teşekkür ekranını göster
+  document.getElementById("thankyouScreen").classList.add("active");
+}
+
+function orderNotSent(){
+  document.getElementById("confirmSent").classList.remove("active");
+  // Sepet olduğu gibi kalır, tekrar deneyebilir
+  showToast("Warenkorb bleibt erhalten");
+}
+
+function closeThankYou(){
+  document.getElementById("thankyouScreen").classList.remove("active");
 }
 
 /* ========== TOAST ========== */
