@@ -1059,17 +1059,20 @@ function sendToContact(phone){
   closeFirmaPopup();
   closeCart();
 
-  // Sepeti kaydet
-  saveCartToStorage();
-  // Zaman damgası ile kaydet — sadece son 5 dakika içindeki flag'ler geçerli
-  try{ localStorage.setItem('orderPending', Date.now().toString()); }catch(e){}
-
   const waUrl="https://wa.me/"+phone+"?text="+encodeURIComponent(msg);
   const isStandalone=window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
 
+  // ÖNCE kaydet — yönlendirmeden ÖNCE her şey localStorage'a yazılmalı
+  saveCartToStorage();
+  try{
+    localStorage.setItem('orderPending', Date.now().toString());
+  }catch(e){}
+
   if(isStandalone){
-    // iOS PWA: doğrudan WhatsApp'a yönlendir
-    window.location.href=waUrl;
+    // iOS PWA: Küçük gecikme ile localStorage'ın yazılmasını garantile
+    setTimeout(()=>{
+      window.location.href=waUrl;
+    },100);
   }else{
     // Normal tarayıcı
     window.open(waUrl);
@@ -1098,10 +1101,10 @@ window.addEventListener('load',function(){
       const elapsed=Date.now()-parseInt(pendingTime);
       localStorage.removeItem('orderPending');
       // Sadece son 5 dakika içinde WhatsApp'a gidildiyse popup göster
-      if(elapsed < 300000){
+      if(elapsed>=0 && elapsed<300000){
         setTimeout(()=>{
           document.getElementById("confirmSent").classList.add("active");
-        },600);
+        },800);
       }
     }
   }catch(e){}
@@ -1109,21 +1112,31 @@ window.addEventListener('load',function(){
 
 function orderConfirmed(){
   document.getElementById("confirmSent").classList.remove("active");
+  // Sepeti tamamen temizle
   cart={};
   notes={};
-  try{localStorage.removeItem('fm_cart');localStorage.removeItem('fm_notes');localStorage.removeItem('fm_category');}catch(e){}
+  try{
+    localStorage.removeItem('fm_cart');
+    localStorage.removeItem('fm_notes');
+    localStorage.removeItem('fm_category');
+    localStorage.removeItem('orderPending');
+  }catch(e){}
   updateCartButton();
+  // Ana sayfaya dön
+  goBack();
+  // Teşekkür ekranını göster
   document.getElementById("thankyouScreen").classList.add("active");
 }
 
 function orderNotSent(){
   document.getElementById("confirmSent").classList.remove("active");
-  // Sepet olduğu gibi kalır, tekrar deneyebilir
   showToast("Warenkorb bleibt erhalten");
 }
 
 function closeThankYou(){
   document.getElementById("thankyouScreen").classList.remove("active");
+  // Sayfayı tamamen sıfırla
+  goBack();
 }
 
 /* ========== TOAST ========== */
