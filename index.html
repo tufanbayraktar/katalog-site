@@ -288,11 +288,55 @@ body{
 .no-results{display:none;text-align:center;padding:40px 20px;color:var(--text-light);font-weight:600;grid-column:1/-1}
 ::-webkit-scrollbar{width:0}
 
+/* Pull to refresh */
+.ptr-indicator{
+  position:fixed;
+  top:-60px;
+  left:50%;
+  transform:translateX(-50%);
+  width:44px;
+  height:44px;
+  background:var(--card);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:var(--shadow-lg);
+  z-index:999;
+  transition:top 0.3s ease, transform 0.2s;
+}
+.ptr-indicator.visible{
+  top:16px;
+}
+.ptr-indicator.loading{
+  top:16px;
+}
+.ptr-indicator svg{
+  width:24px;
+  height:24px;
+  color:var(--green);
+  transition:transform 0.2s;
+}
+.ptr-indicator.ready svg{
+  transform:rotate(180deg);
+}
+@keyframes ptrSpin{
+  to{transform:rotate(360deg)}
+}
+.ptr-indicator.loading svg{
+  animation:ptrSpin 0.8s linear infinite;
+}
+
 </style>
 </head>
 <body>
 
 <div class="toast" id="toast"></div>
+
+<!-- PULL TO REFRESH -->
+<div class="ptr-indicator" id="ptrIndicator">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+</div>
 
 <!-- HERO -->
 <div class="hero">
@@ -1148,6 +1192,59 @@ function showToast(text){
   t.classList.add("show");
   setTimeout(()=>t.classList.remove("show"),1800);
 }
+
+/* ========== PULL TO REFRESH ========== */
+let ptrStartY=0;
+let ptrMoving=false;
+let ptrTriggered=false;
+const ptrEl=document.getElementById('ptrIndicator');
+const PTR_THRESHOLD=80;
+
+document.addEventListener('touchstart',function(e){
+  // Sadece sayfanın en üstündeyken çalışsın
+  if(window.scrollY<=5 && !document.querySelector('.detail.active') && !document.querySelector('.cartpanel.active') && !document.querySelector('.modal-overlay.active')){
+    ptrStartY=e.touches[0].clientY;
+    ptrMoving=true;
+    ptrTriggered=false;
+  }
+},{passive:true});
+
+document.addEventListener('touchmove',function(e){
+  if(!ptrMoving) return;
+  const diff=e.touches[0].clientY-ptrStartY;
+
+  if(diff>10 && window.scrollY<=0){
+    const progress=Math.min(diff/PTR_THRESHOLD,1);
+    ptrEl.classList.add('visible');
+    ptrEl.style.top=Math.min(diff*0.4, 50)+'px';
+
+    if(diff>=PTR_THRESHOLD){
+      ptrEl.classList.add('ready');
+      ptrTriggered=true;
+    }else{
+      ptrEl.classList.remove('ready');
+      ptrTriggered=false;
+    }
+  }
+},{passive:true});
+
+document.addEventListener('touchend',function(e){
+  if(!ptrMoving) return;
+  ptrMoving=false;
+
+  if(ptrTriggered){
+    ptrEl.classList.remove('ready','visible');
+    ptrEl.classList.add('loading');
+    ptrEl.style.top='16px';
+    // Yenile
+    setTimeout(()=>{
+      window.location.reload();
+    },600);
+  }else{
+    ptrEl.classList.remove('visible','ready');
+    ptrEl.style.top='-60px';
+  }
+},{passive:true});
 
 /* ========== ZOOM PREVENTION ========== */
 // Prevent double-tap zoom
