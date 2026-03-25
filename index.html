@@ -514,7 +514,6 @@ init();
 /* ========== CATEGORY ========== */
 function openCategory(cat){
   currentCategory=cat;
-  try{localStorage.setItem('fm_category',cat);}catch(e){}
   document.getElementById("categories").style.display="none";
   document.getElementById("backbtn").style.display="flex";
   document.getElementById("sectionTitle").textContent=cat;
@@ -606,7 +605,6 @@ function goBack(){
   document.getElementById("sectionTitle").textContent="Kategorien";
   document.getElementById("searchInput").value="";
   currentCategory="";
-  try{localStorage.removeItem('fm_category');}catch(e){}
 }
 
 /* ========== NOTES ========== */
@@ -811,20 +809,14 @@ function loadCartFromStorage(){
     const n=localStorage.getItem('fm_notes');
     if(c){
       const parsed=JSON.parse(c);
-      // NaN temizliği
       Object.keys(parsed).forEach(k=>{
         if(typeof parsed[k]!=='number'||isNaN(parsed[k])) delete parsed[k];
       });
       cart=parsed;
     }
     if(n) notes=JSON.parse(n);
-    // Sepet butonunu güncelle
     updateCartButton();
-    // Eğer bir kategorideyken ayrıldıysa geri yükle
-    const savedCat=localStorage.getItem('fm_category');
-    if(savedCat){
-      setTimeout(()=>openCategory(savedCat),50);
-    }
+    // Her zaman ana sayfadan başla — kategori geri yüklenmez
   }catch(e){}
 }
 
@@ -834,6 +826,17 @@ if(document.readyState==='loading'){
 }else{
   loadCartFromStorage();
 }
+
+// Uygulama arka plandan öne geldiğinde yenile (sipariş bekliyor değilse)
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'){
+    const pending=localStorage.getItem('orderPending');
+    if(!pending){
+      // Sepeti localStorage'dan tazele
+      loadCartFromStorage();
+    }
+  }
+});
 
 /* ========== CART PANEL ========== */
 function openCart(){renderCart();document.getElementById("cartpanel").classList.add("active");document.body.style.overflow="hidden"}
@@ -1118,7 +1121,6 @@ function orderConfirmed(){
   try{
     localStorage.removeItem('fm_cart');
     localStorage.removeItem('fm_notes');
-    localStorage.removeItem('fm_category');
     localStorage.removeItem('orderPending');
   }catch(e){}
   updateCartButton();
