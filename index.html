@@ -305,21 +305,24 @@ body{
 .no-results{display:none;text-align:center;padding:40px 20px;color:var(--text-light);font-weight:600;grid-column:1/-1}
 ::-webkit-scrollbar{width:0}
 
-/* Pull to refresh */
-.ptr-indicator{
-
 /* Fullscreen image lightbox */
-.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:600;display:none;align-items:center;justify-content:center;flex-direction:column}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:600;display:none;align-items:center;justify-content:center;flex-direction:column;padding:20px;backdrop-filter:blur(8px)}
 .lightbox.active{display:flex}
-.lightbox-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border:none;border-radius:50%;background:rgba(255,255,255,0.15);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10}
+.lightbox-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border:none;border-radius:50%;background:rgba(255,255,255,0.2);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10}
 .lightbox-close svg{width:24px;height:24px}
-.lightbox-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;width:100%;height:80vh;scrollbar-width:none;align-items:center}
+.lightbox-card{background:var(--card);border-radius:20px;overflow:hidden;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:modalPop 0.3s cubic-bezier(0.32,0.72,0,1)}
+.lightbox-carousel{position:relative;overflow:hidden}
+.lightbox-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .lightbox-track::-webkit-scrollbar{display:none}
-.lightbox-track img{min-width:100%;height:100%;object-fit:contain;scroll-snap-align:start;flex-shrink:0;padding:20px}
-.lightbox-dots{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
-.lightbox-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.4);transition:all 0.2s}
-.lightbox-dot.active{background:white;width:22px;border-radius:5px}
-.lightbox-counter{position:absolute;top:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,0.6);font-size:14px;font-weight:700}
+.lightbox-track img{min-width:100%;height:280px;object-fit:contain;scroll-snap-align:start;flex-shrink:0;background:#fafafa}
+.lightbox-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.lightbox-dot{width:8px;height:8px;border-radius:50%;background:rgba(0,0,0,0.2);transition:all 0.2s}
+.lightbox-dot.active{background:var(--green);width:18px;border-radius:4px}
+.lightbox-info{padding:16px 20px}
+.lightbox-name{font-size:20px;font-weight:900;margin-bottom:2px}
+.lightbox-herkunft{font-size:13px;color:var(--text-light);font-weight:600;margin-bottom:4px}
+.lightbox-price{font-size:18px;color:var(--green);font-weight:800}
+.lightbox-counter{color:rgba(255,255,255,0.5);font-size:13px;font-weight:700;margin-bottom:12px}
 
 /* Pull to refresh */
 .ptr-indicator{
@@ -372,13 +375,18 @@ body{
 </div>
 
 <!-- FULLSCREEN LIGHTBOX -->
-<div class="lightbox" id="lightbox">
+<div class="lightbox" id="lightbox" onclick="closeLightboxOutside(event)">
   <div class="lightbox-counter" id="lightboxCounter"></div>
   <button class="lightbox-close" onclick="closeLightbox()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
-  <div class="lightbox-track" id="lightboxTrack" onscroll="updateLightboxDots()"></div>
-  <div class="lightbox-dots" id="lightboxDots"></div>
+  <div class="lightbox-card" id="lightboxCard">
+    <div class="lightbox-carousel">
+      <div class="lightbox-track" id="lightboxTrack" onscroll="updateLightboxDots()"></div>
+      <div class="lightbox-dots" id="lightboxDots"></div>
+    </div>
+    <div class="lightbox-info" id="lightboxInfo"></div>
+  </div>
 </div>
 
 <!-- HERO -->
@@ -1266,20 +1274,28 @@ function openLightbox(encName,startIdx){
   const track=document.getElementById('lightboxTrack');
   const dots=document.getElementById('lightboxDots');
   const counter=document.getElementById('lightboxCounter');
+  const info=document.getElementById('lightboxInfo');
 
   track.innerHTML='';
   dots.innerHTML='';
   lightboxImages.forEach((src,i)=>{
-    track.innerHTML+=`<img src="${src}" alt="">`;
-    dots.innerHTML+=`<div class="lightbox-dot${i===idx?' active':''}"></div>`;
+    track.innerHTML+=`<img src="${src}" alt="${p.name}">`;
+    if(lightboxImages.length>1){
+      dots.innerHTML+=`<div class="lightbox-dot${i===idx?' active':''}"></div>`;
+    }
   });
 
-  counter.textContent=(idx+1)+' / '+lightboxImages.length;
+  counter.textContent=lightboxImages.length>1?((idx+1)+' / '+lightboxImages.length):'';
+
+  info.innerHTML=`
+    <div class="lightbox-name">${p.name}</div>
+    ${p.herkunft?'<div class="lightbox-herkunft">'+p.herkunft+'</div>':''}
+    <div class="lightbox-price">${p.price}</div>
+  `;
 
   document.getElementById('lightbox').classList.add('active');
   document.body.style.overflow='hidden';
 
-  // Scroll to correct image
   setTimeout(()=>{
     track.scrollTo({left:idx*track.offsetWidth,behavior:'instant'});
   },50);
@@ -1290,13 +1306,21 @@ function closeLightbox(){
   document.body.style.overflow='';
 }
 
+function closeLightboxOutside(e){
+  if(e.target===document.getElementById('lightbox')){
+    closeLightbox();
+  }
+}
+
 function updateLightboxDots(){
   const track=document.getElementById('lightboxTrack');
   const w=track.offsetWidth;
   const idx=Math.round(track.scrollLeft/w);
   const dots=document.querySelectorAll('.lightbox-dot');
   dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
-  document.getElementById('lightboxCounter').textContent=(idx+1)+' / '+lightboxImages.length;
+  if(lightboxImages.length>1){
+    document.getElementById('lightboxCounter').textContent=(idx+1)+' / '+lightboxImages.length;
+  }
 }
 
 /* ========== CAROUSEL DOTS ========== */
