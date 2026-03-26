@@ -1106,7 +1106,7 @@ function sendToContact(phone){
   closeFirmaPopup();
   closeCart();
 
-  const waUrl="https://wa.me/"+phone+"?text="+encodeURIComponent(msg);
+  const waUrl="https://api.whatsapp.com/send?phone="+phone+"&text="+encodeURIComponent(msg);
   const isStandalone=window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
 
   // ÖNCE kaydet — yönlendirmeden ÖNCE her şey localStorage'a yazılmalı
