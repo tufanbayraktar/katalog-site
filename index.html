@@ -87,6 +87,23 @@ body{
 .card-img-wrap img{width:100%;height:140px;object-fit:cover;transition:transform 0.3s}
 .card:active .card-img-wrap img{transform:scale(1.05)}
 
+/* Card image carousel */
+.card-carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.card-carousel::-webkit-scrollbar{display:none}
+.card-carousel img{min-width:100%;height:140px;object-fit:cover;scroll-snap-align:start;flex-shrink:0}
+.card-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:2}
+.card-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.5);transition:all 0.2s}
+.card-dot.active{background:white;width:12px;border-radius:3px}
+
+/* Detail image carousel */
+.detail-carousel{position:relative;overflow:hidden}
+.detail-carousel-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.detail-carousel-track::-webkit-scrollbar{display:none}
+.detail-carousel-track img{min-width:100%;aspect-ratio:1;object-fit:cover;scroll-snap-align:start;flex-shrink:0}
+.detail-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2}
+.detail-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.5);transition:all 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.3)}
+.detail-dot.active{background:white;width:18px;border-radius:4px}
+
 .card-body{padding:10px 12px 50px;position:relative}
 .name{font-weight:800;font-size:15px;line-height:1.2;margin-bottom:4px}
 .herkunft{font-size:12px;color:var(--text-light);font-weight:600;margin-bottom:4px}
@@ -494,25 +511,25 @@ const contacts = [
 /* ========== PRODUCT DATA ========== */
 const products = [
   /* ===== OBST ===== */
-  {name:"Granatapfel",price:"€ / kg",category:"Obst",herkunft:"Türkei",beschreibung:"Frische, saftige Granatäpfel direkt vom Erzeuger. Ideal für Säfte, Salate und Desserts.",img:"https://i.postimg.cc/RC24Jtyq/IMG_4034.jpg"},
-  {name:"Apfel Red Chief",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"Knackige Red Chief Äpfel mit intensiv roter Farbe. Süß und aromatisch.",img:"https://i.postimg.cc/NjBMLT2q/IMG_4039.jpg"},
-  {name:"Kiwi",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"Saftige Kiwis mit süß-saurem Geschmack. Reich an Vitamin C.",img:"https://i.postimg.cc/fRBPmnyJ/IMG_4035.jpg"},
-  {name:"Ananas",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"Tropische Ananas, süß und aromatisch. Perfekt für Desserts und Smoothies.",img:"https://i.postimg.cc/9fDL9Dvj/IMG_4036.jpg"},
-  {name:"Gelbe Melone",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"Süße, aromatische gelbe Melone. Erfrischend und saftig.",img:"https://i.postimg.cc/DZVPbBrZ/IMG_4038.jpg"},
-  {name:"Datteln",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"Natürlich süße Datteln, perfekt als Snack oder zum Backen.",img:"https://i.postimg.cc/MTJgKZNm/IMG_4028.jpg"},
-  {name:"Zitronen Netz",price:"€ / Netz",category:"Obst",herkunft:"",beschreibung:"Frische Zitronen im Netz. Vielseitig einsetzbar in Küche und Getränken.",img:"https://i.postimg.cc/dVtsw6rs/IMG_4027.jpg"},
+  {name:"Granatapfel 9er",price:"€ / kg",category:"Obst",herkunft:"Türkei",beschreibung:"Frische, saftige Granatäpfel direkt vom Erzeuger. Ideal für Säfte, Salate und Desserts.",images:["https://i.postimg.cc/RC24Jtyq/IMG_4034.jpg","https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png"]},
+  {name:"Apfel Red Chief",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"Knackige Red Chief Äpfel mit intensiv roter Farbe. Süß und aromatisch.",images:["https://i.postimg.cc/NjBMLT2q/IMG_4039.jpg"]},
+  {name:"Kiwi",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"Saftige Kiwis mit süß-saurem Geschmack. Reich an Vitamin C.",images:["https://i.postimg.cc/fRBPmnyJ/IMG_4035.jpg","https://i.postimg.cc/PxmT3mjk/IMG_4209.jpg"]},
+  {name:"Ananas",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"Tropische Ananas, süß und aromatisch. Perfekt für Desserts und Smoothies.",images:["https://i.postimg.cc/9fDL9Dvj/IMG_4036.jpg","https://i.postimg.cc/t421DGzk/IMG_4179.jpg"]},
+  {name:"Gelbe Melone",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"Süße, aromatische gelbe Melone. Erfrischend und saftig.",images:["https://i.postimg.cc/DZVPbBrZ/IMG_4038.jpg","https://i.postimg.cc/4NvH797D/IMG_4176.jpg"]},
+  {name:"Datteln",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"Natürlich süße Datteln, perfekt als Snack oder zum Backen.",images:["https://i.postimg.cc/MTJgKZNm/IMG_4028.jpg","https://i.postimg.cc/sgDqQbDh/IMG_4200.jpg"]},
+  {name:"Zitronen Netz",price:"€ / Netz",category:"Obst",herkunft:"",beschreibung:"Frische Zitronen im Netz. Vielseitig einsetzbar in Küche und Getränken.",images:["https://i.postimg.cc/dVtsw6rs/IMG_4027.jpg","https://i.postimg.cc/7PGg6hnK/IMG_4158.jpg"]},
 
   /* ===== GEMÜSE ===== */
-  {name:"Çarliston",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"Milde, lange Spitzpaprika. Ideal zum Braten und Grillen.",img:"https://i.postimg.cc/0NRkgvkf/IMG_4023.jpg"},
-  {name:"Capia Rot",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"Süße rote Capia-Paprika. Perfekt zum Grillen, Rösten und für Salate.",img:"https://i.postimg.cc/9fpvxHr5/IMG_4024.jpg"},
-  {name:"Aubergine",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Frische Auberginen, vielseitig einsetzbar. Ideal für Aufläufe und orientalische Gerichte.",img:"https://i.postimg.cc/VNnj1zj5/IMG_4025.jpg"},
-  {name:"Zucchini Grün",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Knackige grüne Zucchini. Perfekt für Pfannengerichte, Suppen und zum Grillen.",img:"https://i.postimg.cc/d1SQxyLL/IMG_4026.jpg"},
-  {name:"Knoblauch Netz",price:"€ / Netz",category:"Gemüse",herkunft:"",beschreibung:"Aromatischer Knoblauch im Netz. Unverzichtbar in jeder Küche.",img:"https://i.postimg.cc/HWtSG92r/IMG_4022.jpg"},
-  {name:"Metzger Zwiebeln",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Große Metzger-Zwiebeln, kräftig im Geschmack. Perfekt zum Kochen und Braten.",img:"https://i.postimg.cc/Hk22Rw1q/IMG_4031.jpg"},
-  {name:"Einlage Gurken",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Frische Einlegegurken, ideal zum Einlegen und Fermentieren.",img:"https://i.postimg.cc/5yVQfrwn/IMG_4032.jpg"},
-  {name:"Mini Gurken",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Knackige Mini-Gurken, perfekt als Snack oder für Salate.",img:"https://i.postimg.cc/QxnNbPHn/IMG_4033.jpg"},
-  {name:"Petersilie",price:"€ / Bund",category:"Gemüse",herkunft:"",beschreibung:"Frische Petersilie, aromatisch und vielseitig. Für Salate, Suppen und als Garnitur.",img:"https://i.postimg.cc/bwbTY0Ph/IMG_4029.jpg",hasUnitPicker:true,units:["Bund","Kiste (20 Bund)"]},
-  {name:"Dill",price:"€ / Bund",category:"Gemüse",herkunft:"",beschreibung:"Frischer Dill mit feinem Aroma. Ideal für Fischgerichte, Salate und Dips.",img:"https://i.postimg.cc/k5Jjgjyq/IMG_4030.jpg",hasUnitPicker:true,units:["Bund","Kiste (20 Bund)"]},
+  {name:"Çarliston",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"Milde, lange Spitzpaprika. Ideal zum Braten und Grillen.",images:["https://i.postimg.cc/0NRkgvkf/IMG_4023.jpg","https://i.postimg.cc/7hKvd9tG/IMG_4290.jpg"]},
+  {name:"Capia Rot",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"Süße rote Capia-Paprika. Perfekt zum Grillen, Rösten und für Salate.",images:["https://i.postimg.cc/9fpvxHr5/IMG_4024.jpg","https://i.postimg.cc/G3K14333/IMG_4293.jpg"]},
+  {name:"Aubergine",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Frische Auberginen, vielseitig einsetzbar. Ideal für Aufläufe und orientalische Gerichte.",images:["https://i.postimg.cc/VNnj1zj5/IMG_4025.jpg","https://i.postimg.cc/FHdtCjy6/IMG_4321.jpg"]},
+  {name:"Zucchini Grün",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Knackige grüne Zucchini. Perfekt für Pfannengerichte, Suppen und zum Grillen.",images:["https://i.postimg.cc/d1SQxyLL/IMG_4026.jpg","https://i.postimg.cc/hP3W0Cd9/IMG_4315.jpg"]},
+  {name:"Knoblauch Netz",price:"€ / Netz",category:"Gemüse",herkunft:"",beschreibung:"Aromatischer Knoblauch im Netz. Unverzichtbar in jeder Küche.",images:["https://i.postimg.cc/HWtSG92r/IMG_4022.jpg","https://i.postimg.cc/TYPvg8hN/IMG_4303.jpg"]},
+  {name:"Metzger Zwiebeln",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Große Metzger-Zwiebeln, kräftig im Geschmack. Perfekt zum Kochen und Braten.",images:["https://i.postimg.cc/Hk22Rw1q/IMG_4031.jpg","https://i.postimg.cc/3JDCLBSm/IMG_4347.jpg"]},
+  {name:"Einlage Gurken",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Frische Einlegegurken, ideal zum Einlegen und Fermentieren.",images:["https://i.postimg.cc/5yVQfrwn/IMG_4032.jpg","https://i.postimg.cc/Dfc87bWv/IMG_3939.jpg"]},
+  {name:"Mini Gurken",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Knackige Mini-Gurken, perfekt als Snack oder für Salate.",images:["https://i.postimg.cc/QxnNbPHn/IMG_4033.jpg","https://i.postimg.cc/htMGBFhL/IMG_4348.jpg"]},
+  {name:"Petersilie",price:"€ / Bund",category:"Gemüse",herkunft:"",beschreibung:"Frische Petersilie, aromatisch und vielseitig. Für Salate, Suppen und als Garnitur.",images:["https://i.postimg.cc/bwbTY0Ph/IMG_4029.jpg","https://i.postimg.cc/c1BdfMh4/IMG_4228.jpg"],hasUnitPicker:true,units:["Bund","Kiste (20 Bund)"]},
+  {name:"Dill",price:"€ / Bund",category:"Gemüse",herkunft:"",beschreibung:"Frischer Dill mit feinem Aroma. Ideal für Fischgerichte, Salate und Dips.",images:["https://i.postimg.cc/k5Jjgjyq/IMG_4030.jpg","https://i.postimg.cc/BvF0bxtf/IMG_4261.jpg"],hasUnitPicker:true,units:["Bund","Kiste (20 Bund)"]},
 ];
 
 let cart = {};       // { "Petersilie|Bund": 3 } or { "Apfel Red Chief": 2 }
@@ -599,13 +616,26 @@ function createProductCard(p,i,showCat){
     unitPickerHtml+=`</div>`;
   }
 
+  const imgs=p.images||[p.img];
+  const cardId='card-'+sanitizeId(p.name)+'-'+i;
+  let carouselHtml='';
+  if(imgs.length>1){
+    carouselHtml=`<div class="card-carousel" id="${cardId}" onscroll="updateCardDots('${cardId}',${imgs.length})">`;
+    imgs.forEach(src=>{carouselHtml+=`<img src="${src}" alt="${p.name}" loading="lazy">`});
+    carouselHtml+=`</div><div class="card-dots">`;
+    imgs.forEach((_,idx)=>{carouselHtml+=`<div class="card-dot${idx===0?' active':''}"></div>`});
+    carouselHtml+=`</div>`;
+  }else{
+    carouselHtml=`<img src="${imgs[0]}" alt="${p.name}" loading="lazy">`;
+  }
+
   card.innerHTML=`
     <div class="card-img-wrap" onclick="openDetail('${encodeStr(p.name)}')">
       <div class="note-badge" id="notebadge-${sanitizeId(p.name)}" style="display:${hasNote?'flex':'none'}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         Notiz
       </div>
-      <img src="${p.img}" alt="${p.name}" loading="lazy">
+      ${carouselHtml}
     </div>
     <div class="card-body">
       <div class="name">${p.name}</div>
@@ -685,6 +715,18 @@ function openDetail(encName){
     unitPickerHtml+='</div>';
   }
 
+  const detailImgs=p.images||[p.img];
+  let detailCarouselHtml='';
+  if(detailImgs.length>1){
+    detailCarouselHtml=`<div class="detail-carousel"><div class="detail-carousel-track" id="detailCarousel" onscroll="updateDetailDots(${detailImgs.length})">`;
+    detailImgs.forEach(src=>{detailCarouselHtml+=`<img src="${src}" alt="${p.name}">`});
+    detailCarouselHtml+=`</div><div class="detail-dots">`;
+    detailImgs.forEach((_,idx)=>{detailCarouselHtml+=`<div class="detail-dot${idx===0?' active':''}"></div>`});
+    detailCarouselHtml+=`</div></div>`;
+  }else{
+    detailCarouselHtml=`<img class="detail-img" src="${detailImgs[0]}" alt="${p.name}">`;
+  }
+
   detail.innerHTML=`
     <div class="detail-header">
       <button class="detail-close" onclick="closeDetail()">
@@ -693,7 +735,7 @@ function openDetail(encName){
       <span style="font-weight:800">${p.name}</span>
       <div style="width:36px"></div>
     </div>
-    <img class="detail-img" src="${p.img}" alt="${p.name}">
+    ${detailCarouselHtml}
     <div class="detail-body">
       <div class="detail-name">${p.name}</div>
       ${p.herkunft?'<div class="detail-herkunft">Herkunft: '+p.herkunft+'</div>':''}
@@ -920,7 +962,7 @@ function renderCart(){
           </div>
           <div class="cartitem-inner" id="cartinner-${safeKey}" ontouchstart="swipeStart(event,'${safeKey}')" ontouchmove="swipeMove(event,'${safeKey}')" ontouchend="swipeEnd(event,'${safeKey}')">
             <div class="cartitem-main">
-              ${p?'<img class="cartitem-img" src="'+p.img+'" alt="'+escapeHtml(name)+'">':''}
+              ${p?'<img class="cartitem-img" src="'+(p.images?p.images[0]:p.img)+'" alt="'+escapeHtml(name)+'">':''}
               <div class="cartitem-info">
                 <div class="cartitem-name">${escapeHtml(name)}</div>
                 <div class="cartitem-price">${p?p.price:''}</div>
@@ -1183,6 +1225,33 @@ function closeThankYou(){
   document.getElementById("thankyouScreen").classList.remove("active");
   // Sayfayı tamamen sıfırla
   goBack();
+}
+
+/* ========== CAROUSEL DOTS ========== */
+function updateCardDots(cardId,count){
+  const el=document.getElementById(cardId);
+  if(!el) return;
+  const scrollLeft=el.scrollLeft;
+  const width=el.offsetWidth;
+  const activeIdx=Math.round(scrollLeft/width);
+  const wrap=el.closest('.card-img-wrap');
+  if(!wrap) return;
+  const dots=wrap.querySelectorAll('.card-dot');
+  dots.forEach((d,i)=>{
+    d.classList.toggle('active',i===activeIdx);
+  });
+}
+
+function updateDetailDots(count){
+  const el=document.getElementById('detailCarousel');
+  if(!el) return;
+  const scrollLeft=el.scrollLeft;
+  const width=el.offsetWidth;
+  const activeIdx=Math.round(scrollLeft/width);
+  const dots=el.parentElement.querySelectorAll('.detail-dot');
+  dots.forEach((d,i)=>{
+    d.classList.toggle('active',i===activeIdx);
+  });
 }
 
 /* ========== TOAST ========== */
