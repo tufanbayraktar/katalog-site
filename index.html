@@ -671,13 +671,13 @@ function createProductCard(p,i,showCat){
       </div>
       ${carouselHtml}
     </div>
-    <div class="card-body" onclick="openDetail('${encodeStr(p.name)}')">
-      <div class="name">${p.name}</div>
-      ${herkunft?'<div class="herkunft">'+herkunft+'</div>':''}
-      <div class="price">${p.price}</div>
+    <div class="card-body">
+      <div class="name" onclick="openDetail('${encodeStr(p.name)}')" style="cursor:pointer">${p.name}</div>
+      ${herkunft?'<div class="herkunft" onclick="openDetail(\''+encodeStr(p.name)+'\')" style="cursor:pointer">'+herkunft+'</div>':''}
+      <div class="price" onclick="openDetail('${encodeStr(p.name)}')" style="cursor:pointer">${p.price}</div>
       ${unitPickerHtml}
-      <div class="note-input-wrap">
-        <input class="note-input" id="note-${sanitizeId(p.name)}" type="text" placeholder="Hinweis z.B. sehr reif" maxlength="80" value="${escapeHtml(existingNote)}" onfocus="this.parentElement.style.zIndex='5'" onblur="this.parentElement.style.zIndex='';saveNote('${encodeStr(p.name)}',this.value)" oninput="saveNote('${encodeStr(p.name)}',this.value)">
+      <div class="note-input-wrap" onclick="event.stopPropagation()">
+        <input class="note-input" id="note-${sanitizeId(p.name)}" type="text" placeholder="Hinweis z.B. sehr reif" maxlength="80" value="${escapeHtml(existingNote)}" onclick="event.stopPropagation()" onfocus="event.stopPropagation();this.parentElement.style.zIndex='5'" onblur="this.parentElement.style.zIndex='';saveNote('${encodeStr(p.name)}',this.value)" oninput="saveNote('${encodeStr(p.name)}',this.value)">
         <svg class="note-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       </div>
       <button class="addbtn" id="addbtn-${sanitizeId(p.name)}" onclick="event.stopPropagation();addCart('${encodeStr(p.name)}')">+</button>
