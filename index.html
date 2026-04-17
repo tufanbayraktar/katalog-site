@@ -21,17 +21,17 @@
 html{overflow-x:hidden;width:100%;position:relative;touch-action:manipulation;-ms-touch-action:manipulation}
 
 :root{
-  --green:#16a34a;
-  --green-dark:#15803d;
-  --green-light:#dcfce7;
-  --bg:#f0f2f5;
+  --green:#22c55e;
+  --green-dark:#16a34a;
+  --green-light:#f0fdf4;
+  --bg:#fafbfc;
   --card:#ffffff;
-  --text:#1a1a1a;
+  --text:#111827;
   --text-light:#6b7280;
-  --shadow:0 4px 16px rgba(0,0,0,0.08);
-  --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
-  --radius:16px;
-  --radius-sm:12px;
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.03);
+  --shadow-lg:0 6px 20px rgba(0,0,0,0.07);
+  --radius:14px;
+  --radius-sm:10px;
 }
 
 body{
@@ -48,19 +48,19 @@ body{
   padding-bottom:80px;
 }
 
-.hero{position:relative;height:200px;overflow:hidden}
-.hero img{width:100%;height:100%;object-fit:cover;filter:brightness(0.7)}
+.hero{position:relative;height:180px;overflow:hidden}
+.hero img{width:100%;height:100%;object-fit:cover;filter:brightness(0.65)}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.1),rgba(0,0,0,0.5))}
 
-.searchbar{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:85%;max-width:400px;height:44px;background:rgba(255,255,255,0.95);border-radius:30px;display:flex;align-items:center;padding:0 16px;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,0.15);backdrop-filter:blur(10px);z-index:10}
+.searchbar{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:85%;max-width:400px;height:44px;background:rgba(255,255,255,0.95);border-radius:12px;display:flex;align-items:center;padding:0 14px;gap:8px;box-shadow:0 2px 10px rgba(0,0,0,0.08);backdrop-filter:blur(10px);z-index:10}
 .searchbar svg{width:18px;height:18px;color:var(--text-light);flex-shrink:0}
 .searchbar input{border:none;background:none;color:var(--text);font-size:16px;font-family:'Nunito',sans-serif;font-weight:600;outline:none;width:100%}
 .searchbar input::placeholder{color:#9ca3af;font-weight:500}
 
-.logo-section{text-align:center;margin-top:-65px;position:relative;z-index:5}
-.logo{width:120px;height:120px;background:var(--card);border-radius:26px;display:flex;align-items:center;justify-content:center;margin:auto;box-shadow:var(--shadow-lg);border:3px solid white}
-.logo img{width:90px;height:90px;object-fit:contain}
-.brand{font-size:24px;font-weight:900;margin-top:8px;letter-spacing:-0.5px}
+.logo-section{text-align:center;margin-top:-52px;position:relative;z-index:5}
+.logo{width:96px;height:96px;background:var(--card);border-radius:22px;display:flex;align-items:center;justify-content:center;margin:auto;box-shadow:var(--shadow-lg);border:2px solid rgba(255,255,255,0.8)}
+.logo img{width:68px;height:68px;object-fit:contain}
+.brand{font-size:22px;font-weight:900;margin-top:8px;letter-spacing:-0.3px}
 .brand-sub{font-size:13px;color:var(--text-light);font-weight:600;margin-top:2px}
 
 .backbtn{display:none;align-items:center;gap:6px;margin:16px 16px 0;padding:10px 18px;background:var(--card);border:none;border-radius:30px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;color:var(--text);cursor:pointer;box-shadow:var(--shadow);transition:all 0.2s}
@@ -72,14 +72,14 @@ body{
 .categories{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:12px 16px}
 .cat{background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform 0.2s;position:relative}
 .cat:active{transform:scale(0.97)}
-.cat img{width:100%;height:130px;object-fit:cover}
+.cat img{width:100%;height:120px;object-fit:cover}
 .cat-overlay{position:absolute;bottom:0;left:0;right:0;padding:10px 12px;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent)}
 .catname{color:white;font-weight:800;font-size:16px;text-shadow:0 1px 4px rgba(0,0,0,0.3)}
 .catcount{color:rgba(255,255,255,0.8);font-size:12px;font-weight:600}
 
 .products{display:none;grid-template-columns:1fr 1fr;gap:14px;padding:12px 16px}
 
-.card{background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);position:relative;transition:transform 0.2s;animation:fadeUp 0.3s ease-out both}
+.card{background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);border:1px solid #f0f0f0;position:relative;transition:transform 0.15s;animation:fadeUp 0.3s ease-out both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .card:nth-child(1){animation-delay:0.05s}.card:nth-child(2){animation-delay:0.1s}.card:nth-child(3){animation-delay:0.15s}.card:nth-child(4){animation-delay:0.2s}.card:nth-child(5){animation-delay:0.25s}.card:nth-child(6){animation-delay:0.3s}
 
