@@ -45,7 +45,7 @@ body{
   -webkit-text-size-adjust:100%;
   -ms-text-size-adjust:100%;
   touch-action:manipulation;
-  padding-bottom:80px;
+  padding-bottom:120px;
 }
 
 .hero{position:relative;height:180px;overflow:hidden}
@@ -165,7 +165,7 @@ body{
 .detail-cta button:active{transform:scale(0.98);background:var(--green-dark)}
 
 /* VIEWCART */
-.viewcart{position:fixed;bottom:16px;left:16px;right:16px;background:var(--green);color:white;padding:16px 20px;border-radius:var(--radius);display:none;cursor:pointer;z-index:90;box-shadow:0 6px 24px rgba(22,163,74,0.35);font-family:'Nunito',sans-serif;border:none;transition:all 0.2s}
+.viewcart{position:fixed;bottom:74px;left:14px;right:14px;background:var(--green);color:white;padding:14px 18px;border-radius:var(--radius);display:none;cursor:pointer;z-index:90;box-shadow:0 4px 16px rgba(34,197,94,0.3);font-family:'Nunito',sans-serif;border:none;transition:all 0.2s}
 .viewcart:active{transform:scale(0.98)}
 .viewcart-inner{display:flex;justify-content:space-between;align-items:center}
 .viewcart-left{display:flex;align-items:center;gap:10px}
@@ -324,6 +324,75 @@ body{
 .lightbox-price{font-size:18px;color:var(--green);font-weight:800}
 .lightbox-counter{color:rgba(255,255,255,0.5);font-size:13px;font-weight:700;margin-bottom:12px}
 
+/* ========== BOTTOM NAV BAR ========== */
+.bottom-nav{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  height:64px;
+  background:var(--card);
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  z-index:95;
+  border-top:1px solid #f0f0f0;
+  padding-bottom:env(safe-area-inset-bottom,0);
+  box-shadow:0 -1px 6px rgba(0,0,0,0.04);
+}
+
+.nav-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  cursor:pointer;
+  padding:6px 16px;
+  border:none;
+  background:none;
+  font-family:'Nunito',sans-serif;
+  transition:all 0.15s;
+  -webkit-tap-highlight-color:transparent;
+}
+
+.nav-item svg{
+  width:24px;
+  height:24px;
+  color:var(--text-light);
+  transition:color 0.15s;
+}
+
+.nav-item span{
+  font-size:10px;
+  font-weight:700;
+  color:var(--text-light);
+  transition:color 0.15s;
+}
+
+.nav-item.active svg{color:var(--green-dark)}
+.nav-item.active span{color:var(--green-dark)}
+
+.nav-item:active{transform:scale(0.9)}
+
+.nav-cart-badge{
+  position:relative;
+}
+
+.nav-badge{
+  position:absolute;
+  top:-4px;
+  right:-8px;
+  background:var(--green);
+  color:white;
+  font-size:9px;
+  font-weight:900;
+  min-width:16px;
+  height:16px;
+  border-radius:8px;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:0 4px;
+}
+
 /* Pull to refresh */
 .ptr-indicator{
   position:fixed;
@@ -387,6 +456,25 @@ body{
     </div>
     <div class="lightbox-info" id="lightboxInfo"></div>
   </div>
+</div>
+
+<!-- BOTTOM NAV BAR -->
+<div class="bottom-nav" id="bottomNav">
+  <button class="nav-item active" id="navHome" onclick="navGoHome()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Startseite</span>
+  </button>
+  <button class="nav-item" id="navSearch" onclick="navGoSearch()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <span>Suchen</span>
+  </button>
+  <button class="nav-item" id="navCart" onclick="openCart()">
+    <div class="nav-cart-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <div class="nav-badge" id="navBadge">0</div>
+    </div>
+    <span>Warenkorb</span>
+  </button>
 </div>
 
 <!-- HERO -->
@@ -912,8 +1000,8 @@ function updateCartButton(){
     document.getElementById("cartBadge").textContent=totalItems;
     document.getElementById("cartTotalItems").textContent=totalItems+" Artikel";
   }else{vc.style.display="none"}
-  // Sepeti localStorage'a kaydet
   saveCartToStorage();
+  updateNavBadge();
 }
 
 function saveCartToStorage(){
@@ -959,8 +1047,8 @@ document.addEventListener('visibilitychange',function(){
 });
 
 /* ========== CART PANEL ========== */
-function openCart(){renderCart();document.getElementById("cartpanel").classList.add("active");document.body.style.overflow="hidden"}
-function closeCart(){document.getElementById("cartpanel").classList.remove("active");document.body.style.overflow=""}
+function openCart(){renderCart();document.getElementById("cartpanel").classList.add("active");document.body.style.overflow="hidden";setActiveNav('navCart')}
+function closeCart(){document.getElementById("cartpanel").classList.remove("active");document.body.style.overflow="";setActiveNav('navHome')}
 
 function renderCart(){
   const container=document.getElementById("cartitems");
@@ -1356,6 +1444,39 @@ function showToast(text){
   t.textContent="✓ "+text;
   t.classList.add("show");
   setTimeout(()=>t.classList.remove("show"),1800);
+}
+
+/* ========== BOTTOM NAV ========== */
+function navGoHome(){
+  goBack();
+  window.scrollTo({top:0,behavior:'smooth'});
+  setActiveNav('navHome');
+}
+
+function navGoSearch(){
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>{
+    document.getElementById('searchInput').focus();
+  },300);
+  setActiveNav('navSearch');
+}
+
+function setActiveNav(id){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const el=document.getElementById(id);
+  if(el) el.classList.add('active');
+}
+
+function updateNavBadge(){
+  const vals=Object.values(cart).filter(v=>typeof v==='number'&&!isNaN(v));
+  const total=vals.reduce((a,b)=>a+b,0);
+  const badge=document.getElementById('navBadge');
+  if(total>0){
+    badge.style.display='flex';
+    badge.textContent=total;
+  }else{
+    badge.style.display='none';
+  }
 }
 
 /* ========== PULL TO REFRESH ========== */
