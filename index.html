@@ -1454,11 +1454,17 @@ function navGoHome(){
 }
 
 function navGoSearch(){
-  window.scrollTo({top:0,behavior:'smooth'});
-  setTimeout(()=>{
-    document.getElementById('searchInput').focus();
-  },300);
+  // Önce ana sayfaya dön
+  goBack();
+  // Sayfayı en üste kaydır
+  window.scrollTo({top:0,behavior:'instant'});
   setActiveNav('navSearch');
+  // Kısa gecikme ile search input'a focus yap
+  setTimeout(()=>{
+    const input=document.getElementById('searchInput');
+    input.focus();
+    input.click();
+  },150);
 }
 
 function setActiveNav(id){
