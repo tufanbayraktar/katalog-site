@@ -615,34 +615,6 @@ body{
       <div class="catcount" id="count-Gemüse"></div>
     </div>
   </div>
-  <div class="cat" onclick="openCategory('Tomaten')">
-    <img src="https://i.postimg.cc/9fpvxHr5/IMG_4024.jpg" alt="Tomaten">
-    <div class="cat-overlay">
-      <div class="catname">Tomaten</div>
-      <div class="catcount" id="count-Tomaten"></div>
-    </div>
-  </div>
-  <div class="cat" onclick="openCategory('Salat & Kräuter')">
-    <img src="https://i.postimg.cc/bwbTY0Ph/IMG_4029.jpg" alt="Salat & Kräuter">
-    <div class="cat-overlay">
-      <div class="catname">Salat & Kräuter</div>
-      <div class="catcount" id="count-Salat & Kräuter"></div>
-    </div>
-  </div>
-  <div class="cat" onclick="openCategory('Kartoffeln & Zwiebeln')">
-    <img src="https://i.postimg.cc/Hk22Rw1q/IMG_4031.jpg" alt="Kartoffeln & Zwiebeln">
-    <div class="cat-overlay">
-      <div class="catname">Kartoffeln & Zwiebeln</div>
-      <div class="catcount" id="count-Kartoffeln & Zwiebeln"></div>
-    </div>
-  </div>
-  <div class="cat" onclick="openCategory('Sonstiges')">
-    <img src="https://i.postimg.cc/MTJgKZNm/IMG_4028.jpg" alt="Sonstiges">
-    <div class="cat-overlay">
-      <div class="catname">Sonstiges</div>
-      <div class="catcount" id="count-Sonstiges"></div>
-    </div>
-  </div>
 </div>
 
 <div class="products" id="productList"></div>
@@ -757,202 +729,29 @@ const contacts = [
 /* ========== PRODUCT DATA ========== */
 const PH="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect fill='%23f0fdf4' width='400' height='400'/%3E%3Ctext x='200' y='210' text-anchor='middle' fill='%2322c55e' font-size='48' font-family='sans-serif' font-weight='bold'%3E🌿%3C/text%3E%3C/svg%3E";
 
+
 const products = [
-  /* ===== OBST (Meyveler) ===== */
-  {name:"Granatapfel 9er",price:"€ / kg",category:"Obst",herkunft:"Türkei",beschreibung:"Frische, saftige Granatäpfel direkt vom Erzeuger.",images:["https://i.postimg.cc/RC24Jtyq/IMG_4034.jpg","https://i.postimg.cc/FsBpQQqr/Adsiz-tasarim.png"]},
-  {name:"Apfel Red Chief",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"Knackige Red Chief Äpfel mit intensiv roter Farbe.",images:["https://i.postimg.cc/NjBMLT2q/IMG_4039.jpg","https://i.postimg.cc/QtDs90BT/IMG_4349.jpg"]},
-  {name:"Apfel Gala",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Granny Apfel",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kiwi",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"Saftige Kiwis, reich an Vitamin C.",images:["https://i.postimg.cc/fRBPmnyJ/IMG_4035.jpg","https://i.postimg.cc/PxmT3mjk/IMG_4209.jpg"]},
-  {name:"Ananas",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"Tropische Ananas, süß und aromatisch.",images:["https://i.postimg.cc/9fDL9Dvj/IMG_4036.jpg","https://i.postimg.cc/t421DGzk/IMG_4179.jpg"]},
-  {name:"Gelbe Melone",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"Süße, aromatische gelbe Melone.",images:["https://i.postimg.cc/DZVPbBrZ/IMG_4038.jpg","https://i.postimg.cc/4NvH797D/IMG_4176.jpg"]},
-  {name:"Datteln",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"Natürlich süße Datteln.",images:["https://i.postimg.cc/MTJgKZNm/IMG_4028.jpg","https://i.postimg.cc/sgDqQbDh/IMG_4200.jpg"]},
-  {name:"Datteln Medjoul",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Zitronen Netz",price:"€ / Netz",category:"Obst",herkunft:"",beschreibung:"Frische Zitronen im Netz.",images:["https://i.postimg.cc/dVtsw6rs/IMG_4027.jpg","https://i.postimg.cc/7PGg6hnK/IMG_4158.jpg"]},
-  {name:"Zitrone Blatt",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Zitrone Lose",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Limette",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Mango",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Avocado",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Ayva",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Banane",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Orangen",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Blut Orangen",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Pomelo",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Grapefruit",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Clementine Blatt",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Clementine Nadorcott",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Trauben Weiß",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Trauben Schwarz",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Trauben Rot",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Trauben Crimson",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Santa Maria",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Deveci Birne",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Forelle Birne",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Lucas Birne",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Mini Birne",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Abate Birne",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kaktus Feigen",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"SP Kaki",price:"€ / kg",category:"Obst",herkunft:"Spanien",beschreibung:"",images:[PH]},
-  {name:"Ejder Meyvesi",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kestane",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Can Erik",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Pflaumen Rot",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Pflaumen Gelb",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Pflaumen Schwarz",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Pfirsich",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Nektarine",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Paraguay Plattpfirsich",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Aprikose",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kirsche",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Nespoli",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Erdbeeren",price:"€ / Schale",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Johannes Brot",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"ITL Feigen Grün",price:"€ / kg",category:"Obst",herkunft:"Italien",beschreibung:"",images:[PH]},
-  {name:"Kumquats",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Cherimoya",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Honigmelone Gelb",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Honigmelone Grün",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Wassermelone",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kirkagac Melone",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Galya Melone",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Cantaloupe Melone",price:"€ / Stück",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Walnuss / Ceviz",price:"€ / kg",category:"Obst",herkunft:"",beschreibung:"",images:[PH]},
-
-  /* ===== GEMÜSE ===== */
-  {name:"TR Sivri",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"Türkische Spitzpaprika.",images:[PH]},
-  {name:"Çarliston",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"Milde, lange Spitzpaprika.",images:["https://i.postimg.cc/0NRkgvkf/IMG_4023.jpg","https://i.postimg.cc/7hKvd9tG/IMG_4290.jpg"]},
-  {name:"TR Dolma",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"Türkische Dolma-Paprika.",images:[PH]},
-  {name:"Capia Rot",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"Süße rote Capia-Paprika.",images:["https://i.postimg.cc/9fpvxHr5/IMG_4024.jpg","https://i.postimg.cc/G3K14333/IMG_4293.jpg"]},
-  {name:"TR Kil Sivri",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:[PH]},
-  {name:"TR Ucburun / Corno",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:[PH]},
-  {name:"TR Macar",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:[PH]},
-  {name:"Paprika Rot",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Paprika Gelb",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Paprika Grün",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Peperoni Rot",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Peperoni Grün",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"TR Cin Biber",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:[PH]},
-  {name:"Aubergine",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Frische Auberginen.",images:["https://i.postimg.cc/VNnj1zj5/IMG_4025.jpg","https://i.postimg.cc/FHdtCjy6/IMG_4321.jpg"]},
-  {name:"TR Aubergine Tüte",price:"€ / Tüte",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:[PH]},
-  {name:"Aubergine Lose 5kg",price:"€ / 5kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Aubergine Lose Gestreift",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Aubergine Viola Rund",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Aubergine Lange",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Mini Aubergine Schwarz",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Mini Aubergine Gestreift",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Zucchini Grün",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Knackige grüne Zucchini.",images:["https://i.postimg.cc/d1SQxyLL/IMG_4026.jpg","https://i.postimg.cc/hP3W0Cd9/IMG_4315.jpg"]},
-  {name:"TR Zucchini Weiß",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:[PH]},
-  {name:"TR Zucchini Mini",price:"€ / kg",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:[PH]},
-  {name:"Zucchini Blüte",price:"€ / Schale",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Knoblauch Netz",price:"€ / Netz",category:"Gemüse",herkunft:"",beschreibung:"Aromatischer Knoblauch.",images:["https://i.postimg.cc/HWtSG92r/IMG_4022.jpg","https://i.postimg.cc/TYPvg8hN/IMG_4303.jpg"]},
-  {name:"Knoblauch Frisch",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Einlage Gurken",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Frische Einlegegurken.",images:["https://i.postimg.cc/5yVQfrwn/IMG_4032.jpg","https://i.postimg.cc/Dfc87bWv/IMG_3939.jpg"]},
-  {name:"Mini Gurken",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"Knackige Mini-Gurken.",images:["https://i.postimg.cc/QxnNbPHn/IMG_4033.jpg","https://i.postimg.cc/htMGBFhL/IMG_4348.jpg"]},
-  {name:"Citir Gurken",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Gurken Lang",price:"€ / Stück",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"TR Mais Schale",price:"€ / Schale",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:[PH]},
-  {name:"TR Bohnen Schale",price:"€ / Schale",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:[PH]},
-  {name:"TR Bakla Schale",price:"€ / Schale",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:[PH]},
-  {name:"SP Bohnen Tüte",price:"€ / Tüte",category:"Gemüse",herkunft:"Spanien",beschreibung:"",images:[PH]},
-  {name:"Bohnen Lose",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"ITL Bakla",price:"€ / kg",category:"Gemüse",herkunft:"Italien",beschreibung:"",images:[PH]},
-  {name:"Barbunya",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Erbsen",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Okra / Bamya",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Broccoli",price:"€ / Stück",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Blumenkohl",price:"€ / Stück",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Rapa",price:"€ / Bund",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Chimata",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Radieschen",price:"€ / Bund",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kohlrabi",price:"€ / Stück",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Mairübchen",price:"€ / Bund",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Chinakohl",price:"€ / Stück",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Rettich Schwarz",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Rettich Weiß",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Karotten Lose",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Karotten Schale",price:"€ / Schale",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Lauch",price:"€ / Stück",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Bundzwiebel",price:"€ / Bund",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Fenchel",price:"€ / Stück",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Rote Beete",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Rote Beete Bund",price:"€ / Bund",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Rote Beete Vakum",price:"€ / Pkg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Artischocken",price:"€ / Stück",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Ingwer",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Topinambur / Yer Elmasi",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Tropea Getr.",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Tropea Frisch Bund",price:"€ / Bund",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Cardi",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kopf Sellerie",price:"€ / Stück",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Sellerie Stauden",price:"€ / Stück",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Petersilie Wurzel",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Meerrettich",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Bal Kabagi",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Radicchio",price:"€ / Stück",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Oliven Grün",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Champignons Weiß",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Champignons Braun",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Champignons Weiß Schale",price:"€ / Schale",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Austernpilz",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Sauerkraut",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Sauerkraut mit Paprika",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Belg. Salgam",price:"€ / 15kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kartoffeln Süß",price:"€ / kg",category:"Gemüse",herkunft:"",beschreibung:"",images:[PH]},
-
-  /* ===== TOMATEN ===== */
-  {name:"San Marzano Tomate",price:"€ / kg",category:"Tomaten",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Fleisch Tomaten",price:"€ / kg",category:"Tomaten",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Baum Tomaten",price:"€ / kg",category:"Tomaten",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Cherry Tomaten",price:"€ / kg",category:"Tomaten",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Eier Tomaten",price:"€ / kg",category:"Tomaten",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Ochsenherz Tomaten",price:"€ / kg",category:"Tomaten",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Piccadilly Tomate",price:"€ / kg",category:"Tomaten",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kumato Tomaten",price:"€ / kg",category:"Tomaten",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Pink Tomaten",price:"€ / kg",category:"Tomaten",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Marinda Tomaten",price:"€ / kg",category:"Tomaten",herkunft:"",beschreibung:"",images:[PH]},
-
-  /* ===== SALAT & KRÄUTER ===== */
-  {name:"Petersilie",price:"€ / Bund",category:"Salat & Kräuter",herkunft:"",beschreibung:"Frische Petersilie.",images:["https://i.postimg.cc/bwbTY0Ph/IMG_4029.jpg","https://i.postimg.cc/c1BdfMh4/IMG_4228.jpg"],hasUnitPicker:true,units:["Bund","Kiste (20 Bund)"]},
-  {name:"Dill",price:"€ / Bund",category:"Salat & Kräuter",herkunft:"",beschreibung:"Frischer Dill.",images:["https://i.postimg.cc/k5Jjgjyq/IMG_4030.jpg","https://i.postimg.cc/BvF0bxtf/IMG_4261.jpg"],hasUnitPicker:true,units:["Bund","Kiste (20 Bund)"]},
-  {name:"SP Dill",price:"€ / Bund",category:"Salat & Kräuter",herkunft:"Spanien",beschreibung:"",images:[PH]},
-  {name:"SP Minze",price:"€ / Bund",category:"Salat & Kräuter",herkunft:"Spanien",beschreibung:"",images:[PH]},
-  {name:"SP Koriander",price:"€ / Bund",category:"Salat & Kräuter",herkunft:"Spanien",beschreibung:"",images:[PH]},
-  {name:"SP Mangold",price:"€ / Bund",category:"Salat & Kräuter",herkunft:"Spanien",beschreibung:"",images:[PH]},
-  {name:"SP Malva",price:"€ / Bund",category:"Salat & Kräuter",herkunft:"Spanien",beschreibung:"",images:[PH]},
-  {name:"SP Spinat",price:"€ / Bund",category:"Salat & Kräuter",herkunft:"Spanien",beschreibung:"",images:[PH]},
-  {name:"ITL Mangold",price:"€ / Bund",category:"Salat & Kräuter",herkunft:"Italien",beschreibung:"",images:[PH]},
-  {name:"Romana",price:"€ / Stück",category:"Salat & Kräuter",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Löwenzahn",price:"€ / Bund",category:"Salat & Kräuter",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Rucola",price:"€ / Bund",category:"Salat & Kräuter",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Eis Salat",price:"€ / Stück",category:"Salat & Kräuter",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Lollo Grün",price:"€ / Stück",category:"Salat & Kräuter",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Lollo Rot",price:"€ / Stück",category:"Salat & Kräuter",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Eichblatt Grün",price:"€ / Stück",category:"Salat & Kräuter",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Eichblatt Rot",price:"€ / Stück",category:"Salat & Kräuter",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Mix Salat",price:"€ / Stück",category:"Salat & Kräuter",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kopf Salat",price:"€ / Stück",category:"Salat & Kräuter",herkunft:"",beschreibung:"",images:[PH]},
-
-  /* ===== KARTOFFELN & ZWIEBELN ===== */
-  {name:"Kartoffeln 8x2,5 kg",price:"€ / Sack",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kartoffeln 4 kg Sack",price:"€ / Sack",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kartoffeln 25kg Sack",price:"€ / Sack",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kartoffeln XXL",price:"€ / kg",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Karotten Sack 10kg",price:"€ / Sack",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Metzger Zwiebeln",price:"€ / kg",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"Große Metzger-Zwiebeln.",images:["https://i.postimg.cc/Hk22Rw1q/IMG_4031.jpg","https://i.postimg.cc/3JDCLBSm/IMG_4347.jpg"]},
-  {name:"Metzger Zwiebel 25 kg",price:"€ / 25kg",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Zwiebel 4 kg Sack",price:"€ / Sack",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Zwiebel Gelb 20x1 kg",price:"€ / 20kg",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Zwiebel Rot 20x1 kg",price:"€ / 20kg",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Zwiebel Rot 10kg",price:"€ / 10kg",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"DE Weiß Kraut Sack",price:"€ / Sack",category:"Kartoffeln & Zwiebeln",herkunft:"Deutschland",beschreibung:"",images:[PH]},
-  {name:"DE Rot Kraut Sack",price:"€ / Sack",category:"Kartoffeln & Zwiebeln",herkunft:"Deutschland",beschreibung:"",images:[PH]},
-  {name:"Kraut Flach",price:"€ / Stück",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Kraut Spitz",price:"€ / Stück",category:"Kartoffeln & Zwiebeln",herkunft:"",beschreibung:"",images:[PH]},
-
-  /* ===== SONSTIGES ===== */
-  {name:"Arabische Brot",price:"€ / Pkg",category:"Sonstiges",herkunft:"",beschreibung:"",images:[PH]},
-  {name:"Tandir Brot",price:"€ / Pkg",category:"Sonstiges",herkunft:"",beschreibung:"",images:[PH]},
+  {name:"Pink Tomaten 7KG",price:"€ / 7KG",category:"Gemüse",herkunft:"Belgien",beschreibung:"",images:["https://i.postimg.cc/jjbmQh84/IMG-4699.jpg"]},
+  {name:"Wassermelone",price:"€ / Stück",category:"Obst",herkunft:"Marokko",beschreibung:"",images:["https://i.postimg.cc/136bqdK5/IMG-4707.jpg"]},
+  {name:"Weiß Kraut",price:"€ / Sack",category:"Gemüse",herkunft:"Deutschland",beschreibung:"",images:["https://i.postimg.cc/htxNdY0h/IMG-4706.jpg"]},
+  {name:"Rot Kraut",price:"€ / Sack",category:"Gemüse",herkunft:"Deutschland",beschreibung:"",images:["https://i.postimg.cc/6pRFvPhy/IMG-4705.jpg"]},
+  {name:"Aubergine Lose 5KG",price:"€ / 5KG",category:"Gemüse",herkunft:"Niederlande",beschreibung:"",images:["https://i.postimg.cc/sDbt1z5h/IMG-4704.jpg"]},
+  {name:"Aubergine Tüte 12x500gr",price:"€ / Karton",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:["https://i.postimg.cc/136bqdK6/IMG-4703.jpg"]},
+  {name:"Aubergine Viola Rund",price:"€ / kg",category:"Gemüse",herkunft:"Italien",beschreibung:"",images:["https://i.postimg.cc/nh7NDW11/IMG-4702.jpg"]},
+  {name:"Aubergine Gestreift",price:"€ / kg",category:"Gemüse",herkunft:"Italien",beschreibung:"",images:["https://i.postimg.cc/bwb4t5RV/IMG-4701.jpg"]},
+  {name:"Aubergine Lange",price:"€ / kg",category:"Gemüse",herkunft:"Italien",beschreibung:"",images:["https://i.postimg.cc/kg8LbHy1/IMG-4700.jpg"]},
+  {name:"San Marzano Tomaten",price:"€ / kg",category:"Gemüse",herkunft:"Belgien",beschreibung:"",images:["https://i.postimg.cc/1zQ2cKWK/IMG-4698.jpg"]},
+  {name:"Eier Tomaten",price:"€ / kg",category:"Gemüse",herkunft:"Belgien",beschreibung:"",images:["https://i.postimg.cc/0NsFdCtW/IMG-4697.jpg"]},
+  {name:"Cherry Tomaten",price:"€ / kg",category:"Gemüse",herkunft:"Belgien",beschreibung:"Eier Cherry",images:["https://i.postimg.cc/hGB6b0CZ/IMG-4696.jpg"]},
+  {name:"Zucchini Weiß 4KG",price:"€ / 4KG",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:["https://i.postimg.cc/DzTHdcjV/IMG-4695.jpg"]},
+  {name:"Zucchini Grün 5KG",price:"€ / 5KG",category:"Gemüse",herkunft:"Belgien",beschreibung:"",images:["https://i.postimg.cc/5tSGPFTd/IMG-4694.jpg"]},
+  {name:"Gurken Lang 14Stk",price:"€ / Karton",category:"Gemüse",herkunft:"Belgien",beschreibung:"",images:["https://i.postimg.cc/Xvkh2ym4/IMG-4693.jpg"]},
+  {name:"Einlage Gurken 10KG",price:"€ / 10KG",category:"Gemüse",herkunft:"Niederlande",beschreibung:"",images:["https://i.postimg.cc/rpNbht3s/IMG-4692.jpg"]},
+  {name:"Feinsteakgurke 9KG",price:"€ / 9KG",category:"Gemüse",herkunft:"Niederlande",beschreibung:"Çıtır",images:["https://i.postimg.cc/s248nZqB/IMG-4691.jpg"]},
+  {name:"Bohnen Lose 4KG",price:"€ / 4KG",category:"Gemüse",herkunft:"Spanien",beschreibung:"",images:["https://i.postimg.cc/g0H5M6QR/IMG-4690.jpg"]},
+  {name:"Kenger Otu 15x400gr",price:"€ / Karton",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:["https://i.postimg.cc/N0hMYZNs/IMG-4689.jpg"]},
+  {name:"Capia Rot Tüte 15x400gr",price:"€ / Karton",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:["https://i.postimg.cc/6pynbsPZ/IMG-4688.jpg"]},
+  {name:"Çarliston Tüte 15x400gr",price:"€ / Karton",category:"Gemüse",herkunft:"Türkei",beschreibung:"",images:["https://i.postimg.cc/BnXH7Wz8/IMG-4687.jpg"]},
 ];
 
 let cart = {};       // { "Petersilie|Bund": 3 } or { "Apfel Red Chief": 2 }
