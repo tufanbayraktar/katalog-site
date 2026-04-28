@@ -575,7 +575,7 @@ body{
 
 <!-- HERO -->
 <div class="hero">
-  <img src="https://i.postimg.cc/bJB4bPp8/IMG-3971.jpg" alt="FreshMaximum Hero">
+  <img src="https://i.postimg.cc/6qRTS42w/Adsiz-tasarim.png" alt="FreshMaximum Hero">
   <div class="hero-overlay"></div>
   <div class="searchbar">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -586,7 +586,7 @@ body{
 <!-- LOGO -->
 <div class="logo-section">
   <div class="logo">
-    <img src="https://i.postimg.cc/h40CKDKn/Untitled_design.png" alt="FreshMaximum Logo">
+    <img src="https://i.postimg.cc/L5RM9JQg/Adsiz-tasarim2.png" alt="FreshMaximum Logo">
   </div>
   <div class="brand">Fresh Maximum</div>
   <div class="brand-sub">Großhandel für frische Lebensmittel</div>
@@ -1568,6 +1568,14 @@ function showToast(text){
 
 /* ========== BOTTOM NAV ========== */
 function navGoHome(){
+  // Tüm açık panelleri kapat
+  closeSearchPanel();
+  document.getElementById('cartpanel').classList.remove('active');
+  const detail=document.getElementById('detail');
+  if(detail) detail.classList.remove('active');
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow='';
+  // Ana sayfaya dön
   goBack();
   window.scrollTo({top:0,behavior:'smooth'});
   setActiveNav('navHome');
@@ -1607,7 +1615,7 @@ function searchPanelFilter(){
 function renderSearchResults(q){
   const container=document.getElementById('searchPanelResults');
   const filtered=q.length>0
-    ? products.filter(p=>p.name.toLowerCase().includes(q))
+    ? products.filter(p=>p.name.toLowerCase().includes(q)||p.herkunft.toLowerCase().includes(q)||p.category.toLowerCase().includes(q))
     : products;
 
   if(filtered.length===0){
@@ -1615,7 +1623,7 @@ function renderSearchResults(q){
     return;
   }
 
-  let html='';
+  let html='<div style="padding:4px 0 8px;font-size:12px;color:var(--text-light);font-weight:700">'+filtered.length+' Produkte</div>';
   filtered.forEach(p=>{
     const img=(p.images&&p.images[0])||p.img||'';
     const inCart=Object.keys(cart).some(k=>k===p.name||k.startsWith(p.name+'|'));
@@ -1627,7 +1635,7 @@ function renderSearchResults(q){
           <div class="search-result-cat">${p.category}${p.herkunft?' · '+p.herkunft:''}</div>
           <div class="search-result-price">${p.price}</div>
         </div>
-        <button class="search-result-add" onclick="event.stopPropagation();addCart('${encodeStr(p.name)}')">${inCart?'✓':'+'}</button>
+        <button class="search-result-add" onclick="event.stopPropagation();addCart('${encodeStr(p.name)}');this.textContent='✓'">${inCart?'✓':'+'}</button>
       </div>
     `;
   });
