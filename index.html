@@ -652,22 +652,7 @@ body{
 <div class="section-title" id="sectionTitle">Kategorien</div>
 
 <!-- CATEGORIES -->
-<div class="categories" id="categories">
-  <div class="cat" onclick="openCategory('Obst')">
-    <img src="https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png" alt="Obst">
-    <div class="cat-overlay">
-      <div class="catname">Obst</div>
-      <div class="catcount" id="count-Obst"></div>
-    </div>
-  </div>
-  <div class="cat" onclick="openCategory('Gemüse')">
-    <img src="https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png" alt="Gemüse">
-    <div class="cat-overlay">
-      <div class="catname">Gemüse</div>
-      <div class="catcount" id="count-Gemüse"></div>
-    </div>
-  </div>
-</div>
+<div class="categories" id="categories"></div>
 
 <div class="products" id="productList"></div>
 <div class="detail" id="detail"></div>
@@ -852,17 +837,60 @@ function parseCartKey(key){
 }
 
 /* ========== INIT ========== */
+// Kategori görselleri - ilk ürünün görseli kullanılacak, özel görseller varsa onlar
+const catImages={
+  'Obst':'https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png',
+  'Gemüse':'https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png'
+};
+
 function init(){
-  const cats=[...new Set(products.map(p=>p.category))];
-  cats.forEach(cat=>{
-    const count=products.filter(p=>p.category===cat).length;
-    const el=document.getElementById("count-"+cat);
-    if(el) el.textContent=count+" Produkte";
-  });
+  renderCategories();
   // Init default unit choices
   products.filter(p=>p.hasUnitPicker).forEach(p=>{
     if(!unitChoices[p.name]) unitChoices[p.name]=p.units[0];
   });
+  // Filtre barındaki kategorileri güncelle
+  updateSearchFilterChips();
+}
+
+function renderCategories(){
+  const cats=[...new Set(products.map(p=>p.category))];
+  const container=document.getElementById('categories');
+  let html='';
+  cats.forEach(cat=>{
+    const count=products.filter(p=>p.category===cat).length;
+    // Kategori görseli: özel varsa onu, yoksa o kategorideki ilk ürünün görselini kullan
+    let img=catImages[cat];
+    if(!img){
+      const firstProduct=products.find(p=>p.category===cat);
+      img=(firstProduct&&firstProduct.images&&firstProduct.images[0])||PH;
+    }
+    html+=`
+      <div class="cat" onclick="openCategory('${cat}')">
+        <img src="${img}" alt="${cat}">
+        <div class="cat-overlay">
+          <div class="catname">${cat}</div>
+          <div class="catcount">${count} Produkte</div>
+        </div>
+      </div>
+    `;
+  });
+  container.innerHTML=html;
+}
+
+function updateSearchFilterChips(){
+  const cats=[...new Set(products.map(p=>p.category))];
+  const bar=document.getElementById('searchFilterBar');
+  if(!bar) return;
+  let html='<button class="filter-chip active" onclick="setSearchFilter(\'alle\')">Alle</button>';
+  const emojis={'Obst':'🍎','Gemüse':'🥬','Tomaten':'🍅','Salat & Kräuter':'🥗','Kartoffeln & Zwiebeln':'🥔','Sonstiges':'📦'};
+  cats.forEach(cat=>{
+    const emoji=emojis[cat]||'📦';
+    html+=`<button class="filter-chip" onclick="setSearchFilter('${cat}')">${emoji} ${cat}</button>`;
+  });
+  html+=`<button class="filter-chip" onclick="setSearchSort('az')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h12M3 18h6"/></svg>A-Z</button>`;
+  html+=`<button class="filter-chip" onclick="setSearchSort('za')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h6M3 12h12M3 18h18"/></svg>Z-A</button>`;
+  bar.innerHTML=html;
 }
 init();
 
@@ -1778,14 +1806,26 @@ let ptrStartY=0;
 let ptrMoving=false;
 let ptrTriggered=false;
 const ptrEl=document.getElementById('ptrIndicator');
-const PTR_THRESHOLD=80;
+const PTR_THRESHOLD=100;
+
+function isPtrAllowed(){
+  // Sadece ana sayfa görünürken ve hiçbir panel açık değilken
+  if(document.querySelector('.search-panel.active')) return false;
+  if(document.querySelector('.detail.active')) return false;
+  if(document.querySelector('.cartpanel.active')) return false;
+  if(document.querySelector('.modal-overlay.active')) return false;
+  if(document.querySelector('.lightbox.active')) return false;
+  if(window.scrollY>5) return false;
+  return true;
+}
 
 document.addEventListener('touchstart',function(e){
-  // Sadece sayfanın en üstündeyken çalışsın
-  if(window.scrollY<=5 && !document.querySelector('.detail.active') && !document.querySelector('.cartpanel.active') && !document.querySelector('.modal-overlay.active')){
+  if(isPtrAllowed()){
     ptrStartY=e.touches[0].clientY;
     ptrMoving=true;
     ptrTriggered=false;
+  }else{
+    ptrMoving=false;
   }
 },{passive:true});
 
@@ -1793,10 +1833,9 @@ document.addEventListener('touchmove',function(e){
   if(!ptrMoving) return;
   const diff=e.touches[0].clientY-ptrStartY;
 
-  if(diff>10 && window.scrollY<=0){
-    const progress=Math.min(diff/PTR_THRESHOLD,1);
+  if(diff>15 && window.scrollY<=0){
     ptrEl.classList.add('visible');
-    ptrEl.style.top=Math.min(diff*0.4, 50)+'px';
+    ptrEl.style.top=Math.min(diff*0.35, 50)+'px';
 
     if(diff>=PTR_THRESHOLD){
       ptrEl.classList.add('ready');
@@ -1816,7 +1855,6 @@ document.addEventListener('touchend',function(e){
     ptrEl.classList.remove('ready','visible');
     ptrEl.classList.add('loading');
     ptrEl.style.top='16px';
-    // Yenile
     setTimeout(()=>{
       window.location.reload();
     },600);
