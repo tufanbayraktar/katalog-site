@@ -139,7 +139,7 @@ body{
 .detail-close{width:36px;height:36px;border:none;border-radius:50%;background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
 .detail-close svg{width:20px;height:20px}
 .detail-img{width:100%;aspect-ratio:1;object-fit:cover}
-.detail-body{padding:20px 16px 200px}
+.detail-body{padding:20px 16px 20px}
 .detail-name{font-size:24px;font-weight:900;margin-bottom:4px}
 .detail-herkunft{font-size:14px;color:var(--text-light);font-weight:600;margin-bottom:12px}
 .detail-price{font-size:28px;color:var(--green);font-weight:900;margin-bottom:4px}
@@ -160,7 +160,7 @@ body{
 .detail-note-input:focus{border-color:var(--green);background:white}
 .detail-note-input::placeholder{color:#b0b5bf;font-weight:500;font-style:italic}
 
-.detail-cta{position:fixed;bottom:64px;left:0;right:0;padding:10px 16px 14px;background:linear-gradient(to top,var(--bg) 70%,transparent);z-index:110}
+.detail-cta{position:sticky;bottom:0;left:0;right:0;padding:10px 16px 80px;background:var(--bg);z-index:10;flex-shrink:0}
 .detail-cta button{width:100%;padding:16px;background:var(--green);border:none;border-radius:var(--radius-sm);color:white;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 4px 16px rgba(22,163,74,0.3);transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
 .detail-cta button:active{transform:scale(0.98);background:var(--green-dark)}
 
