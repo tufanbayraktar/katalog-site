@@ -1157,10 +1157,25 @@ function saveNoteFromDetail(encName,value){
   if(trimmed){notes[key]=trimmed}else{delete notes[key]}
 }
 
+let openedFromSearch=false;
+
+function openDetailFromSearch(encName){
+  openedFromSearch=true;
+  openDetail(encName);
+}
+
 function closeDetail(){
   document.getElementById("detail").classList.remove("active");
   document.body.style.overflow="";
-  if(currentCategory) openCategory(currentCategory);
+  if(openedFromSearch){
+    openedFromSearch=false;
+    // Arama panelini tekrar göster
+    document.getElementById('searchPanel').classList.add('active');
+    renderSearchResults();
+    setActiveNav('navSearch');
+  }else if(currentCategory){
+    openCategory(currentCategory);
+  }
 }
 
 /* ========== SEARCH ========== */
@@ -1849,7 +1864,7 @@ function renderSearchResults(){
     }
 
     html+=`
-      <div class="search-result-item" onclick="closeSearchPanel();openCategory('${p.category}');setTimeout(()=>openDetail('${encodeStr(p.name)}'),100)">
+      <div class="search-result-item" onclick="openDetailFromSearch('${encodeStr(p.name)}')">
         <img class="search-result-img" src="${img}" alt="${p.name}" loading="lazy">
         <div class="search-result-info">
           <div class="search-result-name">${p.name}</div>
