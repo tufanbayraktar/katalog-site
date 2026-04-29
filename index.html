@@ -1161,15 +1161,17 @@ let openedFromSearch=false;
 
 function openDetailFromSearch(encName){
   openedFromSearch=true;
+  // Detail'i search panel'in üstüne çıkar
+  document.getElementById('detail').style.zIndex='600';
   openDetail(encName);
 }
 
 function closeDetail(){
   document.getElementById("detail").classList.remove("active");
+  document.getElementById("detail").style.zIndex='';
   document.body.style.overflow="";
   if(openedFromSearch){
     openedFromSearch=false;
-    // Arama panelini tekrar göster
     document.getElementById('searchPanel').classList.add('active');
     renderSearchResults();
     setActiveNav('navSearch');
