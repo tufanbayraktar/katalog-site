@@ -326,12 +326,14 @@ body{
 
 /* ========== SEARCH PANEL ========== */
 .search-panel{
-  position:fixed;inset:0;
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
   background:var(--bg);
-  z-index:95;
+  z-index:96;
   display:none;
   flex-direction:column;
   animation:fadeIn 0.2s ease;
+  overflow:hidden;
 }
 .search-panel.active{display:flex}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -406,10 +408,11 @@ body{
 
 .search-panel-results{
   flex:1;
-  overflow-y:auto;
+  overflow-y:scroll;
   -webkit-overflow-scrolling:touch;
   padding:8px 16px 80px;
   overscroll-behavior:contain;
+  touch-action:pan-y;
 }
 
 .search-result-item{
@@ -839,8 +842,8 @@ function parseCartKey(key){
 /* ========== INIT ========== */
 // Kategori görselleri - ilk ürünün görseli kullanılacak, özel görseller varsa onlar
 const catImages={
-  'Obst':'https://i.postimg.cc/tTCc6sjr/Ekran-goruntusu-2026-02-20-165607.png',
-  'Gemüse':'https://i.postimg.cc/MHBg6hxj/Ekran-goruntusu-2026-02-20-165736.png'
+  'Obst':'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=400&h=300&fit=crop',
+  'Gemüse':'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=300&fit=crop'
 };
 
 function init(){
@@ -1669,7 +1672,6 @@ function navGoSearch(){
 function openSearchPanel(){
   const panel=document.getElementById('searchPanel');
   panel.classList.add('active');
-  document.body.style.overflow='hidden';
   const input=document.getElementById('searchPanelInput');
   input.value='';
   searchFilterCat='alle';
@@ -1687,7 +1689,6 @@ function openSearchPanel(){
 
 function closeSearchPanel(){
   document.getElementById('searchPanel').classList.remove('active');
-  document.body.style.overflow='';
   document.getElementById('searchPanelInput').value='';
   searchFilterCat='alle';
   searchSortMode='default';
